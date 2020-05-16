@@ -12,6 +12,8 @@ using namespace std;
 // This class is composed a fasta file and the components of a gff file.
 // One member function parses the fasta file and returns the neucleotide
 // sequence of the gene
+#ifndef _GENOME_FEATURES_
+#define _GENOME_FEATURES_
 class GenomeFeatures
 {
 public:
@@ -25,7 +27,7 @@ public:
   { ; }
 
   // Ctor: takes the relevant columns from the gff for parsing fasta files.
-  // Other attributes remain empty. Might be a bad idea 
+  // Other attributes remain empty. Might be a bad idea
   GenomeFeatures( vector<char> strand, vector<int> startPos,
     vector<int> endPos, vector<int> contig ):
     strand( strand ), startPos( startPos ),
@@ -83,3 +85,4 @@ private:
 
   int numGenes = 0;
 };
+#endif

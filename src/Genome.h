@@ -13,6 +13,8 @@
 //
 // -----------------------------------------------------------------------------
 
+#ifndef _GENOME_
+#define _GENOME_
 class Genome: public BioSeq, public GenomeFeatures
 {
 public:
@@ -21,7 +23,7 @@ public:
   Genome()
   { ; }
 
-  // Value ctor: takes the 
+  // Value ctor: takes the
   Genome( const std::string &faPath, const std::string &gffPath,
     const std::string &genomeId ):
     BioSeq( faPath ), GenomeFeatures( gffPath, genomeId )
@@ -69,5 +71,6 @@ private:
   void getReverseCompliment( std::string &sequence );
 
 };
+#endif
 
 // -----------------------------------------------------------------------------

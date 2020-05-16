@@ -3,6 +3,18 @@
 #include <fstream>
 #include <algorithm>
 
+// -----------------------------------------------------------------------------
+// Parse CD Hit
+// Ryan D. Crawford
+// 11/20/2019
+// -----------------------------------------------------------------------------
+// This function takes the output file for CD-HIT and creates an R list
+// class object containing a matrix of presence of the sequences
+// and a list with the gene identifiers for each of the sequences
+// -----------------------------------------------------------------------------
+
+#ifndef _CD_HIT_PARSER_
+#define _CD_HIT_PARSER_
 class CdHitParser
 {
 public:
@@ -66,3 +78,6 @@ private:
   // genome name is not found
   int GetGenomeIdx( const string &name );
 };
+#endif
+
+// -----------------------------------------------------------------------------

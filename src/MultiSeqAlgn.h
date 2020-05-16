@@ -10,6 +10,8 @@
 //
 // -----------------------------------------------------------------------------
 
+#ifndef _MULTI_SEQ_ALGN_
+#define _MULTI_SEQ_ALGN_
 class MultiSeqAlgn : public BioSeq
 {
 public:
@@ -44,5 +46,6 @@ private:
   void getSeqIterators();
 
 };
+#endif
 
 // -----------------------------------------------------------------------------

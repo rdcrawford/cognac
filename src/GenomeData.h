@@ -10,6 +10,8 @@
 // genomes with multitheadding enabled with tbb.
 // -----------------------------------------------------------------------------
 
+#ifndef _GENOME_DATA_
+#define _GENOME_DATA_
 class GenomeData
 {
 public:
@@ -52,5 +54,6 @@ private:
   // Create the concatenated gene sequences with the gene ids
   void concatenateGenneVecs();
 };
+#endif
 
 // -----------------------------------------------------------------------------

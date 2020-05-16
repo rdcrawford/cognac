@@ -20,6 +20,9 @@ void ParseCdHit(
   int  minClustCount // Remove genes at low frequency in the cluster
   )
 {
+  // This creates a cd-hit object with lists for the gene cluster data And
+  // a matrix of gene presence absence. "genePtr" is passed by reference And
+  // updated with these attributes
   CdHitParser cdHitParser( cdHitClstFile, isBinary, removeLowFreq, genePtr );
 }
 

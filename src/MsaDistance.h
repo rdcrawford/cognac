@@ -17,8 +17,8 @@ using namespace RcppParallel;
 // library, which provides thead safe wrappers for the R data types.
 // -----------------------------------------------------------------------------
 
-// ---- Define a worker class for parallel computing ---------------------------
-
+#ifndef _MSA_DISTANCE_
+#define _MSA_DISTANCE_
 struct MsaDistance : public Worker
 {
   // Ctor: Initialize from Rcpp input and output matrixes (the RMatrix class
@@ -48,5 +48,6 @@ struct MsaDistance : public Worker
   //
   double calcSharedDist( const std::string &ref, const std::string &qry );
 };
+#endif
 
 // -----------------------------------------------------------------------------

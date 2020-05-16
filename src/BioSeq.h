@@ -12,11 +12,13 @@
 // the sequence is converted to upper case.
 // -----------------------------------------------------------------------------
 
+#ifndef _BIO_SEQ_
+#define _BIO_SEQ_
 class BioSeq
 {
 public:
 
-  // Default ctor: does nothing
+  // Default ctor
   BioSeq()
   { ; }
 
@@ -83,5 +85,6 @@ private:
   // Maximium index of the contigs
   int maxSeqIdx;
 };
+#endif
 
 // -----------------------------------------------------------------------------
