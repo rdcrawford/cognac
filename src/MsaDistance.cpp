@@ -12,19 +12,19 @@ MsaDistance::MsaDistance(
   this->msa     = msa;
   this->distMat = distmat;
 
-	switch( distFunType )
+  switch( distFunType )
   {
-		case "raw":
-			distuncPtr = &MsaDistance::TimesOne;
-			break;
-		case "shared":
-			distuncPtr = &MsaDistance::TimesTwo;
-			break;
-		default:
-			Rcpp::stop("Distance function type: ", distFunType,
+    case "raw":
+      distuncPtr = &MsaDistance::TimesOne;
+      break;
+    case "shared":
+      distuncPtr = &MsaDistance::TimesTwo;
+      break;
+    default:
+      Rcpp::stop("Distance function type: ", distFunType,
         " is not supported\nSupported types are:\n  -- raw\n  -- shared\n",
         )
-	}
+  }
 }
 
 // Function call operator that work from the range specified by begin and end
