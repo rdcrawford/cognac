@@ -75,10 +75,10 @@ bool MultiSeqAlgn::findGapPosition( )
   // Iterate over the sequences until a gap is found
   while ( it != seqIts.end() )
   {
-    // If this sequnce is a gap, return true
+    // If this position in the sequnce is a gap, return true
     if ( **it == '-') return true;
 
-    // Advance to the next sequence
+    // Advance to the next reside in the sequence
     ++it;
   }
   // If we have iterated over every sequence in the alignment and not

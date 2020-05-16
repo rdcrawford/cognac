@@ -1,8 +1,8 @@
 // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
-#include "CdHitParser.h"
 #include <fstream>
 #include <algorithm>
+#include "CdHitParser.h"
 
 // -----------------------------------------------------------------------------
 // Parse CD Hit

@@ -10,11 +10,11 @@ using namespace RcppParallel;
 // 2020/01/23
 // -----------------------------------------------------------------------------
 // This is a functor that provides a parallelized calculation of the
-// MSA distances
-// function. An MSA is input ant for each sequence in the MSA the distcance
-// is calcuated between all of the other sequences and sotred in a matrix
-// of integers. The process is done in parralel using the RcppParallel
-// library, which provides thead safe wrappers for the R data types.
+// MSA distances. For each pair of sequences in the alignment, distcance
+// is calcuated as the number of mutations between the two sequences.
+// The process is done in parralel using tbb via RcppParallel. The distance
+// function to be used is passed as argument into the ctor and a function
+// pointer is used in the call operator to specify the function when called.
 // -----------------------------------------------------------------------------
 
 #ifndef _MSA_DISTANCE_
@@ -38,15 +38,19 @@ struct MsaDistance : public Worker
   // matrx.
   typedef double ( MsaDistance::*DistFunction )( const std::string &refSeq,
     const std::string &qrySeq );
-  DistFunction distuncPtr;
+  DistFunction distFunction;
 
   // Function call operator that work from the range specified by begin and end
   // This enables this object t0 behave like a function when passed to
   // parallel_for.
   void operator()( tbb::blocked_range< int > & range );
 
-  //
+  // Retrun the fraction of mutations per shared site. Any position where
+  // there is a gap in either sequece is excluded.
   double calcSharedDist( const std::string &ref, const std::string &qry );
+
+  // Return the raw number of mutations between two sequences
+  double calcRawDist( const std::string &ref, const std::string &qry );
 };
 #endif
 

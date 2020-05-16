@@ -2,6 +2,7 @@
 // [[Rcpp::plugins(cpp11)]]
 #include <RcppParallel.h>
 #include <Rcpp.h>
+#include "MsaDistance.h"
 using namespace RcppParallel;
 
 MsaDistance::MsaDistance(
@@ -15,13 +16,13 @@ MsaDistance::MsaDistance(
   switch( distFunType )
   {
     case "raw":
-      distuncPtr = &MsaDistance::TimesOne;
+      distFunction = &MsaDistance::calcRawDist;
       break;
     case "shared":
-      distuncPtr = &MsaDistance::TimesTwo;
+      distFunction = &MsaDistance::calcSharedDist;
       break;
     default:
-      Rcpp::stop("Distance function type: ", distFunType,
+      Rcpp::stop( "Distance function type: ", distFunType,
         " is not supported\nSupported types are:\n  -- raw\n  -- shared\n",
         )
   }
@@ -30,12 +31,14 @@ MsaDistance::MsaDistance(
 // Function call operator that work from the range specified by begin and end
 void MsaDistance::operator()( tbb::blocked_range< int > & range )
 {
+  double distVal;
   for ( int i = range.begin(); i < range.end(); ++i)
   {
     for ( int j = 0; j < i; ++j )
     {
       // Value to store the count of mismatches between the two sequences
-      auto distVal = ( this->*distuncPtr )( msa[ i ], msa[ j ] );
+      if ( j == i ) distVal = 0;
+      else distVal = ( this->*distFunction )( msa[ i ], msa[ j ] );
 
       // Assign the position in the distance matrix to the number
       // of mutations
