@@ -84,6 +84,7 @@ private:
 
   // Maximium index of the contigs
   int maxSeqIdx;
+
 };
 #endif
 

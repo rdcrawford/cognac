@@ -6,7 +6,10 @@ using namespace std;
 // Ryan D. Crawford
 // 05/12/2020
 // -----------------------------------------------------------------------------
-//
+// This class reads in the relevant columns from a gff file ad parses them
+// into vectors. A unique gene ID is assigned to each entry in the gff file.
+// The contig names are converted to the index of the contig in the
+// fasta file.
 // -----------------------------------------------------------------------------
 
 // This class is composed a fasta file and the components of a gff file.

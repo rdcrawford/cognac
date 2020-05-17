@@ -5,6 +5,12 @@
 #include "MsaDistance.h"
 using namespace RcppParallel;
 
+// -----------------------------------------------------------------------------
+// MsaDistance
+// Ryan D. Crawford
+// 2020/01/23
+// -----------------------------------------------------------------------------
+
 MsaDistance::MsaDistance(
   const std::vector<std::string> &msa,
   Rcpp::NumericMatrix distMat, std::string distFunType)

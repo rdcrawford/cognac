@@ -7,7 +7,7 @@
 # remove any genomes that do not have a complete set of core genes
 # ------------------------------------------------------------------------------
 
-SelectCoreGenes = function(
+SelectAlgnGenes = function(
   genePtr,        # Environment with the data on the genes
   minGeneNum,     # Minimum number of genes to include in the alignment
   coreGeneThresh, # Fraction of genome that a gene must be present in
@@ -139,6 +139,12 @@ SelectCoreGenes = function(
     "  -- ",  sum( isCoreGene ), " genes were used to create the tree\n",
     sep = ''
     )
+  
+  # Remove any non-core genes from the data
+  coreGenes        = unlist( genePtr$clustList )
+  isCoreGene       = genePtr$geneIds %in% coreGenes
+  genePtr$geneSeqs = genePtr$geneSeqs[ isCoreGene ]
+  genePtr$geneIds  = genePtr$geneIds[ isCoreGene ]
 }
 
 # ------------------------------------------------------------------------------

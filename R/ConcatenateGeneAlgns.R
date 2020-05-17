@@ -8,11 +8,10 @@
 # are also stored in a seperate vector
 # ------------------------------------------------------------------------------
 
-ConcatenateGeneAlgns = function( genePtr, outDir, threadVal )
+ConcatenateGeneAlgns = function( genePtr, outDir, runId )
 {
   # Make an output directory to store the mafft alignments
-  algnDir = paste0(outDir, "temp_gene_algns/")
-  if ( !file.exists(algnDir) ) system(paste("mkdir", algnDir))
+  if ( !file.exists(algnDir) ) system( paste("mkdir", algnDir) )
 
   # Generate the mafft alignments using multi-threading via future.apply
   algnList = future_sapply( 1:length(genePtr$clustList) ,
@@ -21,13 +20,6 @@ ConcatenateGeneAlgns = function( genePtr, outDir, threadVal )
 
   # Get the length of the alignments
   algnLens = sapply(1:length(algnList), function(i) nchar( algnList[[i]][1] ) )
-  algnLen = sum( algnLens )
-  cat(
-    "  -- Genes which were aligned: ", length(algnLens), '\n',
-    "  -- The total alignment length is: ", algnLen, '\n',
-    "  -- Min and max: ", min(algnLens), ' ', max(algnLens), '\n',
-    sep = ''
-    )
 
   # save(file = "data/2020_02_14_GenerateGeneAlgns_start.Rdata", list = ls())
   # If there is no variation in the final sequence an empty list is returned.
@@ -37,9 +29,8 @@ ConcatenateGeneAlgns = function( genePtr, outDir, threadVal )
   algnList = algnList[ !isEmpty ]
 
   # Remove any genes that had no variation form the data
-  genePtr$geneData  = genePtr$geneData[ !isEmpty, ]
   genePtr$clustList = genePtr$clustList[ !isEmpty ]
-
+  genePtr$genomeIdList = genePtr$genomeIdList[ !isEmpty ]
 
   # Generate a vector with the gene start positions in the alignment
   genePtr$genePositions = algnLens[ 1 ]
@@ -61,12 +52,12 @@ ConcatenateGeneAlgns = function( genePtr, outDir, threadVal )
   {
     if ( length(algnList[[i]]) != length(concatAlgn) )
     {
-      stop( "The alignment for gene ", i, " is wrong...\n" )
+      stop( "Incorrect number of sequences in alignment ", i, "...\n" )
     }
 
     if ( !identical( genePtr$genomeNames, names(algnList[[i]]) ) )
     {
-      stop( "The gene alignment for gene ", i, " is in the wrong order...\n" )
+      stop( "The alignment for gene ", i, " is in the wrong order...\n" )
     }
 
     # Append each alignment to the vector of the concatenated
@@ -75,14 +66,22 @@ ConcatenateGeneAlgns = function( genePtr, outDir, threadVal )
   }
 
   # Write the concatenated gene file
-  concatGeneFa = paste0(outDir, "concat_genes.fasta")
+  coGeneFa = paste0(outDir, runId, "concatenated_gene_aa_alignment.fasta" )
   sink( concatGeneFa )
   for ( i in 1:length(concatAlgn) )
   {
     cat('>', genePtr$genomeNames[i], '\n', concatAlgn[i], '\n', sep = '')
   }
   sink()
-  # save(file = "data/2020_02_14_GenerateGeneAlgns_end.Rdata", list = ls())
+  
+  # Print the statistics on the alignment 
+  algnLen = sum( algnLens )
+  cat(
+    "  -- Number of genes aligned: ", length(algnLens), '\n',
+    "  -- The total alignment length is: ", algnLen, '\n',
+    sep = ''
+    )
+  
   return( concatGeneFa )
 }
 

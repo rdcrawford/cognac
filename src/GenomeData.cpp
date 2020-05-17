@@ -14,8 +14,6 @@ using namespace RcppParallel;
 // Ryan D. Crawford
 // 05/12/2020
 // -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 
 // Value ctor for inputs of gff files, fasta files, and the corresponding
 // genome names

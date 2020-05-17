@@ -10,8 +10,6 @@ using namespace std;
 // Ryan D. Crawford
 // 05/12/2020
 // -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 
 // This function reads in the fasta file. Returns true if the file
 // was able to be read in
@@ -165,7 +163,7 @@ bool BioSeq::getSeqIndex( const std::string &seqName, int &seqIdx )
 // Free the memory associated with the whole genome sequence. The contig
 // names are retained. This function exists for instances where mimizing memory
 // usage is critical and keeping the whole genome sequence in memory
-void BioSeq::clearSeqs( )
+void BioSeq::clearSeqs()
 {
   seqs.clear();
 }

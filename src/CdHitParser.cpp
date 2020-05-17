@@ -9,10 +9,6 @@
 // Ryan D. Crawford
 // 11/20/2019
 // -----------------------------------------------------------------------------
-// This function takes the output file for CD-HIT and creates an R list
-// class object containing a matrix of presence of the sequences
-// and a list with the gene identifiers for each of the sequences
-// -----------------------------------------------------------------------------
 
 // Ctor
 CdHitParser::CdHitParser(

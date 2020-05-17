@@ -7,7 +7,10 @@
 // Ryan D. Crawford
 // 05/11/2020
 // -----------------------------------------------------------------------------
-//
+// This class provides function for parsing and manipulating multiple sequence
+// alignments. Functionality is provided to remove gaps from the alignment 
+// to retrieve the core genome. Then a distance matrix can be calculated
+// with the paiwise distances between the sequences in the alignmnet
 // -----------------------------------------------------------------------------
 
 #ifndef _MULTI_SEQ_ALGN_

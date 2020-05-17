@@ -29,15 +29,18 @@ FilterMultiCopyGenes = function( genePtr, copyNumTresh )
   # data
   if ( FALSE %in% isSingleCopy )
   {
-    cat("  -- Before filtering there were", nGenes, "genes\n")
+    cat("  -- Before filtering there were ", nGenes, "genes\n")
     genePtr$clustList    = genePtr$clustList[ isSingleCopy ]
     genePtr$genomeIdList = genePtr$genomeIdList[ isSingleCopy ]
     genePtr$geneMat      = genePtr$geneMat[ , isSingleCopy ]
 
-    cat("  -- After filtering there were", sum(isSingleCopy), "genes\n")
+    cat(
+      "  -- After filtering there are", sum(isSingleCopy), 
+      " remaining genes\n"
+      )
 
     if ( !TRUE %in% isSingleCopy )
-      stop("No single copy genes were identified...")
+      stop( "No single copy genes were identified..." )
 
     # Find if there are any genes that have duplications below the
     # threshold

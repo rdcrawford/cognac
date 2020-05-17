@@ -10,7 +10,10 @@
 // Ryan D. Crawford
 // 05/11/2020
 // -----------------------------------------------------------------------------
-//
+// This class inherits the propertes of the BioSeq class, representing the
+// whole genome sequence, and the GenomeFeatures class which is the parsed
+// gff file. This allows easy parsing of the fasta file to retrieve the
+// gen sequences and translate them to return the amino acid sequences.
 // -----------------------------------------------------------------------------
 
 #ifndef _GENOME_

@@ -12,9 +12,10 @@ using namespace RcppParallel;
 // This is a functor that provides a parallelized calculation of the
 // MSA distances. For each pair of sequences in the alignment, distcance
 // is calcuated as the number of mutations between the two sequences.
-// The process is done in parralel using tbb via RcppParallel. The distance
-// function to be used is passed as argument into the ctor and a function
-// pointer is used in the call operator to specify the function when called.
+// The struct is a functor used by tbb via RcppParallel. The name of the 
+// distancefunction to be used is passed as argument into the ctor and a
+// function pointer is used in the call operator to specify the distance
+// function to be used.
 // -----------------------------------------------------------------------------
 
 #ifndef _MSA_DISTANCE_

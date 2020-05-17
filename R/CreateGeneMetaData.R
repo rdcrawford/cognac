@@ -8,7 +8,7 @@
 # the cd hit cluster, and whether the gene is single copy in every geneome
 # ------------------------------------------------------------------------------
 
-CreateGeneMetaData = function( genePtr )
+CreateGeneMetaData = function( genePtr, revTranslate )
 {
   # Find a representitive member from each cluster
   nGenes    = length( genePtr$clustList )
@@ -35,7 +35,15 @@ CreateGeneMetaData = function( genePtr )
   })
 
   # Create a dataframe with the data on all of selected core genes
-  genePtr$geneData = cbind.data.frame( clustReps, geneLens, geneDescr )
+  geneData = cbind.data.frame( 
+    clustReps, 
+    geneLens, 
+    geneDescr,
+    GetGenePartitions( genePtr, revTranslate ),
+    stringsAsFactors = FALSE
+    )
+  
+  return( geneData )
 }
 
 # ------------------------------------------------------------------------------

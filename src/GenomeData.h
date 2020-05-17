@@ -7,7 +7,9 @@
 // 05/12/2020
 // -----------------------------------------------------------------------------
 // This class provides a functionality for parsing the data for multiple
-// genomes with multitheadding enabled with tbb.
+// genomes with multitheadding enabled with tbb. This class is a functor
+// which is passed to "tbb::for_each." The call operator iterates over
+// the vector of genome class objects and parses the fasta and gff files
 // -----------------------------------------------------------------------------
 
 #ifndef _GENOME_DATA_

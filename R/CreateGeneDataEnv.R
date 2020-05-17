@@ -8,7 +8,7 @@
 # fasta file paths, and the genome Ids of the genomes included in the analysis
 # ------------------------------------------------------------------------------
 
-CreateGeneDataEnv = function( genomeFeatures, fastaFiles, genomeIds, outDir )
+CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
 {
   # Currently fasta files are required. Throw an error if the fasta
   # files are not included
@@ -24,29 +24,34 @@ CreateGeneDataEnv = function( genomeFeatures, fastaFiles, genomeIds, outDir )
   # if they are missing, extract the name from the paths
   if ( missing(genomeIds) )
   {
-    genePtr$genomeNames = sapply( gffFiles, ExtractGenomeNameFromPath )
-
-    numInputs =
-      c( length(genomeFeatures), length(fastaFiles) )
+    # Make the genome names by extracting the last element of the path
+    # and removing the file extension.
+    genePtr$genomeNames = sapply( fastaFiles, ExtractGenomeNameFromPath )
+    
+    # Get counts of the number of input vectors 
+    argVecLen = c( length(featureFiles), length(fastaFiles) )
 
   } else {
 
+    # Add the genome ids to the envriroment that will be returned
     genePtr$genomeNames = genomeIds
-    numInputs =
-      c( length(genomeFeatures), length(fastaFiles), length(genomeIds) )
+    
+    # Get counts of the number of input vectors 
+    argVecLen =
+      c( length(featureFiles), length(fastaFiles), length(genomeIds) )
   }
 
   # Check that everything has the same length
-  if ( length( unique(numInputs) ) != 1) )
+  if ( length( unique(argVecLen) ) != 1 )
   {
-    featureNames = c("genomeFeatures", "fastaFiles", "genomeIds")
+    argNames = c("featureFiles", "fastaFiles", "genomeIds")
+    vecLenStr = sapply( 1:length(argVecLen),
+      function(i) 
+        paste0( "  -- ", argNames[i], ": ", argVecLen[i], " elements\n")
+      )
     inputEfforMessage = paste(
-      "The input data vectors are not the same lenth:",
-      sapply( 1:length(numInputs),
-        function(i)
-          paste0( "  -- ", featureNames[i],": " numInputs[i], " elements")
-        )
-        collapse = '\n'
+      c("\nThe input data vectors are not the same length:\n", vecLenStr), 
+      collapse  = ''
       )
     stop( inputEfforMessage )
   }
@@ -67,11 +72,12 @@ CreateGeneDataEnv = function( genomeFeatures, fastaFiles, genomeIds, outDir )
   faaPath = paste0( outDir, "allGenes.faa" )
 
   # Parse the data on the input genomes
-  CreateCognacRunData( genePtr, genomeFeatures, fastaFiles, faaPath )
+  CreateCognacRunData( genePtr, featureFiles, fastaFiles, faaPath )
 
-  # Add the fasta files
+  # Add the fasta files and path to the parsed genome data
   genePtr$fastaFiles = fastaFiles
-  genePtr$faaPath = faaPath
+  genePtr$faaPath    = faaPath
+  
   return( genePtr )
 }
 
