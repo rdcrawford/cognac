@@ -15,10 +15,10 @@ CdHitParser::CdHitParser(
   const std::string &cdHitClstFile, // Path to the cd-hit results
   bool isBinary,                    // Return binary matrix
   int  minGeneNum,               // Remove low frequency genes
-  Rcpp::Environment &genePtr        // Environment to append results to
+  Rcpp::Environment &geneEnv        // Environment to append results to
   )
 {
-  genomeIds = Rcpp::as<std::vector<std::string> >( genePtr[ "genomeNames" ] );
+  genomeIds = Rcpp::as<std::vector<std::string> >( geneEnv[ "genomeNames" ] );
 
   this->minGeneNum = minGeneNum;
   // Open the cd-hit results for reading
@@ -76,7 +76,7 @@ CdHitParser::CdHitParser(
     cdHitResults.clear( );
 
     // Create a genome x gene matrix with the presene or absene of each cluster
-    genePtr.assign( "geneMat", CreateBinaryMat() );
+    geneEnv.assign( "geneMat", CreateBinaryMat() );
 
   } else {
 
@@ -87,11 +87,11 @@ CdHitParser::CdHitParser(
     cdHitResults.clear( );
 
     // Create a genome x gene matrix with the presene or absene of each cluster
-    genePtr.assign( "geneMat", CreateIdentMat() );
+    geneEnv.assign( "geneMat", CreateIdentMat() );
   }
 
-  genePtr.assign( "clustList", clustList );
-  genePtr.assign( "genomeIdList", gIdList );
+  geneEnv.assign( "clustList", clustList );
+  geneEnv.assign( "genomeIdList", gIdList );
 }
 
 bool CdHitParser::RemoveLowFreqClusts( )

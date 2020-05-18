@@ -16,14 +16,14 @@
 
 // [[Rcpp::export]]
 void CreateCognacRunData(
-  Rcpp::Environment                &genePtr, // R environment to be updated
+  Rcpp::Environment                &geneEnv, // R environment to be updated
   const std::vector< std::string > &gfPaths, // Paths to the gff files
   const std::vector< std::string > &faPaths  // Paths to the fasta files
   const std::string                &faaPath  // Paths to the faa to create
   )
 {
   // Retrieve the genome names from the environment
-  std::vector< std::string > genomeIds = genePtr[ "genomeIds" ];
+  std::vector< std::string > genomeIds = geneEnv[ "genomeIds" ];
 
   // Intialize a vector of genome class objects to parse
   GenomeData genomeData( gffPaths, faPaths, genomeIds );
@@ -32,9 +32,9 @@ void CreateCognacRunData(
   genomeData.writeFaa( faaPath );
 
   // Parse the genome features to a data frames
-  genePtr.assign( "gfList", genomeData.createGeneDataFrames() );
-  genePtr.assign( "geneSeqs", genomeData.getAaSeqs() );
-  genePtr.assign( "geneIds", genomeData.getAaSeqs() );
+  geneEnv.assign( "gfList", genomeData.createGeneDataFrames() );
+  geneEnv.assign( "geneSeqs", genomeData.getAaSeqs() );
+  geneEnv.assign( "geneIds", genomeData.getAaSeqs() );
 }
 
 // -----------------------------------------------------------------------------

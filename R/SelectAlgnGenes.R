@@ -8,7 +8,7 @@
 # ------------------------------------------------------------------------------
 
 SelectAlgnGenes = function(
-  genePtr,        # Environment with the data on the genes
+  geneEnv,        # Environment with the data on the genes
   minGeneNum,     # Minimum number of genes to include in the alignment
   coreGeneThresh, # Fraction of genome that a gene must be present in
   maxMissGenes,   # Maximium fraction of genes that can be missing
@@ -26,8 +26,8 @@ SelectAlgnGenes = function(
   if ( missing(minGeneNum) ) minGeneNum = 2
 
   # Save the number of genes and genomes before filtering
-  numClusts  = length( genePtr$clustList )
-  numGenomes = length( genePtr$genomeNames )
+  numClusts  = length( geneEnv$clustList )
+  numGenomes = length( geneEnv$genomeNames )
 
   # To select core genes of interest iterate over the data until all
   # of the remaining genes have some degree of variation and
@@ -37,7 +37,7 @@ SelectAlgnGenes = function(
   # core gene selection
   if ( !missing(outGroup) )
   {
-    isOutGroup = genePtr$genomeNames %in% outGroup
+    isOutGroup = geneEnv$genomeNames %in% outGroup
     for ( i in which( isOutGroup ) ) isKeeper[ i ] = FALSE
   }
 
@@ -45,33 +45,33 @@ SelectAlgnGenes = function(
   {
     # Check that there are suffienct gene counts in the data set to make the
     # tree
-    if ( is.null(dim(genePtr$geneMat)) )
+    if ( is.null(dim(geneEnv$geneMat)) )
       stop( "There are not enough conserved genes to make the tree..." )
-    if ( ncol(genePtr$geneMat) < minGeneNum )
+    if ( ncol(geneEnv$geneMat) < minGeneNum )
       stop( "There are not enough conserved genes to make the tree..." )
 
     # Remove any outlier genomes that dont have core genes
     isKeeper = RemoveOutlierGenomes(
-      genePtr$geneMat, minGeneNum, coreGeneThresh, isKeeper
+      geneEnv$geneMat, minGeneNum, coreGeneThresh, isKeeper
       )
 
     # Check and see that at least one remaining genome has variation
     # in each gene. If genes are conserved in all of the remaining genomes
     # then there is no point in aligning them
-    isNotConserved = sapply(1:ncol(genePtr$geneMat),
-      function(j) FALSE %in% (genePtr$geneMat[ isKeeper, j ] == 100)
+    isNotConserved = sapply(1:ncol(geneEnv$geneMat),
+      function(j) FALSE %in% (geneEnv$geneMat[ isKeeper, j ] == 100)
       )
 
     # If there are genes without variation, remove them from the dataset
     if ( FALSE %in% isNotConserved )
     {
-      genePtr$geneMat      = genePtr$geneMat[ , isNotConserved ]
-      genePtr$clustList    = genePtr$clustList[ isNotConserved ]
-      genePtr$genomeIdList = genePtr$genomeIdList[ isNotConserved]
+      geneEnv$geneMat      = geneEnv$geneMat[ , isNotConserved ]
+      geneEnv$clustList    = geneEnv$clustList[ isNotConserved ]
+      geneEnv$genomeIdList = geneEnv$genomeIdList[ isNotConserved]
     }
 
     # Count the number of core genes in the dataset
-    isCoreGene = CalcNumCoreGenes( genePtr, coreGeneThresh )
+    isCoreGene = CalcNumCoreGenes( geneEnv, coreGeneThresh )
     coreGeneCount = sum( isCoreGene )
 
     # If there is variation in all of the genes after removing outliers
@@ -88,8 +88,8 @@ SelectAlgnGenes = function(
       sep = ''
       )
     # Calcuate the fraction of missing genes
-    missingGeneFrac = sapply( 1:nrow(genePtr$geneMat),
-      function(i) sum( genePtr$geneMat[i, isCoreGene] == 0 ) / coreGeneCount
+    missingGeneFrac = sapply( 1:nrow(geneEnv$geneMat),
+      function(i) sum( geneEnv$geneMat[i, isCoreGene] == 0 ) / coreGeneCount
       )
 
     # Remove genomes that are missing too many genes
@@ -104,9 +104,9 @@ SelectAlgnGenes = function(
     if ( TRUE %in% isMissingTooMuch )
     {
       # Update the genomes and genes that are still being used for the analysis
-      genePtr$gfList      = genePtr$gfList[ !isMissingTooMuch ]
-      genePtr$genomeNames = genePtr$genomeNames[ !isMissingTooMuch ]
-      genePtr$geneMat     = genePtr$geneMat[ !isMissingTooMuch, ]
+      geneEnv$gfList      = geneEnv$gfList[ !isMissingTooMuch ]
+      geneEnv$genomeNames = geneEnv$genomeNames[ !isMissingTooMuch ]
+      geneEnv$geneMat     = geneEnv$geneMat[ !isMissingTooMuch, ]
       numStillIn          = sum( !isMissingTooMuch )
 
       # Make sure there is an alignment for atleast two genomes
@@ -126,14 +126,14 @@ SelectAlgnGenes = function(
         )
 
       # Recalculate the number of core genes
-      isCoreGene = CalcNumCoreGenes( genePtr, coreGeneThresh )
+      isCoreGene = CalcNumCoreGenes( geneEnv, coreGeneThresh )
     }
   }
 
   # Subset to only include the core genes
-  genePtr$clustList    = genePtr$clustList[ isCoreGene ]
-  genePtr$genomeIdList = genePtr$genomeIdList[ isSingleCopy ]
-  genePtr$geneMat      = genePtr$geneMat[ , isCoreGene ]
+  geneEnv$clustList    = geneEnv$clustList[ isCoreGene ]
+  geneEnv$genomeIdList = geneEnv$genomeIdList[ isSingleCopy ]
+  geneEnv$geneMat      = geneEnv$geneMat[ , isCoreGene ]
   cat(
     "  -- ",  numClusts, " orthologous genes were identified by cd-hit\n",
     "  -- ",  sum( isCoreGene ), " genes were used to create the tree\n",
@@ -141,10 +141,10 @@ SelectAlgnGenes = function(
     )
   
   # Remove any non-core genes from the data
-  coreGenes        = unlist( genePtr$clustList )
-  isCoreGene       = genePtr$geneIds %in% coreGenes
-  genePtr$geneSeqs = genePtr$geneSeqs[ isCoreGene ]
-  genePtr$geneIds  = genePtr$geneIds[ isCoreGene ]
+  coreGenes        = unlist( geneEnv$clustList )
+  isCoreGene       = geneEnv$geneIds %in% coreGenes
+  geneEnv$geneSeqs = geneEnv$geneSeqs[ isCoreGene ]
+  geneEnv$geneIds  = geneEnv$geneIds[ isCoreGene ]
 }
 
 # ------------------------------------------------------------------------------

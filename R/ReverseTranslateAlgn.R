@@ -1,15 +1,41 @@
-# ------------------------------------------------------------------------------
-# ReverseTranslateAlgn
-# 2020//13
-# Ryan D. Crawford
-# ------------------------------------------------------------------------------
-# This function inputs a concatenated gene alignment
-# ------------------------------------------------------------------------------
+#  -----------------------------------------------------------------------------
+#  ReverseTranslateAlgn
+#  2020/05/13
+#  Ryan D. Crawford
+#  -----------------------------------------------------------------------------
+#' Reverse Translate Algnment
+#' @description
+#' This function reads in a concatenated gene alignment created by cognac and
+#' @param geneEnv, concatGeneFa, outDir
+#' @param concatGeneFa Path to the amino acid alignment
+#' @param runId Run identifier to append to the alignment file
+#' @param algnEnv Environment created by congnac with the data on the alignment
+#' @return Path to the reverse translated alignment
+#' @export
+#  -----------------------------------------------------------------------------
 
-ReverseTranslateAlgn = function( genePtr, concatGeneFa, outDir )
+ReverseTranslateAlgn = function( 
+  geneEnv, concatGeneFa, outDir, runId, algnEnv
+  )
 {
+  AA_PARTITIONS  = 4
+  
+  # Get indexes in the alignment where the genome partitions are
+  if ( missing(algnEnv) )
+  {
+    # Assign the indexes of the gene positions
+    genePartitions = geneEnv$genePositions
+    
+  } else {
+    
+    # Extract the gene positions from the meta-data
+    genePartitions = sapply( algnEnv$geneData[ , AA_PARTITIONS ],
+      function(x) as.numeric( strsplit(x, ':')[[1]][2] )
+      )
+  }
+  
   # Define the name of the output file
-  concatGeneDnaFa = paste0( outDir, "concat_align_nt_seq.fasta" )
+  concatGeneDnaFa = paste0( outDir, runId,  "concat_align_nt_seq.fasta" )
   if ( file.exists( concatGeneDnaFa ) ) system( paste("rm", concatGeneDnaFa) )
 
   # Read in the concatenated gene alignment
@@ -20,17 +46,17 @@ ReverseTranslateAlgn = function( genePtr, concatGeneFa, outDir )
   for ( i in 1:length(concatGeneSeq) )
   {
     # Look up the row in the gff file corresponging to each core gene
-    gfRowIdxs = sapply( 1:length(genePtr$clustList), function(j)
+    gfRowIdxs = sapply( 1:length(geneEnv$clustList), function(j)
     {
       # Find position the current genome in the vector of genome names
-      isThisGenome = genePtr$genomeIdList[[j]] == genePtr$genomeNames[i]
+      isThisGenome = geneEnv$genomeIdList[[j]] == geneEnv$genomeNames[i]
       if ( !TRUE %in% isThisGenome ) return( NA )
 
       # Find the gene id and look up the row in the gff file corresponding
       # to this gene
       listIdx = which( isThisGenome )[ 1 ]
-      geneId  = genePtr$clustList[[ j ]][ listIdx ]
-      return( which( genePtr$gfList[[ i ]][ , GENE_ID ] == geneId ) )
+      geneId  = geneEnv$clustList[[ j ]][ listIdx ]
+      return( which( geneEnv$gfList[[ i ]][ , GENE_ID ] == geneId ) )
     })
 
     # If there are any missing genes core genes represented as na in the
@@ -39,10 +65,10 @@ ReverseTranslateAlgn = function( genePtr, concatGeneFa, outDir )
 
     # Reverse translate the current sequence in the concatenated gene alignemnt
     TranslateAaAlgnToDna(
-      genePtr$gfList[[i]][ gfRowIdxs, ],
-      genePtr$fastaFiles[i],
-      genePtr$genePositions,
-      genePtr$genomeNames[i],
+      geneEnv$gfList[[i]][ gfRowIdxs, ],
+      geneEnv$fastaFiles[i],
+      genePartitions,
+      geneEnv$genomeNames[i],
       concatGeneSeq[i],
       concatGeneDnaFa
       )

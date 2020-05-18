@@ -1,12 +1,27 @@
 # ------------------------------------------------------------------------------
-# Create Gene Data Env
-# 2020/02/05
-# Ryan D. Crawford
-# ------------------------------------------------------------------------------
-# This function initializes the environment containing data on the genes
-# used in the analysis. This function adds the list of parsed gff files,
-# fasta file paths, and the genome Ids of the genomes included in the analysis
-# ------------------------------------------------------------------------------
+#  CreateGeneDataEnv
+#  2020/02/05
+#  Ryan D. Crawford
+#  -----------------------------------------------------------------------------
+#' Creatate a gene data environment
+#' @description
+#'   This function initializes the environment containing data on the genes
+#'   used in the analysis. This function adds the list of parsed gff files,
+#'   fasta file paths, and the genome Ids of the genomes included in the 
+#'   analysis. This function uses all availible threads to parse the
+#'   genomic data in parallel via the RcppParallel package. 
+#' @param featureFiles Character vector with the paths to the gff or genbank 
+#'   files
+#' @param fastaFiles Character vector with the paths to the fasta files
+#' @param genomeIds Optional vector with the uniqe identifiers for the 
+#'   genomes included in the analysis
+#' @param outDir Directory in witch to write the faa file with the translated
+#'   gene sequences from all genes.
+#' @return The environment containing a list of the genome features ("gfList"), 
+#'   vector of gene sequences ("geneSeqs"), unique gene ids ("geneIds"), 
+#'   path to the faa file written ("faaPath").
+#' @export
+#  -----------------------------------------------------------------------------
 
 CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
 {
@@ -18,7 +33,7 @@ CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
   # Initalize an environment to store the data on the genes. This will
   # be passed to further functions and iteratively be subset to only
   # include the genes contained in the alignment
-  genePtr = new.env()
+  geneEnv = new.env()
 
   # Add the names of the genomes included in the analysis  to the environmnet.
   # if they are missing, extract the name from the paths
@@ -26,7 +41,7 @@ CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
   {
     # Make the genome names by extracting the last element of the path
     # and removing the file extension.
-    genePtr$genomeNames = sapply( fastaFiles, ExtractGenomeNameFromPath )
+    geneEnv$genomeNames = sapply( fastaFiles, ExtractGenomeNameFromPath )
     
     # Get counts of the number of input vectors 
     argVecLen = c( length(featureFiles), length(fastaFiles) )
@@ -34,7 +49,7 @@ CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
   } else {
 
     # Add the genome ids to the envriroment that will be returned
-    genePtr$genomeNames = genomeIds
+    geneEnv$genomeNames = genomeIds
     
     # Get counts of the number of input vectors 
     argVecLen =
@@ -57,12 +72,12 @@ CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
   }
 
   # Check that all of the genome IDs are unique
-  isDuplicated = duplicated( genePtr$genomeNames )
+  isDuplicated = duplicated( geneEnv$genomeNames )
   if ( TRUE %in% isDuplicated )
   {
     stop(
       "There are duplicated genome ids: \n",
-      paste( genePtr$genomeNames[isDuplicated], collapse = ' ' ),
+      paste( geneEnv$genomeNames[isDuplicated], collapse = ' ' ),
       '\n'
       )
   }
@@ -72,13 +87,13 @@ CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
   faaPath = paste0( outDir, "allGenes.faa" )
 
   # Parse the data on the input genomes
-  CreateCognacRunData( genePtr, featureFiles, fastaFiles, faaPath )
+  CreateCognacRunData( geneEnv, featureFiles, fastaFiles, faaPath )
 
   # Add the fasta files and path to the parsed genome data
-  genePtr$fastaFiles = fastaFiles
-  genePtr$faaPath    = faaPath
+  geneEnv$fastaFiles = fastaFiles
+  geneEnv$faaPath    = faaPath
   
-  return( genePtr )
+  return( geneEnv )
 }
 
 # ------------------------------------------------------------------------------

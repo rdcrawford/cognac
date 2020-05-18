@@ -7,18 +7,18 @@
 # one copy and removes it from the dataset
 # ------------------------------------------------------------------------------
 
-FilterMultiCopyGenes = function( genePtr, copyNumTresh )
+FilterMultiCopyGenes = function( geneEnv, copyNumTresh )
 {
   # Set the threshold for defining single copy genes -- default to multi-copy
   # in less than 1 in 1000 genomes
   if ( missing(copyNumTresh) ) copyNumTresh = 0.001
 
   # Find the fraction of genomes where
-  nGenes   = length( genePtr$clustList )
-  nGenomes = length( genePtr$genomeNames )
+  nGenes   = length( geneEnv$clustList )
+  nGenomes = length( geneEnv$genomeNames )
   dupFrac  = sapply( seq(nGenes), function(i)
   {
-    numDuplicates = sum( table( genePtr$genomeIdList[[i]] ) != 1 )
+    numDuplicates = sum( table( geneEnv$genomeIdList[[i]] ) != 1 )
     return( numDuplicates / nGenomes )
   })
 
@@ -30,9 +30,9 @@ FilterMultiCopyGenes = function( genePtr, copyNumTresh )
   if ( FALSE %in% isSingleCopy )
   {
     cat("  -- Before filtering there were ", nGenes, "genes\n")
-    genePtr$clustList    = genePtr$clustList[ isSingleCopy ]
-    genePtr$genomeIdList = genePtr$genomeIdList[ isSingleCopy ]
-    genePtr$geneMat      = genePtr$geneMat[ , isSingleCopy ]
+    geneEnv$clustList    = geneEnv$clustList[ isSingleCopy ]
+    geneEnv$genomeIdList = geneEnv$genomeIdList[ isSingleCopy ]
+    geneEnv$geneMat      = geneEnv$geneMat[ , isSingleCopy ]
 
     cat(
       "  -- After filtering there are", sum(isSingleCopy), 
@@ -51,11 +51,11 @@ FilterMultiCopyGenes = function( genePtr, copyNumTresh )
       # cluster.
       for ( i in which( hasDuplication ) )
       {
-        isNotDuplicated = !duplicated( genePtr$genomeIdList[[ i ]] )
-        genePtr$clustList[[ i ]] =
-          genePtr$clustList[[ i ]][ isNotDuplicated ]
-        genePtr$genomeIdList[[ i ]] =
-          genePtr$genomeIdList[[ i ]][ isNotDuplicated ]
+        isNotDuplicated = !duplicated( geneEnv$genomeIdList[[ i ]] )
+        geneEnv$clustList[[ i ]] =
+          geneEnv$clustList[[ i ]][ isNotDuplicated ]
+        geneEnv$genomeIdList[[ i ]] =
+          geneEnv$genomeIdList[[ i ]][ isNotDuplicated ]
       }
     }
   }

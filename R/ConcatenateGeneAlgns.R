@@ -6,16 +6,15 @@
 # This function creates a new environment with the the sequences
 # of genes used as input to cd-hit. The unique gene ids
 # are also stored in a seperate vector
-# ------------------------------------------------------------------------------
 
-ConcatenateGeneAlgns = function( genePtr, outDir, runId )
+ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
 {
   # Make an output directory to store the mafft alignments
   if ( !file.exists(algnDir) ) system( paste("mkdir", algnDir) )
 
   # Generate the mafft alignments using multi-threading via future.apply
-  algnList = future_sapply( 1:length(genePtr$clustList) ,
-    function(i) AlgnGeneSeqs( genePtr, i, algnDir )
+  algnList = future_sapply( 1:length(geneEnv$clustList) ,
+    function(i) AlgnGeneSeqs( geneEnv, i, algnDir )
     )
 
   # Get the length of the alignments
@@ -29,11 +28,11 @@ ConcatenateGeneAlgns = function( genePtr, outDir, runId )
   algnList = algnList[ !isEmpty ]
 
   # Remove any genes that had no variation form the data
-  genePtr$clustList = genePtr$clustList[ !isEmpty ]
-  genePtr$genomeIdList = genePtr$genomeIdList[ !isEmpty ]
+  geneEnv$clustList = geneEnv$clustList[ !isEmpty ]
+  geneEnv$genomeIdList = geneEnv$genomeIdList[ !isEmpty ]
 
   # Generate a vector with the gene start positions in the alignment
-  genePtr$genePositions = algnLens[ 1 ]
+  geneEnv$genePositions = algnLens[ 1 ]
 
   # If there is more than one gene, create a vector wit the positions
   # of the gene ends in the alignment
@@ -41,13 +40,13 @@ ConcatenateGeneAlgns = function( genePtr, outDir, runId )
   {
     for ( i in 2:length( algnLens ) )
     {
-      genePtr$genePositions[ i ] =
-        genePtr$genePositions[ i - 1 ] + algnLens[ i ]
+      geneEnv$genePositions[ i ] =
+        geneEnv$genePositions[ i - 1 ] + algnLens[ i ]
     }
   }
 
   # Create the concatenated alignemtent sequence
-  concatAlgn = vector("character", length(genePtr$genomeNames) )
+  concatAlgn = vector("character", length(geneEnv$genomeNames) )
   for ( i in 1:length(algnList) )
   {
     if ( length(algnList[[i]]) != length(concatAlgn) )
@@ -55,7 +54,7 @@ ConcatenateGeneAlgns = function( genePtr, outDir, runId )
       stop( "Incorrect number of sequences in alignment ", i, "...\n" )
     }
 
-    if ( !identical( genePtr$genomeNames, names(algnList[[i]]) ) )
+    if ( !identical( geneEnv$genomeNames, names(algnList[[i]]) ) )
     {
       stop( "The alignment for gene ", i, " is in the wrong order...\n" )
     }
@@ -70,7 +69,7 @@ ConcatenateGeneAlgns = function( genePtr, outDir, runId )
   sink( concatGeneFa )
   for ( i in 1:length(concatAlgn) )
   {
-    cat('>', genePtr$genomeNames[i], '\n', concatAlgn[i], '\n', sep = '')
+    cat('>', geneEnv$genomeNames[i], '\n', concatAlgn[i], '\n', sep = '')
   }
   sink()
   

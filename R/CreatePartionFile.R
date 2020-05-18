@@ -3,10 +3,23 @@
 # 2020/04/13
 # Ryan D. Crawford
 # ------------------------------------------------------------------------------
-# This function creates the gene partition file used by RAxML
+#' @description 
+#' This is a function creates the gene partition file used by RAxML
+#' @details 
+#' This is a function that writes the alignmnet partition file used by RAxML
+#' to apply. Written in the format:
+#' DNA, peg.1=1-30
+#' DNA, peg.2=31-60
+#' @param algnEnv Environment created by congac that contains the 
+#' alignment data.
+#' @param outDir Directory to write the file to
+#' @param runId
+#' @param subModel
+#' @param subModel
+#' @return void 
+#' @export
 # ------------------------------------------------------------------------------
-
-CreatePartionFile = function( genePtr, outDir, runId, subModel, seqType )
+CreatePartionFile = function( algnEnv, outDir, runId, subModel, seqType )
 {
   CLUST_REPS     = 1
   GENE_LENS      = 2
@@ -17,7 +30,7 @@ CreatePartionFile = function( genePtr, outDir, runId, subModel, seqType )
   # Set the default substitution model if none was provided
   if ( missing(seqType) )
   {
-    colIdx = ncol( genePtr$geneData )
+    colIdx = ncol( algnEnv$geneData )
   } else if ( seqType == "DNA" ) {
     colIdx = DNA_PARTITIONS
   } else {
@@ -39,9 +52,9 @@ CreatePartionFile = function( genePtr, outDir, runId, subModel, seqType )
     cat(
       subModel,
       ", ",
-      genePtr$geneData[ i, CLUST_REPS ],
+      algnEnv$geneData[ i, CLUST_REPS ],
       " = ",
-      genePtr$geneData[ i, colIdx ],
+      algnEnv$geneData[ i, colIdx ],
       '\n',
       sep = ''
       )

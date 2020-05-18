@@ -15,15 +15,15 @@
 // [[Rcpp::export]]
 void ParseCdHit(
   const std::string &cdHitClstFile, // Path to the cd-hit results
-  Rcpp::Environment &genePtr, // Environment with  the data on all of the genes
+  Rcpp::Environment &geneEnv, // Environment with  the data on all of the genes
   bool isBinary, // If true, creates a binary matrix, false the percent ids
   int  minClustCount // Remove genes at low frequency in the cluster
   )
 {
   // This creates a cd-hit object with lists for the gene cluster data And
-  // a matrix of gene presence absence. "genePtr" is passed by reference And
+  // a matrix of gene presence absence. "geneEnv" is passed by reference And
   // updated with these attributes
-  CdHitParser cdHitParser( cdHitClstFile, isBinary, removeLowFreq, genePtr );
+  CdHitParser cdHitParser( cdHitClstFile, isBinary, removeLowFreq, geneEnv );
 }
 
 // -----------------------------------------------------------------------------

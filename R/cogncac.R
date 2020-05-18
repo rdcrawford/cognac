@@ -1,70 +1,76 @@
-# ------------------------------------------------------------------------------
-# cogncac: COre GeNe Alignement Concatenation
-# 2019/07/15
-# Ryan D. Crawford
-# ------------------------------------------------------------------------------
-# This function uses cd-hit data to identify core genes to
-# construct a concatenated gene alignment. A distance matrix created using
-# the amino acid alignments is then used to create a neighbor joining tree.
-# ------------------------------------------------------------------------------
-
+#  ----------------------------------------------------------------------------
+#' cogncac: Core Gene Alignement Concatenation
+#  2019/07/15
+#  Ryan D. Crawford
+#  -----------------------------------------------------------------------------
+#' @description 
+#'   The cognac function idetentifies shared genes to be used as phylogenetic
+#'   markers. Genes are aligned individually wth mafft and concatenates them
+#'   into a single alignment.
 #' @param fastaFiles A character vector with a fasta file for each genome 
 #' @param featureFiles A character vector with a gff3 or genbank files
 #'  for each genome.
 #' @param genomeIds Optional character vector with the unique ID for each 
-#' genome. If not supplied each genome is created by removing the file 
-#' extension from the fasta file.
+#'   genome. If not supplied each genome is created by removing the file 
+#'   extension from the fasta file.
+#' @param geneEnv Optional. Environment created by "CreateGeneDataEnv" this
+#'   allows a user to parse the genomic data ahead of time. This may be 
+#'   useful when troubleshooting parameters with respect to the alignment
+#'   or cd-hit clustering step.
 #' @param outDir Directory to write output files and temp files created by 
-#' cd-hit and mafft. Defaults to the current working directory.
+#'   cd-hit and mafft. Defaults to the current working directory.
 #' @param runId Optional string to prepend to the output files.
 #' @param minGeneNum An integer specifing the minmium number of genes to
-#' use in creating the alignment. Default: 1.
+#'   use in creating the alignment. Default: 1.
 #' @param outGroup Optional character vector of genomes IDs that are not used
-#' in selecting core genes. An out-group is useful for many phylogenetic 
-#' analysis, but the intersection of genes in all genomes in the analysis
-#' may be smaller if phylogenetically divergent genomes are included when 
-#' selecting core genes. This enables identification of a larger number of 
-#' core genes while still maintaining an outgroup for down-stream analysis.
+#'   in selecting core genes. An out-group is useful for many phylogenetic 
+#'   analysis, but the intersection of genes in all genomes in the analysis
+#'   may be smaller if phylogenetically divergent genomes are included when 
+#'   selecting core genes. This enables identification of a larger number of 
+#'   core genes while still maintaining an outgroup for down-stream analysis.
 #' @param maxMissGenes Optional double specifying what fraction of genes are
-#' permitted to be missing to be allowed to be included in the alignmnet. If
-#' an out-group is input these genomes are not removed.
+#'   permitted to be missing to be allowed to be included in the alignmnet.
+#'   If an out-group is input these genomes are not removed.
 #' @param coreGeneThresh Optional double specifying what fraction of genomes
-#' that a gene must occur in to be considered core. Defaults to 0.99.
+#'   that a gene must occur in to be considered core. Defaults to 0.99.
 #' @param copyNumTresh Optional double specifying what fraction of genomes
-#' that a gene can be duplicate in and remain in the analysis. If a gene
-#' is duplicated, the first gene is taken and used in the alignment. Defaults
-#' to 0.001 -- a gene can be duplicated in 1 in 1000 genomes. 
+#'   that a gene can be duplicate in and remain in the analysis. If a gene
+#'   is duplicated, the first gene is taken and used in the alignment.
+#'   Defaults to 0.001 -- a gene can be duplicated in 1 in 1000 genomes. 
 #' @param threadVal Number of threads availible. Defaults to all availible 
-#' threads. 
+#'   threads. 
 #' @param distMat Optional logical to create a distance matrix. If true, a
-#' distance matrix is calculated as the pairwise number of mutations 
-#' between genomes. Stored in the output environment as "distMat."
+#'   distance matrix is calculated as the pairwise number of mutations 
+#'   between genomes. Stored in the output environment as "distMat."
 #' @param njTree Optional logical to create a neighbor joining tree with ape.
-#' returned in the output environment as "njTree." Defaults to false.
+#'   returned in the output environment as "njTree." Defaults to false.
 #' @param revTranslate Optional logical to to convert the aa algiment to dna.
-#' Defaults to false.
+#'   Defaults to false.
 #' @param partitionFile Optional logical to create a partition file to input
-#' to RAxML
+#'   to RAxML
 #' @param subModel Optional string for the type of subsitiution model 
-#' for partition file
+#'   for partition file
 #' @param keepTempFiles Optional logical to keep any temporary files 
-#' generated by mafft of cd-hit. 
+#'   generated by mafft of cd-hit. 
 #' @param percId Optional double for the identity threshold for identifying
-#' orthologuous genes by cd-hit. See "-c" in the cd-hit manual. Defaults 
-#' to 0.7. 
+#'   orthologuous genes by cd-hit. See "-c" in the cd-hit manual. Defaults 
+#'   to 0.7. 
 #' @param algnCovgd Optional double for the maximium disparity in the lenght
-#' of the genes to be considered orthologous by cd-hit. See -aL" in the
-#' cd-hit manual. Defaults to 0.8.
+#'   of the genes to be considered orthologous by cd-hit. See -aL" in the
+#'   cd-hit manual. Defaults to 0.8.
 #' @param cdHitFlags # Optional string with parameters to pass to cd-hit to 
 #' define clusters aside from "-c" and "-aL" that can be used to define the
-#' clustering parameters.
+#'   clustering parameters.
 #' @return An envrioment with the alignmnet data. Variables included
-#' by default are "aaAlgnPath" and "metaData"
+#'   by default are "aaAlgnPath" and "metaData"
+#' @export
+#  -----------------------------------------------------------------------------
 
 cognac = function(
   fastaFiles,     # Fasta files for the input genomes
-  featureFiles, # Gff3 or genbank files for the input genomes
+  featureFiles,   # Gff3 or genbank files for the input genomes
   genomeIds,      # Vector of genomes to
+  geneEnv,        # Optional. Environment created by "CreateGeneDataEnv"
   outDir,         # Optional. Directory to write the output files
   runId,          # Optional. Run ID to appent to output files
   minGeneNum,     # Optional. Minimium number of genes to build the tree
@@ -91,10 +97,8 @@ cognac = function(
   if ( missing(outDir) )
   {
     outDir = ''
-  }
   # Make sure the output directory ends in a '/'
-  else if ( !grepl("/$", outDir) && outDir != '' )
-  {
+  } else if ( !grepl("/$", outDir) && outDir != '' ) {
     outDir = paste0( outDir, '/' )
   }
  
@@ -153,59 +157,72 @@ cognac = function(
     sep = ''
     )
   
-  # Parse the input files
+  # Parse the input files. This creates an environment that stores:
+  # genome ids, list of parsed gff files, a vector of amino acid sequences, 
+  # and a vector with the gene Ids. Additionally, the amino acid sequences
+  # are written to create the input file for cd-hit. 
   cat("\nStep 1: parsing the data on the input genomes\n")
-  genePtr = CreateGeneDataEnv( featureFiles, fastaFiles, genomeIds, tempDir )
+  if ( missing( geneEnv ) )
+    geneEnv = CreateGeneDataEnv( featureFiles, fastaFiles, genomeIds, tempDir )
   stepTime = GetSplit( stepTime )
   
   # Identify orthologous genes with cd-hit
   cat("\nStep 2: identifiy orthologues with cd-hit\n")
-  FindCogs( genePtr, tempDir, percId, algnCovg, threadVal, cdHitFlags )
+  FindCogs( geneEnv, tempDir, percId, algnCovg, threadVal, cdHitFlags )
   stepTime = GetSplit( startTime )
   
-  # Use the gene data in the "genePtr" to subset single copyt genes to
-  # those that occur as single copy. This function is void, and the clust list
-  # within the "genePtr" leaving only the single copy genes
+  # Find the copy number of each gene. Any gene that is present in 
+  # as multiple copies in greater than the "copyNumTresh" is removed 
+  # from the analysis.
   cat("\nStep 3: Filter for single copy genes\n")
-  FilterMultiCopyGenes( genePtr, copyNumTresh )
+  FilterMultiCopyGenes( geneEnv, copyNumTresh )
   stepTime = GetSplit( stepTime )
   
   # Use the cd-hit results to identify a set of core genes present in all of
   # the input genomes.
   cat("\nStep 4: Selecting genes to include in the alignment\n")
-  SelectAlgnGenes( genePtr, minGeneNum, coreGeneFrac, maxMissGenes, outGroup )
+  SelectAlgnGenes( geneEnv, minGeneNum, coreGeneFrac, maxMissGenes, outGroup )
   stepTime = GetSplit( stepTime )
   
   # Individually create a new fasta file for each gene and generate the
   # alignment each gene with mafft
-  cat("\nStep 6: Aligning and concatenating orthologous genes\n")
-  concatGeneFa = ConcatenateGeneAlgns( genePtr, outDir, runId )
+  cat("\nStep 5: Aligning and concatenating orthologous genes\n")
+  concatGeneFa = ConcatenateGeneAlgns( geneEnv, outDir, runId )
   stepTime = GetSplit( stepTime )
 
   # Create the environment with the objects to export
-  cat( "\nStep 7: Creating output files\n\n" )
+  cat( "\nStep 6: Creating output files\n\n" )
   algnEnv            = new.env()
-  algnEnv$metaData   = CreateGeneMetaData( genePtr, revTranslate )
+  algnEnv$geneData   = CreateGeneMetaData( geneEnv, revTranslate )
   algnEnv$aaAlgnPath = concatGeneFa
-  
+  stepTime = GetSplit( stepTime )
+  cat("Reverse translate:\n")
   # If requested, convert the AA alignment to DNA
   if ( revTranslate )
   {
-    concatGeneFa = ReverseTranslateAlgn( genePtr, concatGeneFa, outDir )
+    # Reverse translate the alignment and get the path to the newly 
+    # created nt alignment
+    concatGeneFa =
+      ReverseTranslateAlgn( geneEnv, concatGeneFa, outDir, runId )
+    
+    # Assign the path to the nt alignment to the output environment
     algnEnv$ntAlgnPath = concatGeneFa
   }
-
+  stepTime = GetSplit( stepTime )
+  
   # If requested, create a distance matrix with the
+  cat("Distance matrix:\n")
   if ( distMat )
-    algnEnv$distMat = CreateAlgnDistMat( concatGeneSeq )
-
+    algnEnv$distMat = CreateAlgnDistMat( concatGeneSeq, "shared", FALSE )
+  stepTime = GetSplit( stepTime )
+  
   # If requested, make a neighbor joining tree with ape
-  if ( njTree ) algnEnv$njTree = ape::nj( as.dist( algnEnv$distMat ) )
+  if ( njTree ) algnEnv$njTree = ape::nj( as.dist(algnEnv$distMat) )
 
   # If requested, write a partition file with the positions of each
   # gene in the a lignment
-  if ( partitionFile ) 
-    CreatePartionFile( genePtr, outDir, runId, subModel, seqType )
+  if ( partitionFile )
+    CreatePartionFile( geneEnv, outDir, runId, subModel, seqType )
   
   # Remove any temp files
   if ( !keepTempFiles ) system( paste("rm -r", tempDir) )

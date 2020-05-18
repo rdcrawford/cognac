@@ -9,7 +9,7 @@
 # ------------------------------------------------------------------------------
 
 FindCogs = function(
-  genePtr,   # Environment with the data on the genes
+  geneEnv,   # Environment with the data on the genes
   outDir,    # Directory to write Cd-Hit output files
   percId,    # Percent ID clustering threashold
   algnCovg,  # Percent coverage for the alignment
@@ -54,7 +54,7 @@ FindCogs = function(
 
   cdHitCmd = paste(
     "cd-hit",
-    "-i", genePtr$faaPath,    # Input file with the translated aa seqs
+    "-i", geneEnv$faaPath,    # Input file with the translated aa seqs
     "-o", cdHitGenesFileName, # Ouput
     "-c", percId              # Min percent identity in the gene seqs
     "-aL", algnCovg,          # Minimum disparity in the length of the seqs
@@ -69,8 +69,8 @@ FindCogs = function(
 
   # Assign the clust list and gene matrix to varibles in the
   # environment containing the gene data
-  minGeneNum = round( length(genePtr$genomeIds) * 0.70, 0 )
-  ParseCdHit( cdHitClstrFileName, genePtr, FALSE, minGeneNum )
+  minGeneNum = round( length(geneEnv$genomeIds) * 0.70, 0 )
+  ParseCdHit( cdHitClstrFileName, geneEnv, FALSE, minGeneNum )
 }
 
 # ------------------------------------------------------------------------------

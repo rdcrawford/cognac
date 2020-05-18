@@ -24,7 +24,7 @@ public:
     const std::string &cdHitClstFile, // Path to the cd-hit results
     bool isBinary,                    // Return binary matrix
     bool removeLowFreq,               // Remove low frequency genes
-    Rcpp::Environment &genePtr        // Environment to append results to
+    Rcpp::Environment &geneEnv        // Environment to append results to
     );
 
   // Create a list with the gene presence matrix and the list of
@@ -50,19 +50,19 @@ private:
 
   // Remove genes beneath the threshold -- 2 if < 1000 genomes
   // leff than 80%  oft the number of input genomes otherwise
-  bool RemoveLowFreqClusts( );
+  bool RemoveLowFreqClusts();
 
   // Create the lists of genes in each cluster
-  void CreateClustList( );
+  void CreateClustList();
 
   // Create a list of identites of the genes within each cluster
-  void CreateItentList( );
+  void CreateItentList();
 
   // Create a genome x gene matrix with the presene or absene of each cluster
-  Rcpp::NumericMatrix CreateBinaryMat(  );
+  Rcpp::NumericMatrix CreateBinaryMat();
 
   // Create a genome x gene matrix with the presene or absene of each cluster
-  Rcpp::NumericMatrix CreateIdentMat(  );
+  Rcpp::NumericMatrix CreateIdentMat();
 
   // Extract the name of the gene from the cd-hit entry
   std::string GetGeneName( const std::string &inStr);
