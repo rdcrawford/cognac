@@ -8,7 +8,8 @@
 //  Ryan D. Crawford
 //  05/15/2020
 //  ----------------------------------------------------------------------------
-//' Create Algnment Distance Matrix
+//' @name CreateAlgnDistMat
+//' @title  Create Algnment Distance Matrix
 //' @description
 //'   This function reads in the path to a multiple sequence alignment. The
 //'   pairwise alignment distances for each sequence are returned. The 

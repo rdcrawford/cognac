@@ -3,6 +3,7 @@
 # 2020/04/13
 # Ryan D. Crawford
 # ------------------------------------------------------------------------------
+#' Create Partion File
 #' @description 
 #' This is a function creates the gene partition file used by RAxML
 #' @details 
@@ -13,10 +14,9 @@
 #' @param algnEnv Environment created by congac that contains the 
 #' alignment data.
 #' @param outDir Directory to write the file to
-#' @param runId
-#' @param subModel
-#' @param subModel
-#' @return void 
+#' @param runId Run identifier appended to the output file
+#' @param subModel substitution model to be used
+#' @return void
 #' @export
 # ------------------------------------------------------------------------------
 CreatePartionFile = function( algnEnv, outDir, runId, subModel, seqType )

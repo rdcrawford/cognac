@@ -3,6 +3,8 @@
 #include <fstream>
 #include <algorithm>
 #include "CdHitParser.h"
+using namespace std;
+using namespace Rcpp;
 
 // -----------------------------------------------------------------------------
 // Parse CD Hit
@@ -14,13 +16,13 @@
 CdHitParser::CdHitParser(
   const std::string &cdHitClstFile, // Path to the cd-hit results
   bool isBinary,                    // Return binary matrix
-  int  minGeneNum,               // Remove low frequency genes
+  int clSizeThesh,                  // Remove low frequency genes
   Rcpp::Environment &geneEnv        // Environment to append results to
   )
 {
   genomeIds = Rcpp::as<std::vector<std::string> >( geneEnv[ "genomeNames" ] );
 
-  this->minGeneNum = minGeneNum;
+  this->clSizeThesh = clSizeThesh;
   // Open the cd-hit results for reading
   ifstream    ifs( cdHitClstFile.c_str() );
   std::string line;        // Currnt line in the text file
@@ -58,7 +60,7 @@ CdHitParser::CdHitParser(
   tailers.push_back( cdHitResults.size() - 1 );
 
   // If requested remove any low frequency clusters
-  if ( minGeneNum > 1 )
+  if ( clSizeThesh > 1 )
   {
     if (  !RemoveLowFreqClusts() )
       Rcpp::stop(
@@ -109,7 +111,7 @@ bool CdHitParser::RemoveLowFreqClusts( )
     clustSize = *tailerIt - *headerIt + 1;
 
     // If there are fewer than the required number of genes remove them
-    if ( clustSize < minGeneNum )
+    if ( clustSize < clSizeThesh )
     {
       // Erase the lines in the cd-hit results
       for ( int i = 0; i < clustSize; i++ )
@@ -180,7 +182,7 @@ void CdHitParser::CreateClustList( )
     for ( int i = *headerIt; i <= *tailerIt; i++ )
     {
       // Extract the name of the gene from the line in the results
-      string geneId = GetGeneName( *lineIt );
+      std::string geneId = GetGeneName( *lineIt );
 
       // Update the vectors in the gene id and genome ID
       clustIt->push_back( geneId );
@@ -268,7 +270,7 @@ Rcpp::NumericMatrix CdHitParser::CreateBinaryMat(  )
     R_CheckUserInterrupt();
   }
 
-  rownames( geneMat ) = wrap( genomeIds );
+  rownames( geneMat ) = Rcpp::wrap( genomeIds );
   return geneMat;
 }
 
@@ -304,7 +306,7 @@ Rcpp::NumericMatrix CdHitParser::CreateIdentMat(  )
     R_CheckUserInterrupt();
   }
 
-  rownames( geneMat ) = wrap( genomeIds );
+  rownames( geneMat ) = Rcpp::wrap( genomeIds );
   return geneMat;
 }
 

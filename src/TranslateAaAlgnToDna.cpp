@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <fstream>
+#include "Genome.h"
 using namespace Rcpp;
 using namespace std;
 
@@ -19,18 +20,16 @@ using namespace std;
 
 // [[Rcpp::export]]
 void TranslateAaAlgnToDna(
-  const Rcpp::DataFrame &gffData,
-  const vector<string>  &faPath,
-  const vector<int>     &genePositions,
-  const string          &genomeName,
-  const string          &aaAlgn,
-  const string          &outputFile
+  const Rcpp::DataFrame  &gffData,
+  std::string            &faPath,
+  const std::vector<int> &genePositions,
+  const std::string      &genomeName,
+  const std::string      &aaAlgn,
+  const std::string      &outputFile
   )
 {
   // ---- Constant Declarations ------------------------------------------------
 
-  const int ANNOT_ID  = 0; // Col index of annot IDs
-  const int GENE_NAME = 1; // Col index of the gene names
   const int CONTIG    = 2; // Col index of the contig index
   const int LEFT_POS  = 3; // Col index of Gene start positons
   const int RIGHT_POS = 4; // Col index of Gene end positions
@@ -40,17 +39,22 @@ void TranslateAaAlgnToDna(
 
   // Initailize a genome class objects with the genom features necessary
   // to parse the fasta file.
-  Genome genome( faPath, gffData[ STRAND ], gffData[ LEFT_POS ],
-    gffData[ RIGHT_POS ], gffData[ CONTIG ] );
+  vector<string> strand = gffData[ STRAND ];
+  vector<int>  start  = gffData[ LEFT_POS ];
+  vector<int>  end    = gffData[ RIGHT_POS ];
+  vector<int>  contig = gffData[ CONTIG ];
+
+  Genome genome( faPath, strand, start, end, contig );
 
   // Read in th fasta file
   genome.parseFasta();
 
-  ofstream ofs;           // Output file stream to write the nt alignment
-  string   seq;           // String to store the current nucleotide sequence
-  int      algnPos   = 0; // Current position in the aa alignment
-  int      genePos   = 0; // Position in the nucleotide sequence
-  int      alGeneIdx = 0; // Gene position in the amino acid alignment
+  std::ofstream ofs;           // Output file stream to write the nt alignment
+  std::string   seq;           // String to keep the current gene sequence
+  int           algnPos   = 0; // Current position in the aa alignment
+  int           algnLen   = aaAlgn.size();
+  int           genePos   = 0; // Position in the nucleotide sequence
+  int           alGeneIdx = 0; // Gene position in the amino acid alignment
 
   // ---- Create  vector with the end positions for each gene ------------------
 
@@ -59,7 +63,7 @@ void TranslateAaAlgnToDna(
 
   // For each gene find the right bound in the alignment. We need to keep track
   // of wherethe genes fall in order to correctly place the stop codons
-  for (int i = 0; i < genePositions.size(); i ++)
+  for ( unsigned int i = 0; i < genePositions.size(); i ++ )
   {
     geneEnd[ i ] = genePositions[ i ] - 1;
   }
@@ -68,7 +72,7 @@ void TranslateAaAlgnToDna(
 
   // Open the output file stream
   ofs.open( outputFile.c_str(), ios::out | ios::app );
-  if ( !fout.fail() ) Rcpp::stop( "Cannot write to file: ", outputFile );
+  if ( !ofs.fail() ) Rcpp::stop( "Cannot write to file: ", outputFile );
 
   // Write the header
   ofs << ">" << genomeName << endl;
@@ -78,7 +82,7 @@ void TranslateAaAlgnToDna(
 
   // Iterate along the alignment and place the codons and gaps in the nt
   // alignment in accordance with the aa alignment
-  while ( algnPos < aaAlgn.size() )
+  while ( algnPos < algnLen )
   {
     // Write the codon correpsonding to thecurrent position in the alignment
     if ( aaAlgn[ algnPos] == '-' )
@@ -105,10 +109,8 @@ void TranslateAaAlgnToDna(
       if ( genePos != 0 )
       {
         // ofs << seq.substr( genePos, 3 );
-        bool isUpdated = genome.getGeneSeq( seq );
+        genome.getGeneSeq( seq );
         genePos = 0;
-
-        gCount ++;
 
       } else {
 

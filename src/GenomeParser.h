@@ -1,8 +1,10 @@
 // [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::plugins(cpp11)]]
-#include <Rcpp.h>
 #include "Genome.h"
-using namespace std;
+#include <RcppParallel.h>
+#include <Rcpp.h>
+using namespace Rcpp;
+using namespace RcppParallel;
 
 // -----------------------------------------------------------------------------
 // GenomeParser
@@ -14,7 +16,9 @@ using namespace std;
 // function. Provides the functionally to parse
 // -----------------------------------------------------------------------------
 
-struct GenomeParser : public worker
+#ifndef _GENOME_PARSER_
+#define _GENOME_PARSER_
+struct GenomeParser : public Worker
 {
   // Ctor. Gives the reference to the vector of genome class objects
   // to be parsed.
@@ -26,10 +30,10 @@ struct GenomeParser : public worker
 
   // This function will be called inside tbb::parallel_for.
   // Iterates over the input range and parses the genomes
-  void operator()( tbb::blocked_range< int > & range )
+  void operator()( std::size_t begin, std::size_t end )
   {
     // Loop over the input range and parse the genome class objects
-    for ( int i = range.begin(); i < range.end(); ++i )
+    for ( auto i = begin; i < end; ++i )
     {
       // Read in and parse the fasta and gff files
       genomeData[ i ].parseGenome();
@@ -37,10 +41,12 @@ struct GenomeParser : public worker
       // Translate the amino acid sequences
       if ( !genomeData[ i ].translateSeqs() )
         Rcpp::stop(
-          "Translating genes for ", genomeData[i].getGenomeId(), " failed"
+          // "Translating genes for ", genomeData[i].getGenomeId(), " failed"
+          "Translate failed"
           );
     }
   }
 };
+#endif
 
 // -----------------------------------------------------------------------------

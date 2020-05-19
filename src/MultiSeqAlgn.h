@@ -1,6 +1,9 @@
+// [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
+#include <RcppParallel.h>
 #include "BioSeq.h"
+using namespace RcppParallel;
 
 // -----------------------------------------------------------------------------
 // MultiSeqAlgn
@@ -8,7 +11,7 @@
 // 05/11/2020
 // -----------------------------------------------------------------------------
 // This class provides function for parsing and manipulating multiple sequence
-// alignments. Functionality is provided to remove gaps from the alignment 
+// alignments. Functionality is provided to remove gaps from the alignment
 // to retrieve the core genome. Then a distance matrix can be calculated
 // with the paiwise distances between the sequences in the alignmnet
 // -----------------------------------------------------------------------------
@@ -25,7 +28,7 @@ public:
   { ; }
 
   // Create a distance matrix from
-  Rcpp::NumericMatrix createDistMat( const &std::string distType );
+  Rcpp::NumericMatrix createDistMat( const std::string & distType );
 
   // This function reads in the fasta file containing the msa and makes sure
   // the file is valid for downstream analysis
@@ -38,7 +41,7 @@ public:
 private:
 
   // Vector of iterators that each point to a sequence in the MSA
-  std::vector< std::string::iterator > strIts;
+  std::vector< std::string::iterator > seqIts;
 
   // This function iterates over sequence in the  alignment positions until a
   // gap is found. If a gap is present at this position in the alignment,
@@ -48,6 +51,8 @@ private:
   // Create a vector with iterators to each sequence in the alignment
   void getSeqIterators();
 
+  // The length of the msa
+  unsigned int seqLen;
 };
 #endif
 

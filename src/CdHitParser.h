@@ -23,7 +23,7 @@ public:
   CdHitParser(
     const std::string &cdHitClstFile, // Path to the cd-hit results
     bool isBinary,                    // Return binary matrix
-    bool removeLowFreq,               // Remove low frequency genes
+    int  clSizeThesh,                 // Remove low frequency genes
     Rcpp::Environment &geneEnv        // Environment to append results to
     );
 
@@ -43,7 +43,7 @@ private:
   std::vector<int>         tailers;      // Position of the cluster end
 
   // Minimium number of genes in a cluster to keep
-  int minGeneNum
+  int clSizeThesh;
 
   // Vecotr containing the names of all of the genomes in the analysis
   std::vector< std::string > genomeIds;
@@ -76,7 +76,7 @@ private:
   // Input a vector of genomes and a genome name and return the
   // index of the genome name in the vector. Returns -1 if the
   // genome name is not found
-  int GetGenomeIdx( const string &name );
+  int GetGenomeIdx( const std::string &name );
 };
 #endif
 

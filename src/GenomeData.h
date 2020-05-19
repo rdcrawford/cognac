@@ -1,5 +1,4 @@
 #include "Genome.h"
-#include "GenomeParser.h"
 
 // -----------------------------------------------------------------------------
 // GenomeData
@@ -33,6 +32,10 @@ public:
   // Write the amino acid sequences to an faa file
   void writeFaa( std::string faaPath );
 
+  // Create a list of dataframes containing the parsed genome
+  // features
+  Rcpp::List createGeneDataFrames();
+
 private:
 
   // This is a vector of genom class objects
@@ -54,7 +57,7 @@ private:
   void countNumGenes();
 
   // Create the concatenated gene sequences with the gene ids
-  void concatenateGenneVecs();
+  void concatenateGeneVecs();
 };
 #endif
 

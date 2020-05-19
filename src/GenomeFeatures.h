@@ -22,30 +22,30 @@ class GenomeFeatures
 public:
 
   // Default ctor
-  GenomeFeatures( )
+  GenomeFeatures()
   { ; }
 
-  GenomeFeatures( const std::string &gffPath, const std::string &genomeId ):
-    gffPath( gffPath ), genomeId( genomeId )
+  GenomeFeatures( const std::string &gfPath, const std::string &genomeId ):
+    gfPath( gfPath ), genomeId( genomeId )
   { ; }
 
   // Ctor: takes the relevant columns from the gff for parsing fasta files.
   // Other attributes remain empty. Might be a bad idea
-  GenomeFeatures( vector<char> strand, vector<int> startPos,
+  GenomeFeatures( vector<string> strand, vector<int> startPos,
     vector<int> endPos, vector<int> contig ):
     strand( strand ), startPos( startPos ),
     endPos( endPos ), contig( contig )
   { ; }
 
   // Dtor: does nothing
-  ~GenomeFeatures( )
+  ~GenomeFeatures()
   { ; }
 
   // Return the number of genes
   int getNumGenes();
 
   // Parse the gff file
-  bool parseGff( BioSeq *wgs );
+  bool parseGfs( BioSeq *wgs );
 
   // Create the data-frame to be read into R
   Rcpp::DataFrame createGeneData();
@@ -64,16 +64,16 @@ private:
   // Allow the genome class acess to the features to facilitate parsing genes
   friend class Genome;
 
+  // Path to the gff file
+  std::string gfPath;
+
   // The name assigned to this genome
   std::string genomeId;
-
-  // Path to the gff file
-  std::string gffPath;
 
   // Vectors containing the relevant columns of the gff file
   std::vector< std::string > featId;
   std::vector< std::string > description;
-  std::vector< char >        strand;
+  std::vector< string >      strand;
   std::vector< int >         startPos;
   std::vector< int >         endPos;
   std::vector< int >         contig;

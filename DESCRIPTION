@@ -1,0 +1,27 @@
+Package: cognac
+Type: Package
+Title: Core Gene Alignment Concatenation
+Version: 1.0
+Date: 2020-05-18
+Author: Ryan D. Crawford
+Maintainer: Your Name <rcrawfo@umich.edu>
+Description: Implimention of a method to create a concatenated gene alignment 
+   of phylogenetic marker genes in R with integration of c++ via Rcpp and
+   multi-threadding enabled with tbb via RcppParallel, and in R via the 
+   future package. Genomic data is input and the coding sequences are 
+   extracted and translated. CD-HIT is used to identify orthologous genes,
+   and common phylogenetic marker genes are identified. These genes are then 
+   aligned with mafft individually and the algnments are then concatenated.
+   Optionally the alignment can then be reverse translated to create a 
+   nucleotide alignment.
+License: GPL (>= 2)
+Imports: 
+    Rcpp (>= 1.0.3), 
+    RcppParallel (>= 4.4.4),
+    future (>= 1.15.1),
+    future.apply(>= 1.3.0),
+    ape(>= 5.3)
+LinkingTo: Rcpp, RcppParallel
+SystemRequirements: GNU make
+Encoding: UTF-8
+RoxygenNote: 7.1.0

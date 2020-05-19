@@ -12,13 +12,13 @@ using namespace std;
 // 05/12/2020
 // -----------------------------------------------------------------------------
 
-bool GenomeFeatures::parseGff( BioSeq *wgs )
+bool GenomeFeatures::parseGfs( BioSeq *wgs )
 {
   ifstream    gff;
   std::string line;
 
   // Open the input stream
-  gff.open( gffPath.c_str() );
+  gff.open( gfPath.c_str() );
   if ( !gff.is_open() ) return false;
 
   // Read in the file line by line
@@ -40,11 +40,15 @@ bool GenomeFeatures::parseGff( BioSeq *wgs )
   return true;
 }
 
+int GenomeFeatures::getNumGenes()
+{
+  return numGenes;
+}
 std::string GenomeFeatures::getDescription( std::string attributes )
 {
   // Find the position of the delimiter in the target string and subset the
   // string
-  int start = attributes.find( "Name=" );
+  unsigned int start = attributes.find( "Name=" );
 
   // If the name was not found, look for a product ID
   if ( start == string::npos )
@@ -59,14 +63,14 @@ std::string GenomeFeatures::getDescription( std::string attributes )
   }
 
   // Find the end of the description
-  int end = attributes.find( ";", start );
+  unsigned int end = attributes.find( ";", start );
   if ( end == string::npos ) end = attributes.length();
 
   // Get the substring corresponding to the descrition
   string description = attributes.substr( start, end - start );
 
   // Check if there is a note in the attributes
-  int noteStart = attributes.find( "Note=" );
+  unsigned int noteStart = attributes.find( "Note=" );
   if ( noteStart == string::npos ) return description;
   else noteStart += 5;
 
@@ -85,10 +89,10 @@ bool GenomeFeatures::parseGffEntry( const std::string &line, BioSeq *wgs )
   string       method;
   string       type;
   string       attributes;
+  string         fStrand;
   int          fStart;
   int          fEnd;
   char         whoKnows;
-  char         fStrand;
   int          noIdea;
   int          contIdx;
 
@@ -158,9 +162,9 @@ bool GenomeFeatures::setGff(
   std::string gffPath, const std::string &genomeId, BioSeq *wgs
   )
 {
-  this->gffPath = gffPath;
+  this->gfPath   = gfPath;
   this->genomeId = genomeId;
-  return parseGff( wgs );
+  return parseGfs( wgs );
 }
 
 // -----------------------------------------------------------------------------

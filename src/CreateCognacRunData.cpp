@@ -18,7 +18,7 @@
 void CreateCognacRunData(
   Rcpp::Environment                &geneEnv, // R environment to be updated
   const std::vector< std::string > &gfPaths, // Paths to the gff files
-  const std::vector< std::string > &faPaths  // Paths to the fasta files
+  const std::vector< std::string > &faPaths, // Paths to the fasta files
   const std::string                &faaPath  // Paths to the faa to create
   )
 {
@@ -26,7 +26,7 @@ void CreateCognacRunData(
   std::vector< std::string > genomeIds = geneEnv[ "genomeIds" ];
 
   // Intialize a vector of genome class objects to parse
-  GenomeData genomeData( gffPaths, faPaths, genomeIds );
+  GenomeData genomeData( gfPaths, faPaths, genomeIds );
 
   // Write the gene sequences to an faa file to be the input for cd-hit
   genomeData.writeFaa( faaPath );

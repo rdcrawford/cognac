@@ -56,7 +56,7 @@ FindCogs = function(
     "cd-hit",
     "-i", geneEnv$faaPath,    # Input file with the translated aa seqs
     "-o", cdHitGenesFileName, # Ouput
-    "-c", percId              # Min percent identity in the gene seqs
+    "-c", percId,             # Min percent identity in the gene seqs
     "-aL", algnCovg,          # Minimum disparity in the length of the seqs
     "-T",  threadVal,         # Number of threads
     "-n",  wordSize,          # Size word to particion sequences into
@@ -70,7 +70,7 @@ FindCogs = function(
   # Assign the clust list and gene matrix to varibles in the
   # environment containing the gene data
   minGeneNum = round( length(geneEnv$genomeIds) * 0.70, 0 )
-  ParseCdHit( cdHitClstrFileName, geneEnv, FALSE, minGeneNum )
+  ParseCdHit( cdHitClstrFileName, FALSE, minGeneNum, geneEnv )
 }
 
 # ------------------------------------------------------------------------------

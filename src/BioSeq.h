@@ -64,8 +64,9 @@ public:
 
 private:
 
-  // Allow access from genome class
+  // Allow access from genome class and msa class
   friend class Genome;
+  friend class MultiSeqAlgn;
 
   // The path to the fasta file corresponding to this genome sequence
   std::string faPath;
@@ -78,6 +79,9 @@ private:
 
   // Parse the fasta header to get the contig names
   std::string getSeqName( std::string &faHeader );
+
+  // Convert the sequence to upper case
+  void convertToUper();
 
   // Iterator to keep track of the current position in the vector
   std::vector< std::string >::iterator curSeqName;

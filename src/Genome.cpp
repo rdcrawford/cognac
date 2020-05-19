@@ -22,8 +22,8 @@ void Genome::parseGenome()
     Rcpp::stop( "Failed parsing fasta file: ", faPath );
 
   // Parse the relevant attributes of the gff file to the component vectors
-  if ( !parseGff( this ) )
-    Rcpp::stop( "Failed parsing gff file: ", gffPath );
+  if ( !parseGfs( this ) )
+    Rcpp::stop( "Failed parsing gff file: ", gfPath );
 }
 
 bool Genome::parseGenome(
@@ -36,18 +36,12 @@ bool Genome::parseGenome(
   return setGff( gffPath, genomeId, this );
 }
 
-// Ctor: takes the relevant columns from the gff
-GenomeFeatures( const vector<string> faPath, vector<string> strand,
-  vector<int> startPos, vector<int> endPos, vector<int> contig ):
-  BioSeq( faPath ), GenomeFeatures(
-{ ; }
-
 // Update the string passed by reference to that of the current gene.
 // If the sequnce was updated, return true.
 bool Genome::getGeneSeq( std::string &seq )
 {
   // Get the sequence at the coordinates of this entry in the gff file
-  isUpdated =
+  bool isUpdated =
     getSeqAtCoord( contig[ gIdx ], startPos[ gIdx ], endPos[ gIdx ], seq );
 
   // If these were not valid coordinates, return false indicating that
@@ -60,8 +54,7 @@ bool Genome::getGeneSeq( std::string &seq )
   }
 
   // If this is the reverse strand, get the reverse compliment
-  if ( strand[ gIdx ] == "-" ) getReverseCompliment( seq );
-
+  if ( strand[ gIdx ].compare("=") == 0 ) getReverseCompliment( seq );
   // Increment the index for the next gene
   gIdx ++;
 
@@ -75,7 +68,7 @@ void Genome::getReverseCompliment( std::string &sequence )
   reverse( sequence.begin(), sequence.end() );
 
   // Iterate over the sequence and substiture the complementary base
-  for (int i = 0; i < sequence.length(); i ++)
+  for ( unsigned int i = 0; i < sequence.length(); i ++ )
   {
     if      ( sequence[i] == 'A' ) sequence[i] = 'T';
     else if ( sequence[i] == 'T' ) sequence[i] = 'A';
@@ -98,7 +91,6 @@ bool Genome::translateSeqs()
 
   // Allocate a vector with the number of genes
   aaSeqs.reserve( getNumGenes() );
-  auto it = aaSeqs.begin();
 
   // Iterate over all of the genes
   while ( gIdx < featId.size() )
@@ -123,7 +115,7 @@ std::vector< std::string > Genome::getAaSeqs()
 }
 
 // Returns a vector to the translate gene sequences
-std::vector< std::string > *getAaSeqRef()
+std::vector< std::string > *Genome::getAaSeqRef()
 {
   return & aaSeqs;
 }

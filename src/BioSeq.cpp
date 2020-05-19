@@ -31,7 +31,7 @@ bool BioSeq::parseFasta( )
     {
       seqIdx ++; // Advance the couter to the current contig
       // Parse the line to get the name of the contig
-      seqNames.push_back( getseqName( line ) );
+      seqNames.push_back( getSeqName( line ) );
 
       // Create an empty contig to add sequences to
       seqs.push_back( "" );
@@ -45,9 +45,9 @@ bool BioSeq::parseFasta( )
   }
 
   ifs.close();
-  maxContig = seqIdx;
+  maxSeqIdx = seqIdx;
   curSeqName = seqNames.begin();
-  convertToUper()
+  convertToUper();
   return true;
 }
 
@@ -73,7 +73,7 @@ bool BioSeq::parseFasta( std::vector< std::string > &faSeq )
       seqIdx ++; // Advance the couter to the current contig
 
       // Parse the line to get the name of the contig
-      seqNames.push_back( getseqName( *line ) );
+      seqNames.push_back( getSeqName( *line ) );
 
       // Create an empty contig to add sequences to
       seqs.push_back( "" );
@@ -85,8 +85,14 @@ bool BioSeq::parseFasta( std::vector< std::string > &faSeq )
     }
   }
   ifs.close();
-  convertToUper()
+  convertToUper();
   return true;
+}
+
+// Create a vector with the names of the contigs including the fasta headers
+std::vector< std::string > BioSeq::getSeqNames()
+{
+  return seqNames;
 }
 
 void BioSeq::convertToUper()
@@ -96,7 +102,8 @@ void BioSeq::convertToUper()
   // transform the entire string to uppercase
   if ( std::islower( seqs[0][0] ) )
   {
-    transform( seqs.begin(), seqs.end(), seqs.begin(), ::toupper);
+    for ( auto &seq : seqs )
+      transform( seq.begin(), seq.end(), seq.begin(), ::toupper);
   }
 }
 
@@ -112,11 +119,11 @@ std::string BioSeq::getSeqName( std::string &faHeader )
   faHeader.erase( 0, 1 );
 
   // If the fasta header starts with accn, delete it
-  int accnPos = faHeader.find( "accn|" );
+  unsigned int accnPos = faHeader.find( "accn|" );
   if ( accnPos != string::npos ) faHeader.erase( 0, accnPos + 5 );
 
   // Find the position of the first space.
-  int spacePos = faHeader.find( ' ' );
+  unsigned int spacePos = faHeader.find( ' ' );
 
   // If there are no spaces, return the header as is
   if ( spacePos == string::npos ) return faHeader;
@@ -132,15 +139,9 @@ std::vector< std::string > BioSeq::getSeqs( )
   return seqs;
 }
 
-std::vector< std::string > BioSeq::getNumSeqs()
+int BioSeq::getNumSeqs() const
 {
-  return seqNames;
-}
-
-// Returns the count of the seqs for this genome
-int BioSeq::getNumContigs() const
-{
-  return seqNames.size();
+  return maxSeqIdx;
 }
 
 // Find which contig
@@ -173,7 +174,7 @@ bool BioSeq::getSeqAtCoord(
   )
 {
   // Check that this is a contig in this file
-  if ( seqIdx > maxContig ) return false;
+  if ( seqIdx > maxSeqIdx ) return false;
 
   // Check that the requested direction is correct
   if ( startPos > endPos ) return false;

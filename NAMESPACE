@@ -1,0 +1,7 @@
+useDynLib(cognac, .registration=TRUE)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
+export(CreateGeneDataEnv)
+export(CreatePartionFile)
+export(ReverseTranslateAlgn)
+export(cognac)

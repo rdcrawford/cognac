@@ -2,8 +2,10 @@
 // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
 #include "BioSeq.h"
+#include <RcppParallel.h>
 #include "MultiSeqAlgn.h"
 #include "MsaDistance.h"
+using namespace RcppParallel;
 
 // -----------------------------------------------------------------------------
 // MultiSeqAlgn
@@ -11,26 +13,22 @@
 // 05/11/2020
 // -----------------------------------------------------------------------------
 
-Rcpp::NumericMatrix MultiSeqAlgn::createDistMat( const &std::string distType )
+Rcpp::NumericMatrix MultiSeqAlgn::createDistMat( const std::string & distType )
 {
   // Allocate the matrix to store the differences between aligned
   // sequences we will return
-  Rcpp::NumericMatrix distMat( seqs.size(), seqs.size() );
+  Rcpp::NumericMatrix distMat( getNumSeqs(), getNumSeqs() );
 
   // Create the functor
-  auto func =  msaDistance( seqs, distMat, distType );
-
-  // To use Intel TBB we first have to create a range object. In this case
-  // we want to parse all genomes in the vector
-  tbb::blocked_range< int > range( 0, seqs.size() );
+  MsaDistance msaDistance( seqs, distMat, distType );
 
   // Call tbb::parallel_for, the code in the functor will be executed
   // on the availible number of threads.
-  tbb::parallel_for( range, func );
+  parallelFor( 0, getNumSeqs(), msaDistance );
 
-  CharacterVector names = Rcpp::wrap( seqNames );
-  rownames( distMat )   = names;
-  colnames( distMat )   = names;
+  Rcpp::CharacterVector names = Rcpp::wrap( seqNames );
+  rownames( distMat )         = names;
+  colnames( distMat )         = names;
 
   // Set the row and column names of the matirx and Return
   return distMat;
@@ -40,10 +38,11 @@ Rcpp::NumericMatrix MultiSeqAlgn::createDistMat( const &std::string distType )
 // the file is valid for downstream analysis
 void MultiSeqAlgn::parseMsa()
 {
-  if ( ! parseFasta() ) Rcpp::stop("Unable to open the alignment for reading\n")
+  if ( ! parseFasta() )
+   Rcpp::stop("Unable to open the alignment for reading\n");
 
   // Find the size of the alignment
-  seqLen = seqs[0].size();
+  this->seqLen = seqs[0].size();
 
   // Make sure that this alignment contains sequences
   if ( !seqLen )
@@ -51,9 +50,6 @@ void MultiSeqAlgn::parseMsa()
     Rcpp::stop( "There are no sequences in this alignment...\n" );
   }
 
-  // Iterate over the alignment and ensure that all of the sequences are
-  // the same length. If not, throw and error.
-  seqLen = msa[0].size();
   for ( auto it = seqs.begin(); it != seqs.end(); it++ )
   {
     // If this is not the same size as the first alignment, throw an error
@@ -88,12 +84,12 @@ bool MultiSeqAlgn::findGapPosition( )
 void MultiSeqAlgn::getSeqIterators()
 {
   // Allocate sufficient space for each sequence in the alignment
-  strIts.reserve( seqs.size() );
+  seqIts.reserve( seqs.size() );
 
   // Iterate over the alignment and get a pointer to the start of each
   // sequence in the alginment
   for ( auto it = seqs.begin(); it != seqs.end(); it++ )
-    strIts.push_back( it->begin() );
+    seqIts.push_back( it->begin() );
 }
 
 // Iterate over each position in the alignment and remove any position with
@@ -105,8 +101,8 @@ void MultiSeqAlgn::removeGaps()
 
   // Get pointers to the start and end of the alignment to keep track
   // of the current position in the alignment
-  auto algnPos = strIts[0].begin();
-  auto algnEnd = strIts[0].end();
+  auto algnPos = seqs[0].begin();
+  auto algnEnd = seqs[0].end();
 
   // Iterate over each position in the alignment
   while ( algnPos != algnEnd )
@@ -114,13 +110,13 @@ void MultiSeqAlgn::removeGaps()
     // If there is a gap at the curret position in the algnment, remove it
     if ( findGapPosition() )
     {
-      for ( int i = 0; i < seqs.size(); i ++ )
-        seqs[ i ].erase( strIts[i] );
+      for ( unsigned int i = 0; i < seqs.size(); i ++ )
+        seqs[ i ].erase( seqIts[i] );
     }
     // If there is not a gap advance to the next position
     else
     {
-      for ( auto & it : strIts ) ++it;
+      for ( auto & it : seqIts ) ++it;
     }
     algnPos ++;
     R_CheckUserInterrupt();

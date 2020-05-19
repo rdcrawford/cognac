@@ -1,5 +1,6 @@
 // [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::plugins(cpp11)]]
+#include "GenomeData.h"
 #include "Genome.h"
 #include "GenomeParser.h"
 #include <RcppParallel.h>
@@ -22,7 +23,7 @@ GenomeData::GenomeData(const std::vector< std::string > &gffPaths,
   const std::vector< std::string > &genomeIds)
 {
   // Initialize the vector of genome class objects
-  for ( int i = 0; i < gffPaths.size(); i++ )
+  for ( unsigned int i = 0; i < gffPaths.size(); i++ )
     genomeData.push_back( Genome( gffPaths[i], faPaths[i], genomeIds[i] ) );
 
   // Parse the data
@@ -30,36 +31,6 @@ GenomeData::GenomeData(const std::vector< std::string > &gffPaths,
 
   // Count the total number of genes that are in this dataset
   countNumGenes();
-}
-
-// Value for ctor for gff files with the
-GenomeData::GenomeData( const std::vector< std::string > &gffPaths,
-  const std::vector< std::string > &genomeIds)
-{
-  // Initialize the vector of genome class objects
-  for ( int i = 0; i < gffPaths.size(); i++ )
-    genomeData.push_back( Genome( gffPaths[i], faPaths[i], genomeIds[i] ) );
-
-  // Parse the data
-  parseGenomeData();
-
-  // Count the total number of genes that are in this dataset
-  countNumGenes();
-}
-
-// Value ctor for gbk files
-GenomeData::GenomeData(const std::vector< std::string > &gbkPaths,
-  const std::vector< std::string > &faPaths,
-  const std::vector< std::string > &genomeIds)
-{
-  // Parse the data: read in the genome features and genome sequences
-  parseGenomeData();
-
-  // Count the total number of genes that are in this dataset
-  countNumGenes();
-
-  // Concatenate the gene sequences
-  concatenateGeneSeqs()
 }
 
 // Parse the genome data using tbb parallel_for
@@ -67,21 +38,21 @@ void GenomeData::parseGenomeData()
 {
   // To use Intel TBB we first have to create a range object. In this case
   // we want to parse all genomes in the vector
-  tbb::blocked_range< int > range( 0, genomeData.size() );
+  tbb::blocked_range< std::size_t > range( 0, genomeData.size() );
 
   // We have to create a temporary instance of the functor class for the
   // Genome parser. The 'func' object is a struct that behaves like a function
-  auto func = GenomeParser( genomeData );
+  // GenomeParser func( genomeData );
 
   // Call tbb::parallel_for, the code in the functor will be executed
   // on the availible number of threads.
-  tbb::parallel_for( range, func );
+  // tbb::parallel_for( range, func );
 }
 
 
 // Return the anino acid sequences for all of the input genomes
 // Create the concatenated gene sequences with the gene ids
-void GenomeData::concatenateGenneVecs();
+void GenomeData::concatenateGeneVecs()
 {
   // Allocate space for the total number of genes. This is important
   // because the vector will be very large
@@ -127,11 +98,13 @@ std::vector< std::string > GenomeData::getGeneIds()
 // Write the amino acid sequences to an faa file
 void GenomeData::writeFaa( std::string faaPath )
 {
-  ofstresm ofs.open( faaPath.c_str() );
+  // Initialize the output file stream and open for writing
+  std::ofstream ofs;
+  ofs.open( faaPath.c_str() );
 
-  for ( int i = 0; i < aaSeqs.size(); i++ )
+  for ( unsigned int i = 0; i < aaSeqs.size(); i++ )
   {
-    ofs >> '>' >> geneIds[i] >> endl >> aaSeqs[i] >> endl;
+    ofs << ">" << geneIds[i] << endl << aaSeqs[i] << endl;
   }
 }
 
@@ -142,6 +115,20 @@ void GenomeData::countNumGenes()
 
   for ( auto it = genomeData.begin(); it != genomeData.end(); it++ )
     numGenes += it->getNumGenes();
+}
+
+// Create a list of dataframes containing the parsed genome
+// features
+Rcpp::List GenomeData::createGeneDataFrames()
+{
+  // Initialize the list to output
+  Rcpp::List gfList( genomeData.size() );
+
+  // For each genome, create a data frame with the features
+  for ( unsigned int i = 0; i < genomeData.size(); i++ )
+    gfList[i] = genomeData[i].createGeneData();
+
+  return gfList;
 }
 
 // -----------------------------------------------------------------------------

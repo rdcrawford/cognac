@@ -32,7 +32,7 @@ public:
     BioSeq( faPath ), GenomeFeatures( gffPath, genomeId )
   { ; }
 
-  Genome( const std::string &faPath, vector<char> strand,
+  Genome( const std::string &faPath, vector<string> strand,
     vector<int> startPos, vector<int> endPos, vector<int> contig ):
     BioSeq( faPath ), GenomeFeatures( strand, startPos, endPos, contig )
   { ; }
@@ -41,7 +41,7 @@ public:
   // and a string corresponding to a gene sequence to be updated, both passed
   // by reference. The current gene index is incremented with each function
   // call and the seq variable is updated to
-  bool getGeneSeq( string &seq );
+  bool getGeneSeq( std::string &seq );
 
   // Parse the inut files
   void parseGenome();
@@ -64,7 +64,7 @@ public:
 private:
 
   // Integer to keep track of the current gene
-  int gIdx = 0;
+  unsigned int gIdx = 0;
 
   // Vector of amino acid sequences
   std::vector< std::string> aaSeqs;
