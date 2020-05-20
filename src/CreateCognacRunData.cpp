@@ -23,7 +23,7 @@ void CreateCognacRunData(
   )
 {
   // Retrieve the genome names from the environment
-  std::vector< std::string > genomeIds = geneEnv[ "genomeIds" ];
+  std::vector< std::string > genomeIds = geneEnv[ "genomeNames" ];
 
   // Intialize a vector of genome class objects to parse
   GenomeData genomeData( gfPaths, faPaths, genomeIds );
@@ -34,7 +34,7 @@ void CreateCognacRunData(
   // Parse the genome features to a data frames
   geneEnv.assign( "gfList", genomeData.createGeneDataFrames() );
   geneEnv.assign( "geneSeqs", genomeData.getAaSeqs() );
-  geneEnv.assign( "geneIds", genomeData.getAaSeqs() );
+  geneEnv.assign( "geneIds", genomeData.getGeneIds() );
 }
 
 // -----------------------------------------------------------------------------

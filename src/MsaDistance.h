@@ -26,13 +26,13 @@ struct MsaDistance : public Worker
   // can be automatically converted to from the Rcpp matrix type). Additionally
   // The integer indicating the type of function to sue
   MsaDistance(
-    std::vector<std::string> msa, Rcpp::NumericMatrix distMat,
+    const std::vector<std::string> &msa, Rcpp::NumericMatrix distMat,
     std::string distFunType): msa(msa), distMat(distMat),
     distFunType(distFunType)
   { ; }
 
   // Input multipe sequence alignment to calculate distance from
-  std::vector< std::string > &msa;
+  std::vector< std::string > msa;
 
   // Output matrix to write distances to
   RMatrix< double > distMat;

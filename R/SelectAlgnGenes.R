@@ -19,9 +19,6 @@ SelectAlgnGenes = function(
   # default to 99%
   if ( missing(coreGeneThresh) ) coreGeneThresh = 0.99
 
-  # Create the path to the tree file
-  if ( missing(fastTree) ) fastTree = FALSE
-
   # Set the minimium number of genes to build the tree
   if ( missing(minGeneNum) ) minGeneNum = 2
 
@@ -132,11 +129,12 @@ SelectAlgnGenes = function(
 
   # Subset to only include the core genes
   geneEnv$clustList    = geneEnv$clustList[ isCoreGene ]
-  geneEnv$genomeIdList = geneEnv$genomeIdList[ isSingleCopy ]
+  geneEnv$genomeIdList = geneEnv$genomeIdList[ isCoreGene ]
   geneEnv$geneMat      = geneEnv$geneMat[ , isCoreGene ]
   cat(
     "  -- ",  numClusts, " orthologous genes were identified by cd-hit\n",
-    "  -- ",  sum( isCoreGene ), " genes were used to create the tree\n",
+    "  -- ",  sum( isCoreGene ), 
+    " genes will be used to create the alignment\n",
     sep = ''
     )
   

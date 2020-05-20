@@ -40,15 +40,16 @@ bool GenomeFeatures::parseGfs( BioSeq *wgs )
   return true;
 }
 
-int GenomeFeatures::getNumGenes()
+unsigned int GenomeFeatures::getNumGenes()
 {
-  return numGenes;
+  return featId.size();
 }
+
 std::string GenomeFeatures::getDescription( std::string attributes )
 {
   // Find the position of the delimiter in the target string and subset the
   // string
-  unsigned int start = attributes.find( "Name=" );
+  auto start = attributes.find( "Name=" );
 
   // If the name was not found, look for a product ID
   if ( start == string::npos )
@@ -63,14 +64,14 @@ std::string GenomeFeatures::getDescription( std::string attributes )
   }
 
   // Find the end of the description
-  unsigned int end = attributes.find( ";", start );
+  auto end = attributes.find( ";", start );
   if ( end == string::npos ) end = attributes.length();
 
   // Get the substring corresponding to the descrition
   string description = attributes.substr( start, end - start );
 
   // Check if there is a note in the attributes
-  unsigned int noteStart = attributes.find( "Note=" );
+  auto noteStart = attributes.find( "Note=" );
   if ( noteStart == string::npos ) return description;
   else noteStart += 5;
 
@@ -150,6 +151,11 @@ Rcpp::DataFrame GenomeFeatures::createGeneData()
     );
 
   return geneData;
+}
+
+std::vector< std::string > GenomeFeatures::getGeneIds()
+{
+  return featId;
 }
 
 // Return the identifier for this genome

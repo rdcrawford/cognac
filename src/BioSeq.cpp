@@ -119,18 +119,17 @@ std::string BioSeq::getSeqName( std::string &faHeader )
   faHeader.erase( 0, 1 );
 
   // If the fasta header starts with accn, delete it
-  unsigned int accnPos = faHeader.find( "accn|" );
+  auto accnPos = faHeader.find( "accn|" );
   if ( accnPos != string::npos ) faHeader.erase( 0, accnPos + 5 );
 
   // Find the position of the first space.
-  unsigned int spacePos = faHeader.find( ' ' );
+  auto spacePos = faHeader.find( ' ' );
 
   // If there are no spaces, return the header as is
   if ( spacePos == string::npos ) return faHeader;
 
   // Erase everything after the space from the header and return
-  int len = spacePos - faHeader.length() + 1;
-  return faHeader.erase( spacePos, len );
+  return faHeader.substr( 0, spacePos);
 }
 
 // This function returns the whole genome sequence as a vector
@@ -141,7 +140,7 @@ std::vector< std::string > BioSeq::getSeqs( )
 
 int BioSeq::getNumSeqs() const
 {
-  return maxSeqIdx;
+  return seqs.size();
 }
 
 // Find which contig

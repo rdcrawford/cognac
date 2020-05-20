@@ -6,21 +6,22 @@
 # This function creates a new environment with the the sequences
 # of genes used as input to cd-hit. The unique gene ids
 # are also stored in a seperate vector
+# ------------------------------------------------------------------------------
 
 ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
 {
   # Make an output directory to store the mafft alignments
+  algnDir = paste0( outDir, "temp_congnac_files/mafft_alignments/" )
   if ( !file.exists(algnDir) ) system( paste("mkdir", algnDir) )
 
   # Generate the mafft alignments using multi-threading via future.apply
-  algnList = future_sapply( 1:length(geneEnv$clustList) ,
+  algnList = future.apply::future_sapply( 1:length(geneEnv$clustList) ,
     function(i) AlgnGeneSeqs( geneEnv, i, algnDir )
     )
-
+  
   # Get the length of the alignments
   algnLens = sapply(1:length(algnList), function(i) nchar( algnList[[i]][1] ) )
 
-  # save(file = "data/2020_02_14_GenerateGeneAlgns_start.Rdata", list = ls())
   # If there is no variation in the final sequence an empty list is returned.
   # Remove any empty genes from the list.
   isEmpty  = algnLens == 0
@@ -36,7 +37,7 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
 
   # If there is more than one gene, create a vector wit the positions
   # of the gene ends in the alignment
-  if ( length(alignList) > 1 )
+  if ( length(algnList) > 1 )
   {
     for ( i in 2:length( algnLens ) )
     {
@@ -66,7 +67,7 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
 
   # Write the concatenated gene file
   coGeneFa = paste0(outDir, runId, "concatenated_gene_aa_alignment.fasta" )
-  sink( concatGeneFa )
+  sink( coGeneFa )
   for ( i in 1:length(concatAlgn) )
   {
     cat('>', geneEnv$genomeNames[i], '\n', concatAlgn[i], '\n', sep = '')
@@ -81,7 +82,7 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
     sep = ''
     )
   
-  return( concatGeneFa )
+  return( coGeneFa )
 }
 
 # ------------------------------------------------------------------------------

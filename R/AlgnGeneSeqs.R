@@ -11,7 +11,7 @@
 # ------------------------------------------------------------------------------
 
 AlgnGeneSeqs = function(
-  genePtr,  # Environment with the parsed gene sequences
+  geneEnv,  # Environment with the parsed gene sequences
   clustIdx, # Vector with unique gene ids to align
   algnDir,  # Path to the fasta file to write gene sequences to
   maffftOps # Optional. Argumnets for mafft. mafft [maffftOps] in > out
@@ -23,35 +23,34 @@ AlgnGeneSeqs = function(
 
   # Find the genes in the corresponding to genomes which are still in the
   # analysis
-  algnGenes    = genePtr$clustList[[ clustIdx ]]
-  isAlgnGenome = genePtr$genomeIdList %in% genePtr$genomeNames
+  algnGenes    = geneEnv$clustList[[ clustIdx ]]
+  isAlgnGenome = geneEnv$genomeIdList[[ clustIdx ]] %in% geneEnv$genomeNames
   algnGenes    = algnGenes[ isAlgnGenome ]
-  isAlgnGene   = genePtr$geneIds %in% algnGenes
+  isAlgnGene   = geneEnv$geneIds %in% algnGenes
 
   # For each unique sequence, find the identical sequences and
   # store them in a list.
   identList = FindIdenticalGenes(
-    genePtr$geneSeqs[ isAlgnGene ], genePtr$geneIds[ isAlgnGene ]
+    geneEnv$geneSeqs[ isAlgnGene ], geneEnv$geneIds[ isAlgnGene ]
     )
 
   # If there is no variation in the gene, it doesnt matter. Just return an
   # empty character vector
   if (length(identList) == 1)
   {
-    algn = vector("character", length(genePtr$genomeNames))
-    names(algn) = genePtr$genomeNames
+    algn = vector( "character", length(geneEnv$genomeNames) )
     return( list( algn ) )
   }
 
   # If there are no duplication, align all of the genes
-  isGeneRep = genePtr$geneIds[ isAlgnGene ] %in% names(identList)
+  isGeneRep = geneEnv$geneIds[ isAlgnGene ] %in% names(identList)
   toAlgnIdxs = which(isAlgnGene)[ isGeneRep ]
 
   # Write the input fasta file
   sink( geneFaPath )
   for ( i in toAlgnIdxs )
   {
-    cat('>', genePtr$geneIds[i], '\n', genePtr$geneSeqs[i], '\n', sep = '')
+    cat('>', geneEnv$geneIds[i], '\n', geneEnv$geneSeqs[i], '\n', sep = '')
   }
   sink()
 
@@ -85,15 +84,15 @@ AlgnGeneSeqs = function(
   algnGenomeIds = sapply( names(algn), GetGenomeId, USE.NAMES = FALSE )
 
   # Sorted order of the genomes
-  genomeIdOrder = vector("integer", length(genePtr$genomeNames))
+  genomeIdOrder = vector("integer", length(geneEnv$genomeNames))
 
   # Sort the alignment by the genome names
   # Iterate over all of the genomes and find the position of the
   # genome in the vector of genome Ids
-  for ( j in seq( length(genePtr$genomeNames) ) )
+  for ( j in seq( length(geneEnv$genomeNames) ) )
   {
     # Find the alignment header corresponding to this genome
-    isCurGenome = algnGenomeIds == genePtr$genomeNames[j]
+    isCurGenome = algnGenomeIds == geneEnv$genomeNames[j]
 
     # If this genome is missing, add a string of '-' the length of the
     # gene to the alignment vector
@@ -101,7 +100,7 @@ AlgnGeneSeqs = function(
     {
       idx = length(algn) + 1
       algn[ idx ] = paste( rep( '-', nchar(algn[1]) ), collapse = '' )
-      algnGenomeIds[ idx ] = genePtr$genomeNames[ j ]
+      algnGenomeIds[ idx ] = geneEnv$genomeNames[ j ]
 
     } else {
 

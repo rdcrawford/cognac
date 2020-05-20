@@ -16,7 +16,7 @@ FilterMultiCopyGenes = function( geneEnv, copyNumTresh )
   # Find the fraction of genomes where
   nGenes   = length( geneEnv$clustList )
   nGenomes = length( geneEnv$genomeNames )
-  dupFrac  = sapply( seq(nGenes), function(i)
+  dupFrac  = future.apply::future_sapply( seq(nGenes), function(i)
   {
     numDuplicates = sum( table( geneEnv$genomeIdList[[i]] ) != 1 )
     return( numDuplicates / nGenomes )
@@ -36,7 +36,7 @@ FilterMultiCopyGenes = function( geneEnv, copyNumTresh )
 
     cat(
       "  -- After filtering there are", sum(isSingleCopy), 
-      " remaining genes\n"
+      "remaining genes\n"
       )
 
     if ( !TRUE %in% isSingleCopy )

@@ -7,7 +7,7 @@
 CreatePartionFile(algnEnv, outDir, runId, subModel, seqType)
 }
 \arguments{
-\item{algnEnv}{Environment created by congac that contains the 
+\item{algnEnv}{Environment created by the cognac that contains the 
 alignment data.}
 
 \item{outDir}{Directory to write the file to}

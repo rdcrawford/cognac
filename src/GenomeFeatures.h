@@ -42,7 +42,7 @@ public:
   { ; }
 
   // Return the number of genes
-  int getNumGenes();
+  unsigned int getNumGenes();
 
   // Parse the gff file
   bool parseGfs( BioSeq *wgs );
@@ -58,6 +58,7 @@ public:
 
   // Get the reference to the gene ids
   std::vector< std::string >* getGeneIdRef();
+  std::vector< std::string > getGeneIds();
 
 private:
 

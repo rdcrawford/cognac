@@ -11,14 +11,15 @@
 #' to apply. Written in the format:
 #' DNA, peg.1=1-30
 #' DNA, peg.2=31-60
-#' @param algnEnv Environment created by congac that contains the 
-#' alignment data.
+#' @param algnEnv Environment created by the cognac that contains the 
+#'   alignment data.
 #' @param outDir Directory to write the file to
 #' @param runId Run identifier appended to the output file
 #' @param subModel substitution model to be used
 #' @return void
 #' @export
 # ------------------------------------------------------------------------------
+
 CreatePartionFile = function( algnEnv, outDir, runId, subModel, seqType )
 {
   CLUST_REPS     = 1

@@ -2,7 +2,7 @@
 % Please edit documentation in R/CreateGeneDataEnv.R
 \name{CreateGeneDataEnv}
 \alias{CreateGeneDataEnv}
-\title{Creatate a gene data environment}
+\title{Create a gene data environment}
 \usage{
 CreateGeneDataEnv(featureFiles, fastaFiles, genomeIds, outDir)
 }
@@ -12,10 +12,10 @@ files}
 
 \item{fastaFiles}{Character vector with the paths to the fasta files}
 
-\item{genomeIds}{Optional vector with the uniqe identifiers for the 
+\item{genomeIds}{Optional vector with the unique identifiers for the 
 genomes included in the analysis}
 
-\item{outDir}{Directory in witch to write the faa file with the translated
+\item{outDir}{Directory in which to write the faa file with the translated
 gene sequences from all genes.}
 }
 \value{
@@ -27,6 +27,7 @@ The environment containing a list of the genome features ("gfList"),
 This function initializes the environment containing data on the genes
   used in the analysis. This function adds the list of parsed gff files,
   fasta file paths, and the genome Ids of the genomes included in the 
-  analysis. This function uses all availible threads to parse the
-  genomic data in parallel via the RcppParallel package.
+  analysis to a new environment which is returned. This function uses 
+  all available threads to parse the genomic data in parallel via the 
+  RcppParallel package.
 }

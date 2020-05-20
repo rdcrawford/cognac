@@ -48,7 +48,7 @@ private:
   std::vector< std::string > geneIds;
 
   // The number of genes in this dataset
-  int numGenes;
+  unsigned int numGenes;
 
   // Parse the genome data using tbb parallel_for
   void parseGenomeData();

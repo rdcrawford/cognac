@@ -54,17 +54,17 @@ FindCogs = function(
 
   cdHitCmd = paste(
     "cd-hit",
-    "-i", geneEnv$faaPath,    # Input file with the translated aa seqs
-    "-o", cdHitGenesFileName, # Ouput
-    "-c", percId,             # Min percent identity in the gene seqs
-    "-aL", algnCovg,          # Minimum disparity in the length of the seqs
-    "-T",  threadVal,         # Number of threads
-    "-n",  wordSize,          # Size word to particion sequences into
-    trimws(cdHitFlags),       # Additional flags for the cd-hit run
-    ">",  cdHitLogFile        # Write the output to a temp log file
+    "-i",  geneEnv$faaPath,    # Input file with the translated aa seqs
+    "-o",  cdHitGenesFileName, # Ouput
+    "-c",  percId,             # Min percent identity in the gene seqs
+    "-aL", algnCovg,           # Minimum disparity in the length of the seqs
+    "-T",  threadVal,          # Number of threads
+    "-n",  wordSize,           # Size word to particion sequences into
+    trimws(cdHitFlags),        # Additional flags for the cd-hit run
+    ">",   cdHitLogFile        # Write the output to a temp log file
     )
   system( cdHitCmd )
-
+  
   # ---- Parse the CD-Hit Data -------------------------------------------------
 
   # Assign the clust list and gene matrix to varibles in the

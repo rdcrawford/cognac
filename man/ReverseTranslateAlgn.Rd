@@ -2,7 +2,7 @@
 % Please edit documentation in R/ReverseTranslateAlgn.R
 \name{ReverseTranslateAlgn}
 \alias{ReverseTranslateAlgn}
-\title{Reverse Translate Algnment}
+\title{Reverse Translate Alignment}
 \usage{
 ReverseTranslateAlgn(geneEnv, concatGeneFa, outDir, runId, algnEnv)
 }
@@ -13,7 +13,7 @@ ReverseTranslateAlgn(geneEnv, concatGeneFa, outDir, runId, algnEnv)
 
 \item{runId}{Run identifier to append to the alignment file}
 
-\item{algnEnv}{Environment created by congnac with the data on the alignment}
+\item{algnEnv}{Environment created by cognac with the data on the alignment}
 }
 \value{
 Path to the reverse translated alignment

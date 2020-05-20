@@ -24,7 +24,7 @@ public:
 
   // This ctor takes the path to the msa in fasta format and creates the
   // BioSeq class object to parse the
-  MultiSeqAlgn( std::string faPath ):BioSeq( faPath )
+  MultiSeqAlgn( std::string faPath ): BioSeq( faPath )
   { ; }
 
   // Create a distance matrix from

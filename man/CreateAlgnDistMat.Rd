@@ -4,12 +4,12 @@
 \alias{CreateAlgnDistMat}
 \title{Create Algnment Distance Matrix}
 \arguments{
-\item{Path}{to the alignment}
+\item{msaPath}{Path to the alignment}
 
-\item{Method}{for calculating distance: "raw", or "shared."}
+\item{method}{Method for calculating distance: "raw", or "shared."}
 
-\item{Logical}{to specify whether to remove gap positions from the alignment
-to create the core genome.}
+\item{isCore}{Logical to specify whether to remove gap positions from the 
+alignment to create the core genome.}
 }
 \value{
 A numeric matrix

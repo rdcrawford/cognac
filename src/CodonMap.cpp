@@ -19,7 +19,7 @@ CodonMap::CodonMap()
 {
   //Initialize the codon map to the
   codonToAaMap =
-    {
+  {
     //Isoleucine
     {"ATT", 'I'}, {"ATC", 'I'}, {"ATA", 'I'},
 

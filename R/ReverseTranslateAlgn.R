@@ -3,13 +3,13 @@
 #  2020/05/13
 #  Ryan D. Crawford
 #  -----------------------------------------------------------------------------
-#' Reverse Translate Algnment
+#' Reverse Translate Alignment
 #' @description
 #' This function reads in a concatenated gene alignment created by cognac and
 #' @param geneEnv, concatGeneFa, outDir
 #' @param concatGeneFa Path to the amino acid alignment
 #' @param runId Run identifier to append to the alignment file
-#' @param algnEnv Environment created by congnac with the data on the alignment
+#' @param algnEnv Environment created by cognac with the data on the alignment
 #' @return Path to the reverse translated alignment
 #' @export
 #  -----------------------------------------------------------------------------
@@ -18,7 +18,10 @@ ReverseTranslateAlgn = function(
   geneEnv, concatGeneFa, outDir, runId, algnEnv
   )
 {
-  AA_PARTITIONS  = 4
+  # save( file = "ReverseTranslateAlgn.Rdata", list = ls() )
+  # load("ReverseTranslateAlgn.Rdata")
+  # Constant declarations
+  AA_PARTITIONS  = 4 # Column index of the aa gene partitions 
   
   # Get indexes in the alignment where the genome partitions are
   if ( missing(algnEnv) )
@@ -35,7 +38,8 @@ ReverseTranslateAlgn = function(
   }
   
   # Define the name of the output file
-  concatGeneDnaFa = paste0( outDir, runId,  "concat_align_nt_seq.fasta" )
+  concatGeneDnaFa = 
+    paste0( outDir, runId,  "concatenated_gene_nt_alignment.fasta" )
   if ( file.exists( concatGeneDnaFa ) ) system( paste("rm", concatGeneDnaFa) )
 
   # Read in the concatenated gene alignment
@@ -56,7 +60,7 @@ ReverseTranslateAlgn = function(
       # to this gene
       listIdx = which( isThisGenome )[ 1 ]
       geneId  = geneEnv$clustList[[ j ]][ listIdx ]
-      return( which( geneEnv$gfList[[ i ]][ , GENE_ID ] == geneId ) )
+      return( which( geneEnv$gfList[[ i ]]$featId == geneId ) )
     })
 
     # If there are any missing genes core genes represented as na in the

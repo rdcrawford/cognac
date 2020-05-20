@@ -3,19 +3,20 @@
 #  2020/02/05
 #  Ryan D. Crawford
 #  -----------------------------------------------------------------------------
-#' Creatate a gene data environment
+#' Create a gene data environment
 #' @description
 #'   This function initializes the environment containing data on the genes
 #'   used in the analysis. This function adds the list of parsed gff files,
 #'   fasta file paths, and the genome Ids of the genomes included in the 
-#'   analysis. This function uses all availible threads to parse the
-#'   genomic data in parallel via the RcppParallel package. 
+#'   analysis to a new environment which is returned. This function uses 
+#'   all available threads to parse the genomic data in parallel via the 
+#'   RcppParallel package. 
 #' @param featureFiles Character vector with the paths to the gff or genbank 
 #'   files
 #' @param fastaFiles Character vector with the paths to the fasta files
-#' @param genomeIds Optional vector with the uniqe identifiers for the 
+#' @param genomeIds Optional vector with the unique identifiers for the 
 #'   genomes included in the analysis
-#' @param outDir Directory in witch to write the faa file with the translated
+#' @param outDir Directory in which to write the faa file with the translated
 #'   gene sequences from all genes.
 #' @return The environment containing a list of the genome features ("gfList"), 
 #'   vector of gene sequences ("geneSeqs"), unique gene ids ("geneIds"), 
@@ -41,8 +42,9 @@ CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
   {
     # Make the genome names by extracting the last element of the path
     # and removing the file extension.
-    geneEnv$genomeNames = sapply( fastaFiles, ExtractGenomeNameFromPath )
-    
+    geneEnv$genomeNames = 
+      sapply( fastaFiles, ExtractGenomeNameFromPath, USE.NAMES = FALSE )
+
     # Get counts of the number of input vectors 
     argVecLen = c( length(featureFiles), length(fastaFiles) )
 

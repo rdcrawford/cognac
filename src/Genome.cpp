@@ -42,7 +42,7 @@ bool Genome::getGeneSeq( std::string &seq )
 {
   // Get the sequence at the coordinates of this entry in the gff file
   bool isUpdated =
-    getSeqAtCoord( contig[ gIdx ], startPos[ gIdx ], endPos[ gIdx ], seq );
+    getSeqAtCoord( contig[ gIdx ] - 1, startPos[ gIdx ], endPos[ gIdx ], seq );
 
   // If these were not valid coordinates, return false indicating that
   // the sequnce was not updated
@@ -55,6 +55,7 @@ bool Genome::getGeneSeq( std::string &seq )
 
   // If this is the reverse strand, get the reverse compliment
   if ( strand[ gIdx ].compare("=") == 0 ) getReverseCompliment( seq );
+
   // Increment the index for the next gene
   gIdx ++;
 
@@ -86,14 +87,14 @@ bool Genome::translateSeqs()
   // for each codon
   CodonMap codonMap;
 
-  this->gIdx = 0;  // Start at the first gene
   std::string seq; // Empty string to populate with the gene seqences
+  auto numGenes = featId.size();
 
   // Allocate a vector with the number of genes
-  aaSeqs.reserve( getNumGenes() );
+  aaSeqs.reserve( numGenes );
 
   // Iterate over all of the genes
-  while ( gIdx < featId.size() )
+  while ( gIdx < numGenes )
   {
     // Get the sequnece of the current gene
     if ( !getGeneSeq( seq ) ) return false;
@@ -105,6 +106,7 @@ bool Genome::translateSeqs()
     // amino acid sequences
      aaSeqs.push_back( seq );
   }
+
   return true;
 }
 

@@ -9,16 +9,16 @@
 //  05/15/2020
 //  ----------------------------------------------------------------------------
 //' @name CreateAlgnDistMat
-//' @title  Create Algnment Distance Matrix
+//' @title Create Algnment Distance Matrix
 //' @description
 //'   This function reads in the path to a multiple sequence alignment. The
 //'   pairwise alignment distances for each sequence are returned. The 
 //'   pairwise distances are calculated in parallel via the RcppParallel 
 //'   package.
-//' @param Path to the alignment
-//' @param Method for calculating distance: "raw", or "shared."
-//' @param Logical to specify whether to remove gap positions from the alignment
-//'   to create the core genome.
+//' @param msaPath Path to the alignment
+//' @param method Method for calculating distance: "raw", or "shared."
+//' @param isCore Logical to specify whether to remove gap positions from the 
+//'   alignment to create the core genome.
 //' @return A numeric matrix
 //' @export
 //  ----------------------------------------------------------------------------

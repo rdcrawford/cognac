@@ -2,7 +2,6 @@
 // [[Rcpp::plugins(cpp11)]]
 #include "GenomeData.h"
 #include "Genome.h"
-#include "GenomeParser.h"
 #include <RcppParallel.h>
 #include <Rcpp.h>
 #include <fstream>
@@ -24,29 +23,35 @@ GenomeData::GenomeData(const std::vector< std::string > &gffPaths,
 {
   // Initialize the vector of genome class objects
   for ( unsigned int i = 0; i < gffPaths.size(); i++ )
-    genomeData.push_back( Genome( gffPaths[i], faPaths[i], genomeIds[i] ) );
+    genomeData.push_back( Genome( faPaths[i], gffPaths[i], genomeIds[i] ) );
 
   // Parse the data
   parseGenomeData();
 
   // Count the total number of genes that are in this dataset
   countNumGenes();
+
+  // Concatenate the amino acid sequences into a single vector
+  concatenateGeneVecs();
 }
 
 // Parse the genome data using tbb parallel_for
 void GenomeData::parseGenomeData()
 {
-  // To use Intel TBB we first have to create a range object. In this case
-  // we want to parse all genomes in the vector
-  tbb::blocked_range< std::size_t > range( 0, genomeData.size() );
+  // Use paralle for each to iterate over the vector of genomes and
+  // parse the
+  tbb::parallel_for_each(
+    genomeData.begin(),
+    genomeData.end(),
+    [&] ( Genome &g )
+  {
+    // Read in and parse the fasta and gff files
+    g.parseGenome();
 
-  // We have to create a temporary instance of the functor class for the
-  // Genome parser. The 'func' object is a struct that behaves like a function
-  // GenomeParser func( genomeData );
-
-  // Call tbb::parallel_for, the code in the functor will be executed
-  // on the availible number of threads.
-  // tbb::parallel_for( range, func );
+    // Translate the amino acid sequences
+    if ( !g.translateSeqs() )
+      Rcpp::stop( "Translate failed" );
+  });
 }
 
 
@@ -57,29 +62,18 @@ void GenomeData::concatenateGeneVecs()
   // Allocate space for the total number of genes. This is important
   // because the vector will be very large
   aaSeqs.reserve( numGenes );
-
-  // For each genome Retrive the coding sequences
-  for ( auto it = genomeData.begin(); it != genomeData.end(); it++ )
-  {
-    // Get the reference to the vector of amino acid sequences
-    auto seqRef = it->getAaSeqRef();
-
-    // Concatenate the vectors
-    aaSeqs.insert( aaSeqs.end(), seqRef->begin(), seqRef->end() );
-  }
-
-  // Allocate space for the total number of genes. This is important
-  // because the vector will be very large
   geneIds.reserve( numGenes );
 
   // For each genome Retrive the coding sequences
   for ( auto it = genomeData.begin(); it != genomeData.end(); it++ )
   {
     // Get the reference to the vector of amino acid sequences
-    auto geneIdRef = it->getAaSeqRef();
+    auto seqRef   = it->getAaSeqRef();
+    auto seqIdRef = it->getGeneIdRef();
 
     // Concatenate the vectors
-    geneIds.insert( aaSeqs.end(), geneIdRef->begin(), geneIdRef->end() );
+    aaSeqs.insert( aaSeqs.end(), seqRef->begin(), seqRef->end() );
+    geneIds.insert( geneIds.end(), seqIdRef->begin(), seqIdRef->end() );
   }
 }
 
@@ -101,7 +95,6 @@ void GenomeData::writeFaa( std::string faaPath )
   // Initialize the output file stream and open for writing
   std::ofstream ofs;
   ofs.open( faaPath.c_str() );
-
   for ( unsigned int i = 0; i < aaSeqs.size(); i++ )
   {
     ofs << ">" << geneIds[i] << endl << aaSeqs[i] << endl;
@@ -111,8 +104,11 @@ void GenomeData::writeFaa( std::string faaPath )
 // Count the total number of genes that are in this dataset
 void GenomeData::countNumGenes()
 {
-  numGenes = 0;
+  // Initialize the number of genes to zero
+  this->numGenes = 0;
 
+  // Iterate over the vector of genomes and get the count of the
+  // number of genes in each genome
   for ( auto it = genomeData.begin(); it != genomeData.end(); it++ )
     numGenes += it->getNumGenes();
 }

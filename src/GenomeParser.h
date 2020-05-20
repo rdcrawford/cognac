@@ -22,7 +22,7 @@ struct GenomeParser : public Worker
 {
   // Ctor. Gives the reference to the vector of genome class objects
   // to be parsed.
-  GenomeParser( std::vector< Genome > &genomeData ): genomeData( genomeData )
+  GenomeParser( std::vector< Genome > genomeData ): genomeData( genomeData )
   { ; }
 
   // Vector of genome data class objects to be parsed
@@ -40,10 +40,8 @@ struct GenomeParser : public Worker
 
       // Translate the amino acid sequences
       if ( !genomeData[ i ].translateSeqs() )
-        Rcpp::stop(
-          // "Translating genes for ", genomeData[i].getGenomeId(), " failed"
-          "Translate failed"
-          );
+        Rcpp::stop( "Translate failed" );
+      Rcpp::Rcout << genomeData[ i ].getNumGenes() << endl;
     }
   }
 };

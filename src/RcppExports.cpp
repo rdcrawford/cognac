@@ -8,6 +8,17 @@
 
 using namespace Rcpp;
 
+// ConcatenateAlignments
+void ConcatenateAlignments(Rcpp::StringVector& concatAlgn, const Rcpp::StringVector& algn);
+RcppExport SEXP _cognac_ConcatenateAlignments(SEXP concatAlgnSEXP, SEXP algnSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type concatAlgn(concatAlgnSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::StringVector& >::type algn(algnSEXP);
+    ConcatenateAlignments(concatAlgn, algn);
+    return R_NilValue;
+END_RCPP
+}
 // CreateAlgnDistMat
 Rcpp::NumericMatrix CreateAlgnDistMat(std::string msaPath, std::string method, bool isCore);
 RcppExport SEXP _cognac_CreateAlgnDistMat(SEXP msaPathSEXP, SEXP methodSEXP, SEXP isCoreSEXP) {
@@ -32,6 +43,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const std::string& >::type faaPath(faaPathSEXP);
     CreateCognacRunData(geneEnv, gfPaths, faPaths, faaPath);
     return R_NilValue;
+END_RCPP
+}
+// CreateCoreGenomeDistMat
+Rcpp::NumericMatrix CreateCoreGenomeDistMat(std::string msaPath);
+RcppExport SEXP _cognac_CreateCoreGenomeDistMat(SEXP msaPathSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type msaPath(msaPathSEXP);
+    rcpp_result_gen = Rcpp::wrap(CreateCoreGenomeDistMat(msaPath));
+    return rcpp_result_gen;
 END_RCPP
 }
 // ExtractGenomeNameFromPath
@@ -128,12 +150,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // TranslateAaAlgnToDna
-void TranslateAaAlgnToDna(const Rcpp::DataFrame& gffData, std::string& faPath, const std::vector<int>& genePositions, const std::string& genomeName, const std::string& aaAlgn, const std::string& outputFile);
+void TranslateAaAlgnToDna(const Rcpp::DataFrame& gffData, const std::string& faPath, const std::vector<int>& genePositions, const std::string& genomeName, const std::string& aaAlgn, const std::string& outputFile);
 RcppExport SEXP _cognac_TranslateAaAlgnToDna(SEXP gffDataSEXP, SEXP faPathSEXP, SEXP genePositionsSEXP, SEXP genomeNameSEXP, SEXP aaAlgnSEXP, SEXP outputFileSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::DataFrame& >::type gffData(gffDataSEXP);
-    Rcpp::traits::input_parameter< std::string& >::type faPath(faPathSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type faPath(faPathSEXP);
     Rcpp::traits::input_parameter< const std::vector<int>& >::type genePositions(genePositionsSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type genomeName(genomeNameSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type aaAlgn(aaAlgnSEXP);
@@ -160,8 +182,10 @@ RcppExport SEXP _cognac_RcppExport_registerCCallable() {
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_cognac_ConcatenateAlignments", (DL_FUNC) &_cognac_ConcatenateAlignments, 2},
     {"_cognac_CreateAlgnDistMat", (DL_FUNC) &_cognac_CreateAlgnDistMat, 3},
     {"_cognac_CreateCognacRunData", (DL_FUNC) &_cognac_CreateCognacRunData, 4},
+    {"_cognac_CreateCoreGenomeDistMat", (DL_FUNC) &_cognac_CreateCoreGenomeDistMat, 1},
     {"_cognac_ExtractGenomeNameFromPath", (DL_FUNC) &_cognac_ExtractGenomeNameFromPath, 1},
     {"_cognac_GetGenomeNameWithExt", (DL_FUNC) &_cognac_GetGenomeNameWithExt, 2},
     {"_cognac_FindIdenticalGenes", (DL_FUNC) &_cognac_FindIdenticalGenes, 2},
