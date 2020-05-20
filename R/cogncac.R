@@ -225,7 +225,6 @@ cognac = function(
   cat("  -- Distance matrix:\n")
   if ( distMat )
     algnEnv$distMat = CreateAlgnDistMat( concatGeneFa, "shared", FALSE )
-  print(algnEnv$distMat )
   stepTime = GetSplit( stepTime )
   
   # If requested, make a neighbor joining tree with ape
