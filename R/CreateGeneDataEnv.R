@@ -26,64 +26,11 @@
 
 CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
 {
-  # Currently fasta files are required. Throw an error if the fasta
-  # files are not included
-  if ( missing(fastaFiles) )
-    stop("Missing required argument with the paths to the fasta files\n")
-
   # Initalize an environment to store the data on the genes. This will
   # be passed to further functions and iteratively be subset to only
   # include the genes contained in the alignment
   geneEnv = new.env()
-
-  # Add the names of the genomes included in the analysis  to the environmnet.
-  # if they are missing, extract the name from the paths
-  if ( missing(genomeIds) )
-  {
-    # Make the genome names by extracting the last element of the path
-    # and removing the file extension.
-    geneEnv$genomeNames = 
-      sapply( fastaFiles, ExtractGenomeNameFromPath, USE.NAMES = FALSE )
-
-    # Get counts of the number of input vectors 
-    argVecLen = c( length(featureFiles), length(fastaFiles) )
-
-  } else {
-
-    # Add the genome ids to the envriroment that will be returned
-    geneEnv$genomeNames = genomeIds
-    
-    # Get counts of the number of input vectors 
-    argVecLen =
-      c( length(featureFiles), length(fastaFiles), length(genomeIds) )
-  }
-
-  # Check that everything has the same length
-  if ( length( unique(argVecLen) ) != 1 )
-  {
-    argNames = c("featureFiles", "fastaFiles", "genomeIds")
-    vecLenStr = sapply( 1:length(argVecLen),
-      function(i) 
-        paste0( "  -- ", argNames[i], ": ", argVecLen[i], " elements\n")
-      )
-    inputEfforMessage = paste(
-      c("\nThe input data vectors are not the same length:\n", vecLenStr), 
-      collapse  = ''
-      )
-    stop( inputEfforMessage )
-  }
-
-  # Check that all of the genome IDs are unique
-  isDuplicated = duplicated( geneEnv$genomeNames )
-  if ( TRUE %in% isDuplicated )
-  {
-    stop(
-      "There are duplicated genome ids: \n",
-      paste( geneEnv$genomeNames[isDuplicated], collapse = ' ' ),
-      '\n'
-      )
-  }
-
+  
   # Create the path to the cd-hit input file. This is where the amino acid
   # sequences for all of the genome will be written
   faaPath = paste0( outDir, "allGenes.faa" )

@@ -32,14 +32,10 @@ Rcpp::List FindIdenticalGenes(
   // Start at the first gene to enter the loop
   int geneIdx = 0;
   Rcpp::StringVector geneReps;
-  // cout << "Total gene count: " << genes.size() << endl;
 
   // Iterate over all of the genes and find any identical sequences
   while ( geneIdx < genes.size() )
   {
-    // cout << "geneIdx: " << geneIdx
-    //      << " geneRep count: " << geneReps.size()
-    //      << endl;
     // Initialize a vector to store the identical genes
     Rcpp::StringVector identGeneIds( 0 );
     isClassified[ geneIdx ] = true;

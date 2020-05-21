@@ -12,18 +12,11 @@ CreateGeneMetaData = function( geneEnv, revTranslate )
 {
   # Find a representitive member from each cluster
   nGenes    = length( geneEnv$clustList )
-  clustReps = future.apply::future_sapply( seq(nGenes), 
-    function(i) geneEnv$clustList[[i]][1]
-    )
-
-  # Look up the description of each gene
-  repIdxs = future.apply::future_sapply( clustReps, 
-    function(x) which(geneEnv$geneIds == x)
-    )
-
-  # Look up the length of the gene
-  geneLens = future.apply::future_sapply( repIdxs, 
-    function(i) nchar(geneEnv$geneSeqs[i])
+  
+  # Create a character vector with the gene Ids of all of the genes 
+  # in each cluster 
+  clGeneIds = sapply( 1:length(geneEnv$clustList),
+    function(i) paste( geneEnv$clustList[[i]], sep = ',' )
     )
 
   # Look up the gene description
@@ -41,10 +34,9 @@ CreateGeneMetaData = function( geneEnv, revTranslate )
   })
 
   # Create a dataframe with the data on all of selected core genes
-  geneData = cbind.data.frame( 
-    clustReps, 
-    geneLens, 
+  geneData = cbind.data.frame(
     geneDescr,
+    clGeneIds,
     GetGenePartitions( geneEnv, revTranslate ),
     stringsAsFactors = FALSE
     )

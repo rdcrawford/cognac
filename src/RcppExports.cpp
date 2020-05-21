@@ -8,6 +8,17 @@
 
 using namespace Rcpp;
 
+// CalcDistMatAtPartitions
+Rcpp::NumericMatrix CalcDistMatAtPartitions(std::string msaPath);
+RcppExport SEXP _cognac_CalcDistMatAtPartitions(SEXP msaPathSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type msaPath(msaPathSEXP);
+    rcpp_result_gen = Rcpp::wrap(CalcDistMatAtPartitions(msaPath));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ConcatenateAlignments
 void ConcatenateAlignments(Rcpp::StringVector& concatAlgn, const Rcpp::StringVector& algn);
 RcppExport SEXP _cognac_ConcatenateAlignments(SEXP concatAlgnSEXP, SEXP algnSEXP) {
@@ -182,6 +193,7 @@ RcppExport SEXP _cognac_RcppExport_registerCCallable() {
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_cognac_CalcDistMatAtPartitions", (DL_FUNC) &_cognac_CalcDistMatAtPartitions, 1},
     {"_cognac_ConcatenateAlignments", (DL_FUNC) &_cognac_ConcatenateAlignments, 2},
     {"_cognac_CreateAlgnDistMat", (DL_FUNC) &_cognac_CreateAlgnDistMat, 3},
     {"_cognac_CreateCognacRunData", (DL_FUNC) &_cognac_CreateCognacRunData, 4},

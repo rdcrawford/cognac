@@ -70,7 +70,7 @@ bool MultiSeqAlgn::findGapPosition( )
   while ( it != seqIts.end() )
   {
     // If this position in the sequnce is a gap, return true
-    if ( **it == '-') return true;
+    if ( **it == '-' ) return true;
 
     // Advance to the next reside in the sequence
     ++it;
@@ -99,13 +99,8 @@ void MultiSeqAlgn::removeGaps()
   // Create iterators for each sequence in the alignment
   getSeqIterators();
 
-  // Get pointers to the start and end of the alignment to keep track
-  // of the current position in the alignment
-  auto algnPos = seqs[0].begin();
-  auto algnEnd = seqs[0].end();
-
   // Iterate over each position in the alignment
-  while ( algnPos != algnEnd )
+  for ( unsigned int algnPos = 0; algnPos < seqs[0].size(); algnPos ++ )
   {
     // If there is a gap at the curret position in the algnment, remove it
     if ( findGapPosition() )
@@ -118,9 +113,36 @@ void MultiSeqAlgn::removeGaps()
     {
       for ( auto & it : seqIts ) ++it;
     }
-    algnPos ++;
+
     R_CheckUserInterrupt();
   }
 }
+
+// {
+//   Rcpp::CharacterVector names = Rcpp::wrap( seqNames );
+//
+//   for ( int i = 0; i < partition.size(); i++ )
+//   {
+//     Rcpp::NumericMatrix MultiSeqAlgn::createDistMat( const std::string & distType )
+//     {
+//       // Allocate the matrix to store the differences between aligned
+//       // sequences we will return
+//       Rcpp::NumericMatrix distMat( getNumSeqs(), getNumSeqs() );
+//
+//       // Create the functor
+//       MsaDistance msaDistance( seqs, distMat, distType );
+//
+//       // Call tbb::parallel_for, the code in the functor will be executed
+//       // on the availible number of threads.
+//       parallelFor( 0, getNumSeqs(), msaDistance );
+//
+//       rownames( distMat )         = names;
+//       colnames( distMat )         = names;
+//
+//       // Set the row and column names of the matirx and Return
+//       return distMat;
+//     }
+//   }
+// }
 
 // -----------------------------------------------------------------------------

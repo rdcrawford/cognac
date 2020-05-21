@@ -7,9 +7,16 @@
 #'   The cognac function idetentifies shared genes to be used as phylogenetic
 #'   markers. Genes are aligned individually wth mafft and concatenates them
 #'   into a single alignment.
-#' @param fastaFiles A character vector with a fasta file for each genome 
+#' @param fastaDir Directory containing the fasta files
+#' @param featureDir Directory containing the Gff3 or genbank files 
+#' @param fastaFiles In place of a directory with fasta files, a character 
+#'   vector with the paths to the the fasta files for each genome can be
+#'   input. Incompatible with "fasta dir."
+#' @param fastaFiles In place of a directory with fasta files, a character 
+#'   vector with the paths to the the fasta files for each genome can be
+#'   input. Incompatible with "fasta dir."
 #' @param featureFiles A character vector with a gff3 or genbank files
-#'  for each genome.
+#'  for each genome
 #' @param genomeIds Optional character vector with the unique ID for each 
 #'   genome. If not supplied each genome is created by removing the file 
 #'   extension from the fasta file.
@@ -68,8 +75,12 @@
 #  -----------------------------------------------------------------------------
 
 cognac = function(
+  fastaDir,       # Directory containing the fasta files
+  featureDir,     # Directory containing the Gff3 or genbank files 
   fastaFiles,     # Fasta files for the input genomes
   featureFiles,   # Gff3 or genbank files for the input genomes
+  fastaExt,       # Extension used on the fasta files
+  featureExt,     # Extension used on the gff or genbank files 
   genomeIds,      # Vector of genomes to
   geneEnv,        # Optional. Environment created by "CreateGeneDataEnv"
   outDir,         # Optional. Directory to write the output files
@@ -94,6 +105,52 @@ cognac = function(
   startTime = Sys.time() # Start the timer
   # ---- Parse the input arguments ---------------------------------------------
 
+  # Make sure that there aren't incompatible arguments with respect to 
+  # fastaFiles and fastaDir
+  if ( (!missing(fastaFiles) && !missing(fastaDir)) ||  
+    (missing(fastaFiles) && missing(fastaDir))   
+    )
+  {
+    stop(
+      "Input arguments must contain one of \"fastaFiles\" (",
+      "character vector with paths to fasta files)",
+      " or \"fastaDir\"(directory containing fasta files)",
+      )
+    
+  } else if ( missing(fastaFiles) ) {
+    
+    # Get the paths to the fasta files 
+    fastaFiles = GetFilePaths( fastaDir, fastaExt )
+  }
+  
+  # Make sure that there aren't incompatible arguments with respect to 
+  # fastaFiles and fastaDir
+  if ( ( !missing(featureFiles) && !missing(featureDir) ) ||  
+    ( missing(featureFiles) && missing(featureDir) )   
+    )
+  {
+    stop(
+      "Input arguments must contain one of \"featureFiles\" (",
+      "character vector with paths to fasta files)",
+      " or \"featureDir\"(directory containing fasta files)",
+      )
+    
+  } else if ( missing(featureFiles) ) {
+    
+    # Get the paths to the fasta files 
+    featureFiles = GetFilePaths( featureDir, featureExt )
+  }
+  
+  # Check that the size of the vectors are the same length
+  if ( length(fastaFiles) != length(featureFiles) )
+  {
+    stop(
+      "Input arguments must contain one of \"featureFiles\" (",
+      "character vector with paths to gff or genbank files)",
+      " or \"featureDir\"(directory containing gff or genbank files)",
+      )
+  }
+  
   # If now output directory was specified, write to the working directory
   if ( missing(outDir) )
   {
@@ -113,7 +170,7 @@ cognac = function(
   }
   
   # Make a temporary directory to store any files made during the run
-  tempDir = paste0( outDir, "temp_congnac_files/" )
+  tempDir = paste0( outDir, runId, "temp_congnac_files/" )
   if ( !file.exists(tempDir) ) system( paste("mkdir", tempDir) )
 
   # By default, delete any temporary file that are created
@@ -159,6 +216,7 @@ cognac = function(
 
   # ---- Find the target genes using the gene ids ------------------------------
 
+  
   cat(
     "\n\nCreating concatenated gene alignment:\n",
     "  -- ", length(featureFiles), " genomes were input\n",
@@ -228,7 +286,8 @@ cognac = function(
   stepTime = GetSplit( stepTime )
   
   # If requested, make a neighbor joining tree with ape
-  if ( njTree ) algnEnv$njTree = ape::nj( as.dist(algnEnv$distMat) )
+  if ( njTree ) 
+    algnEnv$njTree = ape::nj( as.dist(algnEnv$distMat) )
 
   # If requested, write a partition file with the positions of each
   # gene in the a lignment
@@ -236,7 +295,8 @@ cognac = function(
     CreatePartionFile( geneEnv, outDir, runId, subModel, seqType )
   
   # Remove any temp files
-  if ( !keepTempFiles ) system( paste( "rm -r", tempDir ) )
+  if ( !keepTempFiles ) 
+    system( paste( "rm -r", tempDir ) )
   stepTime = GetSplit( startTime )
   
   cat( "\nRun complete\n" )

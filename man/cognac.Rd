@@ -5,8 +5,12 @@
 \title{cogncac: Core Gene Alignement Concatenation}
 \usage{
 cognac(
+  fastaDir,
+  featureDir,
   fastaFiles,
   featureFiles,
+  fastaExt,
+  featureExt,
   genomeIds,
   geneEnv,
   outDir,
@@ -29,10 +33,16 @@ cognac(
 )
 }
 \arguments{
-\item{fastaFiles}{A character vector with a fasta file for each genome}
+\item{fastaDir}{Directory containing the fasta files}
+
+\item{featureDir}{Directory containing the Gff3 or genbank files}
+
+\item{fastaFiles}{In place of a directory with fasta files, a character 
+vector with the paths to the the fasta files for each genome can be
+input. Incompatible with "fasta dir."}
 
 \item{featureFiles}{A character vector with a gff3 or genbank files
-for each genome.}
+for each genome}
 
 \item{genomeIds}{Optional character vector with the unique ID for each 
 genome. If not supplied each genome is created by removing the file 

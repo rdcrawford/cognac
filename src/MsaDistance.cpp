@@ -12,6 +12,8 @@ using namespace RcppParallel;
 // 2020/01/23
 // -----------------------------------------------------------------------------
 
+// Set the function pointer to the type specified by the input
+// argument "distFunType"
 void MsaDistance::setDistFunc()
 {
   if ( distFunType == "raw" )
@@ -37,6 +39,8 @@ double MsaDistance::calcRawDist(
 
   // Initialize a counter for the number of mutations between two sequences
   double numMutations = 0;
+
+  // Set the distance function to the 
   setDistFunc();
   // For each base in the two sequence, see if there is NOT a match at
   // the kth position of of the alignment and there is not an aligned,
@@ -79,6 +83,8 @@ void MsaDistance::operator()(std::size_t begin, std::size_t end)
   }
 }
 
+// Returns the number of mutations normalized to the number of shared
+// sites (excluding gap potitions)
 double MsaDistance::calcSharedDist(
   const std::string &ref, const std::string &qry
   )

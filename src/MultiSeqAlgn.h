@@ -38,6 +38,11 @@ public:
   // a gap to generte the core genome alignment
   void removeGaps();
 
+  // Create a list distance matricies for each of the individual partitions.
+  // The specified by the input vector of integers.
+  std::list< Rcpp::NumericMatrix > getAlignDists(
+    const std::vector< int > &genePartitions );
+
 private:
 
   // Vector of iterators that each point to a sequence in the MSA
