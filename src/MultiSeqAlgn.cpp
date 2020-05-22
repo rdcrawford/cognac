@@ -118,31 +118,46 @@ void MultiSeqAlgn::removeGaps()
   }
 }
 
-// {
-//   Rcpp::CharacterVector names = Rcpp::wrap( seqNames );
-//
-//   for ( int i = 0; i < partition.size(); i++ )
-//   {
-//     Rcpp::NumericMatrix MultiSeqAlgn::createDistMat( const std::string & distType )
-//     {
-//       // Allocate the matrix to store the differences between aligned
-//       // sequences we will return
-//       Rcpp::NumericMatrix distMat( getNumSeqs(), getNumSeqs() );
-//
-//       // Create the functor
-//       MsaDistance msaDistance( seqs, distMat, distType );
-//
-//       // Call tbb::parallel_for, the code in the functor will be executed
-//       // on the availible number of threads.
-//       parallelFor( 0, getNumSeqs(), msaDistance );
-//
-//       rownames( distMat )         = names;
-//       colnames( distMat )         = names;
-//
-//       // Set the row and column names of the matirx and Return
-//       return distMat;
-//     }
-//   }
-// }
+
+std::list< Rcpp::NumericMatrix > MultiSeqAlgn::calcAlignPartitionDists(
+  std::string distType, vector< int > genePartitions
+  )
+{
+  // Initialize the list, reserving the number of matricies to output
+  std::list< Rcpp::NumericMatrix > distMatList;
+  distMatList.reserve( getNumSeqs() );
+
+  // Initialize the start of the gene partition
+  int gStart;
+
+  // Convert the row names to an Rcpp character vector to be used as the
+  // row and column names
+  Rcpp::CharacterVector names = Rcpp::wrap( seqNames );
+
+  for ( int i = 0; i < partition.size(); i++ )
+  {
+    if ( i == 0 ) gStart = 0;
+    else gStart = genePartitions[ i - 1 ];
+    // Allocate the matrix to store the differences between aligned
+    // sequences we will return
+    Rcpp::NumericMatrix distMat( getNumSeqs(), getNumSeqs() );
+
+    // Create the functor
+    MsaDistance msaDistance( seqs, distMat, distType );
+
+    // Call tbb::parallel_for, the code in the functor will be executed
+    // on the availible number of threads.
+    parallelFor( gStart, genePartitions[ i ] - 1 , msaDistance );
+
+    // Set the row and column names
+    rownames( distMat ) = names;
+    colnames( distMat ) = names;
+
+    // Set the row and column names of the matirx and Return
+    distMatList.push_back( distMat );
+  }
+
+  return distMatList;
+}
 
 // -----------------------------------------------------------------------------

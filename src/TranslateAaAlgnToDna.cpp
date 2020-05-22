@@ -82,7 +82,7 @@ void TranslateAaAlgnToDna(
 
   // Get the first gene to enter the loop
   genome.getGeneSeq( seq );
-  
+
   // Iterate along the alignment and place the codons and gaps in the nt
   // alignment in accordance with the aa alignment
   while ( algnPos < algnLen )
@@ -125,7 +125,6 @@ void TranslateAaAlgnToDna(
     algnPos ++; // Move to the aa residue in the alignment
 
     // Allow user to prematurely break out of the loop
-    // if ( alGeneIdx == 6 ) break;
     R_CheckUserInterrupt();
   }
 
