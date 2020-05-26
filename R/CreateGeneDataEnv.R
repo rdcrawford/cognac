@@ -31,6 +31,9 @@ CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
   # include the genes contained in the alignment
   geneEnv = new.env()
   
+  # Add the genome ids to the envrionment 
+  geneEnv$genomeNames = genomeIds
+  
   # Create the path to the cd-hit input file. This is where the amino acid
   # sequences for all of the genome will be written
   faaPath = paste0( outDir, "allGenes.faa" )

@@ -151,6 +151,11 @@ cognac = function(
       )
   }
   
+  # Create the genome IDs and/or check the ids to ensre they are valid
+  genomeIds = GetGenomeIds( 
+    featureFiles, fastaFiles, fastaExt, featureExt, genomeIds
+    )
+  
   # If now output directory was specified, write to the working directory
   if ( missing(outDir) )
   {

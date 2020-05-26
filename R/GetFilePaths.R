@@ -17,10 +17,7 @@ GetFilePaths = function( dir, ext )
   
   # It no file extension was input, set the default extension to an 
   # empty string
-  if ( missing(ext) )
-  {
-    ext = ''
-  }
+  if ( missing(ext) ) ext = ''
   
   # Run the command to import the paths into R
   cmd   = paste0( "ls ", dir, '*', ext )
