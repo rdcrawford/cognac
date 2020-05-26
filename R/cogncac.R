@@ -182,7 +182,7 @@ cognac = function(
   if ( missing(keepTempFiles) ) keepTempFiles = FALSE
 
   # Default to one available thread
-  if ( missing(threadVal) ) threadVal = as.numeric(future::availableCores())
+  if ( missing(threadVal) ) threadVal = as.numeric( future::availableCores() )
 
   # Create a distance matrix with the pairwise distances between isolates
   if ( missing(distMat) ) distMat = FALSE

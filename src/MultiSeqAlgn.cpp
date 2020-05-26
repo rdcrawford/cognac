@@ -136,7 +136,7 @@ std::list< Rcpp::NumericMatrix > MultiSeqAlgn::calcAlignPartitionDists(
   // row and column names
   Rcpp::CharacterVector names = Rcpp::wrap( seqNames );
 
-  for ( int i = 0; i < genePartitions.size(); i++ )
+  for ( unsigned int i = 0; i < genePartitions.size(); i++ )
   {
     if ( i == 0 ) gStart = 0;
     else gStart = genePartitions[ i - 1 ];
@@ -148,7 +148,7 @@ std::list< Rcpp::NumericMatrix > MultiSeqAlgn::calcAlignPartitionDists(
 
     // Create an alignment with only the sequences in the partitions
     std::vector< std::string > subSeqs( numSeqs );
-    for ( unsigned int j = 0; j < numSeqs; j ++ )
+    for ( unsigned int j = 0; j < numSeqs; j++ )
       subSeqs[ j ] = seqs[ j ].substr( gStart, len );
 
     // Create the functor

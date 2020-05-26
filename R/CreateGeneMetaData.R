@@ -11,7 +11,7 @@
 CreateGeneMetaData = function( geneEnv, revTranslate )
 {
   # Find a representitive member from each cluster
-  nGenes    = length( geneEnv$clustList )
+  nGenes = length( geneEnv$clustList )
   
   # Create a character vector with the gene Ids of all of the genes 
   # in each cluster 
@@ -27,7 +27,7 @@ CreateGeneMetaData = function( geneEnv, revTranslate )
 
     # Look up the row index of the gene in the data-frame of
     # parsed genome features
-    rIdx = which( geneEnv$gfList[[ gIdx ]]$featId == clustReps[i] )
+    rIdx = which( geneEnv$gfList[[ gIdx ]]$featId == geneEnv$clustList[[i]][1] )
 
     # Return the description of the gene
     return( geneEnv$gfList[[ gIdx ]]$description[ rIdx ] )
