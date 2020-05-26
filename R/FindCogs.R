@@ -69,7 +69,7 @@ FindCogs = function(
 
   # Assign the clust list and gene matrix to varibles in the
   # environment containing the gene data
-  minGeneNum = floor( length(geneEnv$genomeNames) * 0.70, 0 )
+  minGeneNum = floor( length(geneEnv$genomeNames) * 0.70 )
   ParseCdHit( cdHitClstrFileName, FALSE, minGeneNum, geneEnv )
 }
 
