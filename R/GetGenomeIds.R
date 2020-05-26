@@ -22,7 +22,7 @@ GetGenomeIds = function(
     {
       # Make the genome names by extracting the last element of the path
       # and removing the file extension.
-      geneEnv$genomeNames = sapply( 
+      genomeIds = sapply( 
         fastaFiles, ExtractGenomeNameFromPath, USE.NAMES = FALSE
         )
     
@@ -31,7 +31,7 @@ GetGenomeIds = function(
       
       # Make the genome names by extracting the last element of the path
       # and removing the file extension.
-      geneEnv$genomeNames = sapply(
+      genomeIds = sapply(
         fastaFiles, GetGenomeNameWithExt, fastaExt, USE.NAMES = FALSE
         )
 
@@ -43,7 +43,7 @@ GetGenomeIds = function(
     {
       # Make the genome names by extracting the last element of the path
       # and removing the file extension.
-      genomeIds = sapply(
+      featGenomeIds = sapply(
         featureFiles, ExtractGenomeNameFromPath, USE.NAMES = FALSE
         )
       
@@ -52,16 +52,16 @@ GetGenomeIds = function(
       
       # Make the genome names by extracting the last element of the path
       # and removing the file extension.
-      genomeIds = sapply( 
+      featGenomeIds = sapply( 
         featureFiles, GetGenomeNameWithExt, featureExt, USE.NAMES = FALSE
         )
     }
     
     #If the genome IDs made by using the fasta files and feature files 
     # are not identical, throw warnings
-    if ( !identical( geneEnv$genomeNames, genomeIds ) )
+    if ( !identical( genomeIds, featGenomeIds ) )
     {
-      isInFaNames = genomeIds %in% geneEnv$genomeNames
+      isInFaNames = featGenomeIds %in% genomeIds
       
       if ( FALSE %in% isInFaNames )
       {
@@ -71,8 +71,8 @@ GetGenomeIds = function(
           "feature files produced different results in ",
           sum(isInFaNames), " out of ", length(fastaFiles), 
           " instances\n\n", "For example:\n",
-          " -- Fasta file name: ", geneEnv$genomeNames[i], '\n',
-          " -- Feature file name: ", genomeIds[i], '\n'
+          " -- Fasta file name: ", genomeIds[i], '\n',
+          " -- Feature file name: ", featGenomeIds[i], '\n'
           )
         
       } else {
@@ -87,7 +87,7 @@ GetGenomeIds = function(
   }
 
   # Check that all of the genome IDs are unique
-  isDuplicated = duplicated( geneEnv$genomeNames )
+  isDuplicated = duplicated( genomeIds )
   if ( TRUE %in% isDuplicated )
   {
     numDuplicates  = sum( isDuplicated )
@@ -97,7 +97,7 @@ GetGenomeIds = function(
     if ( numDuplicates > MAX_CASES )
     {
       errStr = paste( 
-        c(paste( "  --", geneEnv$genomeNames[isDuplicated][1:MAX_CASES]), 
+        c(paste( "  --", genomeIds[isDuplicated][1:MAX_CASES]), 
         "     ...\n"),
         collapse = "\n" 
         )
@@ -105,7 +105,7 @@ GetGenomeIds = function(
     } else {
       
         errStr = paste( 
-        paste( "  --", geneEnv$genomeNames[isDuplicated]), 
+        paste( "  --", genomeIds[isDuplicated]), 
         collapse = "\n" 
         )
     
