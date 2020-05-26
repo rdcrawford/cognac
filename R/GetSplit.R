@@ -11,7 +11,7 @@ GetSplit = function( inTime )
 {
   curTime = Sys.time()
   diff = round( difftime( curTime, inTime, units = "mins"), 2 )
-  cat( "  -- Finished in ", diff, " min.\n", sep = '' )
+  cat( "  -- Finished in ", diff, " minutes\n", sep = '' )
   return( curTime )
 }
 

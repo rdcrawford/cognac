@@ -104,11 +104,10 @@ GetGenomeIds = function(
 
     } else {
       
-        errStr = paste( 
+      errStr = paste( 
         paste( "  --", genomeIds[isDuplicated]), 
         collapse = "\n" 
         )
-    
     }
     
     stop(

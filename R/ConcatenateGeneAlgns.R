@@ -11,7 +11,7 @@
 ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
 {
   # Make an output directory to store the mafft alignments
-  algnDir = paste0( outDir, "temp_congnac_files/mafft_alignments/" )
+  algnDir = paste0( outDir, "temp_congnac_files", runId, "/mafft_alignments/" )
   if ( !file.exists(algnDir) ) system( paste("mkdir", algnDir) )
 
   # Generate the mafft alignments using multi-threading via future.apply
