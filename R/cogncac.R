@@ -264,7 +264,7 @@ cognac = function(
   stepTime     = GetSplit( stepTime )
 
   # Create the environment with the objects to export
-  cat( "\nStep 6: creating output files\n\n" )
+  cat( "\nStep 6: creating output files\n" )
   algnEnv            = new.env()
   algnEnv$geneData   = CreateGeneMetaData( geneEnv, revTranslate )
   algnEnv$aaAlgnPath = concatGeneFa
@@ -302,7 +302,7 @@ cognac = function(
   # Remove any temp files
   if ( !keepTempFiles ) 
     system( paste( "rm -r", tempDir ) )
-  stepTime = GetSplit( startTime )
+  stepTime = GetSplit( stepTime )
   
   cat( "\nRun complete\n" )
   cat( "  -- Amino acid alignment written to:", algnEnv$aaAlgnPath, '\n' )

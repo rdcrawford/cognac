@@ -116,7 +116,6 @@ bool CdHitParser::RemoveLowFreqClusts( )
       // Erase the lines in the cd-hit results
       for ( int i = 0; i < clustSize; i++ )
         cdHitResults.erase( lineIt );
-      // cdHitResults.erase( lineIt, lineIt + clustSize );
 
       // Add the erased elements to the cluster
       numErased += clustSize;
