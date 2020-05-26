@@ -15,8 +15,8 @@ CreateGeneMetaData = function( geneEnv, revTranslate )
   
   # Create a character vector with the gene Ids of all of the genes 
   # in each cluster 
-  clGeneIds = sapply( 1:length(geneEnv$clustList),
-    function(i) paste( geneEnv$clustList[[i]], sep = ',' )
+  clGeneIds = sapply( seq(nGenes),
+    function(i) paste( geneEnv$clustList[[i]], collapse = ',' )
     )
 
   # Look up the gene description
