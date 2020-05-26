@@ -40,8 +40,8 @@ public:
 
   // Create a list distance matricies for each of the individual partitions.
   // The specified by the input vector of integers.
-  std::list< Rcpp::NumericMatrix > getAlignDists(
-    const std::vector< int > &genePartitions );
+  std::list< Rcpp::NumericMatrix > calcAlignPartitionDists(
+    std::string distType, std::vector< int > genePartitions );
 
 private:
 

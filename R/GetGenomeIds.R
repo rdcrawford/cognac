@@ -104,7 +104,7 @@ GetGenomeIds = function(
 
     } else {
       
-      errStr = paste( 
+        errStr = paste( 
         paste( "  --", geneEnv$genomeNames[isDuplicated]), 
         collapse = "\n" 
         )

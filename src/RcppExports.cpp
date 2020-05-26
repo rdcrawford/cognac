@@ -8,14 +8,16 @@
 
 using namespace Rcpp;
 
-// CalcDistMatAtPartitions
-Rcpp::NumericMatrix CalcDistMatAtPartitions(std::string msaPath);
-RcppExport SEXP _cognac_CalcDistMatAtPartitions(SEXP msaPathSEXP) {
+// CalcAlgnPartitionDists
+std::list < Rcpp::NumericMatrix > CalcAlgnPartitionDists(std::string msaPath, std::string method, std::vector< int > genePartitions);
+RcppExport SEXP _cognac_CalcAlgnPartitionDists(SEXP msaPathSEXP, SEXP methodSEXP, SEXP genePartitionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type msaPath(msaPathSEXP);
-    rcpp_result_gen = Rcpp::wrap(CalcDistMatAtPartitions(msaPath));
+    Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< std::vector< int > >::type genePartitions(genePartitionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(CalcAlgnPartitionDists(msaPath, method, genePartitions));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -193,7 +195,7 @@ RcppExport SEXP _cognac_RcppExport_registerCCallable() {
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_cognac_CalcDistMatAtPartitions", (DL_FUNC) &_cognac_CalcDistMatAtPartitions, 1},
+    {"_cognac_CalcAlgnPartitionDists", (DL_FUNC) &_cognac_CalcAlgnPartitionDists, 3},
     {"_cognac_ConcatenateAlignments", (DL_FUNC) &_cognac_ConcatenateAlignments, 2},
     {"_cognac_CreateAlgnDistMat", (DL_FUNC) &_cognac_CreateAlgnDistMat, 3},
     {"_cognac_CreateCognacRunData", (DL_FUNC) &_cognac_CreateCognacRunData, 4},

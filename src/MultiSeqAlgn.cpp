@@ -5,6 +5,7 @@
 #include <RcppParallel.h>
 #include "MultiSeqAlgn.h"
 #include "MsaDistance.h"
+using namespace Rcpp;
 using namespace RcppParallel;
 
 // -----------------------------------------------------------------------------
@@ -120,34 +121,42 @@ void MultiSeqAlgn::removeGaps()
 
 
 std::list< Rcpp::NumericMatrix > MultiSeqAlgn::calcAlignPartitionDists(
-  std::string distType, vector< int > genePartitions
+  std::string distType, std::vector< int > genePartitions
   )
 {
   // Initialize the list, reserving the number of matricies to output
   std::list< Rcpp::NumericMatrix > distMatList;
-  distMatList.reserve( getNumSeqs() );
 
   // Initialize the start of the gene partition
-  int gStart;
+  unsigned int gStart;
+  unsigned int numSeqs = getNumSeqs();
+  unsigned int len;
 
   // Convert the row names to an Rcpp character vector to be used as the
   // row and column names
   Rcpp::CharacterVector names = Rcpp::wrap( seqNames );
 
-  for ( int i = 0; i < partition.size(); i++ )
+  for ( int i = 0; i < genePartitions.size(); i++ )
   {
     if ( i == 0 ) gStart = 0;
     else gStart = genePartitions[ i - 1 ];
+    len = genePartitions[ i ] - gStart;
+
     // Allocate the matrix to store the differences between aligned
     // sequences we will return
-    Rcpp::NumericMatrix distMat( getNumSeqs(), getNumSeqs() );
+    Rcpp::NumericMatrix distMat( numSeqs, numSeqs );
+
+    // Create an alignment with only the sequences in the partitions
+    std::vector< std::string > subSeqs( numSeqs );
+    for ( unsigned int j = 0; j < numSeqs; j ++ )
+      subSeqs[ j ] = seqs[ j ].substr( gStart, len );
 
     // Create the functor
-    MsaDistance msaDistance( seqs, distMat, distType );
+    MsaDistance msaDistance( subSeqs, distMat, distType );
 
     // Call tbb::parallel_for, the code in the functor will be executed
     // on the availible number of threads.
-    parallelFor( gStart, genePartitions[ i ] - 1 , msaDistance );
+    parallelFor( 0, numSeqs, msaDistance );
 
     // Set the row and column names
     rownames( distMat ) = names;

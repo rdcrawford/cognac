@@ -23,7 +23,7 @@ GetFilePaths = function( dir, ext )
   }
   
   # Run the command to import the paths into R
-  cmd = paste0( "ls ", dir, '*', ext )
+  cmd   = paste0( "ls ", dir, '*', ext )
   files = system( cmd, intern = TRUE )
   
   if ( length(files) == 0 )
