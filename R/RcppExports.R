@@ -64,6 +64,10 @@ TranslateAaAlgnToDna <- function(gffData, faPath, genePositions, genomeName, aaA
     invisible(.Call(`_cognac_TranslateAaAlgnToDna`, gffData, faPath, genePositions, genomeName, aaAlgn, outputFile))
 }
 
+test <- function() {
+    invisible(.Call(`_cognac_test`))
+}
+
 # Register entry points for exported C++ functions
 methods::setLoadAction(function(ns) {
     .Call('_cognac_RcppExport_registerCCallable', PACKAGE = 'cognac')

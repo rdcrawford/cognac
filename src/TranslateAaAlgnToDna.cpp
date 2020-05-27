@@ -20,12 +20,12 @@ using namespace std;
 
 // [[Rcpp::export]]
 void TranslateAaAlgnToDna(
-  const Rcpp::DataFrame  &gffData,
-  const std::string      &faPath,
-  const std::vector<int> &genePositions,
-  const std::string      &genomeName,
-  const std::string      &aaAlgn,
-  const std::string      &outputFile
+  const Rcpp::DataFrame    &gffData,
+  const std::string        &faPath,
+  const std::vector< int > &genePositions,
+  const std::string        &genomeName,
+  const std::string        &aaAlgn,
+  const std::string        &outputFile
   )
 {
   // ---- Constant Declarations ------------------------------------------------
@@ -67,9 +67,7 @@ void TranslateAaAlgnToDna(
   // For each gene find the right bound in the alignment. We need to keep track
   // of wherethe genes fall in order to correctly place the stop codons
   for ( unsigned int i = 0; i < genePositions.size(); i ++ )
-  {
     geneEnd[ i ] = genePositions[ i ] - 1;
-  }
 
   // ---- Reverse translate the alignment --------------------------------------
 
@@ -106,21 +104,20 @@ void TranslateAaAlgnToDna(
     {
       // Increment the current gene in the alignment to advance to the
       // next end position
-      alGeneIdx ++ ;
+      alGeneIdx ++;
 
       // If we have written the entire sequece of this gene, get the next gene
       if ( genePos != 0 )
       {
-        ofs << seq.substr( genePos, 3 );
+        // ofs << seq.substr( genePos, 3 );
         genome.getGeneSeq( seq );
         genePos = 0;
 
       } else {
 
         // Insead of a stop codon, write a gap
-        ofs << "---";
+        // ofs << "---";
       }
-
     }
     algnPos ++; // Move to the aa residue in the alignment
 

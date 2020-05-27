@@ -181,7 +181,14 @@ bool BioSeq::getSeqAtCoord(
   // Update the sequence to return the substring for this contig. The start
   // is decremented by one because it is one indexed
   int len = endPos - startPos + 1;
-  seq = seqs[ seqIdx ].substr( startPos - 1, len );
+
+  seq = seqs[ seqIdx ].substr( startPos, len );
+  // Rcpp::Rcout << "  -- Contig: " << seqIdx   << std::endl
+  //             << "  -- Start: "  << startPos << std::endl
+  //             << "  -- End: "    << endPos   << std::endl
+  //             << "  -- Len: "    << len      << std::endl
+  //             << seq                         << std::endl;
+
   return true;
 }
 

@@ -163,17 +163,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // TranslateAaAlgnToDna
-void TranslateAaAlgnToDna(const Rcpp::DataFrame& gffData, const std::string& faPath, const std::vector<int>& genePositions, const std::string& genomeName, const std::string& aaAlgn, const std::string& outputFile);
+void TranslateAaAlgnToDna(const Rcpp::DataFrame& gffData, const std::string& faPath, const std::vector< int >& genePositions, const std::string& genomeName, const std::string& aaAlgn, const std::string& outputFile);
 RcppExport SEXP _cognac_TranslateAaAlgnToDna(SEXP gffDataSEXP, SEXP faPathSEXP, SEXP genePositionsSEXP, SEXP genomeNameSEXP, SEXP aaAlgnSEXP, SEXP outputFileSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::DataFrame& >::type gffData(gffDataSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type faPath(faPathSEXP);
-    Rcpp::traits::input_parameter< const std::vector<int>& >::type genePositions(genePositionsSEXP);
+    Rcpp::traits::input_parameter< const std::vector< int >& >::type genePositions(genePositionsSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type genomeName(genomeNameSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type aaAlgn(aaAlgnSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type outputFile(outputFileSEXP);
     TranslateAaAlgnToDna(gffData, faPath, genePositions, genomeName, aaAlgn, outputFile);
+    return R_NilValue;
+END_RCPP
+}
+// test
+void test();
+RcppExport SEXP _cognac_test() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    test();
     return R_NilValue;
 END_RCPP
 }
@@ -207,6 +216,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cognac_ParseCdHit", (DL_FUNC) &_cognac_ParseCdHit, 4},
     {"_cognac_ParseFasta", (DL_FUNC) &_cognac_ParseFasta, 1},
     {"_cognac_TranslateAaAlgnToDna", (DL_FUNC) &_cognac_TranslateAaAlgnToDna, 6},
+    {"_cognac_test", (DL_FUNC) &_cognac_test, 0},
     {"_cognac_RcppExport_registerCCallable", (DL_FUNC) &_cognac_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
 };

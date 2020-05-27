@@ -85,8 +85,7 @@ CodonMap::CodonMap()
 
     //Stop codons
     {"TGA", 'Z'}, {"TAA", 'Z'}, {"TAG", 'Z'}
-    };
-
+  };
 }
 
 //Look up values in the map
@@ -108,7 +107,7 @@ bool CodonMap::Translate( std::string &seq )
   // Initalize a string to store the translated sequence
   // Look up the stop codon. If there is not a cannonical stop
   // codon, translate the entire sequence.
-  char stopCodon = LookUpAa( seq.substr( seq.size() - 4, 3) ) ;
+  char stopCodon = LookUpAa( seq.substr( seq.size() - 3, 3) ) ;
   unsigned int aaSeqLen;
   if ( stopCodon == 'Z' )
   {
@@ -128,7 +127,12 @@ bool CodonMap::Translate( std::string &seq )
   for( unsigned int i = 1; i < aaSeqLen; i++ )
   {
     int startPos = i * 3;
-    aaSeq[i] = LookUpAa( seq.substr(startPos, 3) );
+
+    char aa = LookUpAa( seq.substr(startPos, 3) );
+
+    // If this is an internal stop codon, it codes for Selenocysteine -- change
+    // the char added to the string to U
+    if ( aa != 'Z' ) aaSeq[i] = aa;
   }
 
   //Update the seq variable (passed by reference)

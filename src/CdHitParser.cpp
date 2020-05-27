@@ -20,13 +20,18 @@ CdHitParser::CdHitParser(
   Rcpp::Environment &geneEnv        // Environment to append results to
   )
 {
+  // Set the class member variables
   genomeIds = Rcpp::as<std::vector<std::string> >( geneEnv[ "genomeNames" ] );
+  this->clSizeThesh = clSizeThesh; // Set the minimium cluster size to process
 
-  this->clSizeThesh = clSizeThesh;
-  // Open the cd-hit results for reading
-  ifstream    ifs( cdHitClstFile.c_str() );
+  ifstream    ifs;         // Input file stream for the cd-hit output
   std::string line;        // Currnt line in the text file
   int         lineNum = 0; // Counter for the current line
+
+  // Open the cd-hit results for reading
+  ifs.open( cdHitClstFile.c_str() );
+  if ( !ifs.is_open() )
+    Rcpp::stop("Cannot open the cd-hit results...");
 
   // Read in the results  line by line
   while ( getline( ifs, line ) )
@@ -48,10 +53,8 @@ CdHitParser::CdHitParser(
     }
   }
 
-
   // Find the positions of all of the fasta headers in the results
-  std::vector<int>::iterator it;
-  for ( it = headers.begin() + 1; it != headers.end(); ++it )
+  for ( auto it = headers.begin() + 1; it != headers.end(); ++it )
   {
     // The end of the cluster is the position before the next header
     tailers.push_back( *it - 1 );
@@ -59,7 +62,7 @@ CdHitParser::CdHitParser(
   // The final end position is the last string in the vector
   tailers.push_back( cdHitResults.size() - 1 );
 
-  // If requested remove any low frequency clusters
+  // If requested remoeve any low frequency clusters
   if ( clSizeThesh > 1 )
   {
     if (  !RemoveLowFreqClusts() )
@@ -70,12 +73,12 @@ CdHitParser::CdHitParser(
 
   // Transform the raw results to a list of vectors containing the names
   // of the genes
-  CreateClustList( );
+  CreateClustList();
 
   if ( isBinary )
   {
     // Free the memory associated with the cd-hit results
-    cdHitResults.clear( );
+    cdHitResults.clear();
 
     // Create a genome x gene matrix with the presene or absene of each cluster
     geneEnv.assign( "geneMat", CreateBinaryMat() );
@@ -83,7 +86,7 @@ CdHitParser::CdHitParser(
   } else {
 
     // Create the list of gene identities to the reference sequence
-    CreateItentList( );
+    CreateItentList();
 
     // Free the memory associated with the cd-hit results
     cdHitResults.clear( );
@@ -108,7 +111,7 @@ bool CdHitParser::RemoveLowFreqClusts( )
   while ( headerIt != headers.end() )
   {
     // Calculate the number of genes in the custer
-    clustSize = *tailerIt - *headerIt + 1;
+    clustSize = *tailerIt - *headerIt;
 
     // If there are fewer than the required number of genes remove them
     if ( clustSize < clSizeThesh )
@@ -242,8 +245,8 @@ void CdHitParser::CreateItentList( )
 
 int CdHitParser::GetGenomeIdx( const string & name )
 {
-  auto it = std::find(genomeIds.begin(), genomeIds.end(), name);
-  if (it == genomeIds.end()) return -1;
+  auto it = std::find( genomeIds.begin(), genomeIds.end(), name );
+  if ( it == genomeIds.end() ) return -1;
   return it - genomeIds.begin();
 }
 
@@ -262,7 +265,8 @@ Rcpp::NumericMatrix CdHitParser::CreateBinaryMat(  )
     // gene IDs and genome IDs for the respective list element
     for ( auto it = gIdIt->begin(); it < gIdIt->end(); it++ )
     {
-      geneMat( GetGenomeIdx( *it ), colIdx ) = 1;
+      int rIdx = GetGenomeIdx( *it );
+      if ( rIdx != -1 ) geneMat( rIdx, colIdx ) = 1;
     }
 
     // Move to the next list element
@@ -295,7 +299,10 @@ Rcpp::NumericMatrix CdHitParser::CreateIdentMat(  )
     for ( auto it = gIdIt->begin(); it < gIdIt->end(); it++ )
     {
       int rIdx = GetGenomeIdx( *it );
-      if ( !geneMat( rIdx, colIdx ) ) geneMat( rIdx, colIdx ) = *percIt;
+      if ( rIdx != -1 )
+      {
+        if ( !geneMat( rIdx, colIdx ) ) geneMat( rIdx, colIdx ) = *percIt;
+      }
       percIt ++;
     }
 

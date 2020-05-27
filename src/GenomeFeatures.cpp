@@ -123,9 +123,9 @@ bool GenomeFeatures::parseGffEntry( const std::string &line, BioSeq *wgs )
   // Add the atributes of the genes to the vectors
   featId.push_back( "fig|" + genomeId + ".peg." + to_string( numGenes ) );
   description.push_back( getDescription( attributes ) );
-  contig.push_back( contIdx + 1 );
-  startPos.push_back( fStart );
-  endPos.push_back( fEnd );
+  contig.push_back( contIdx );
+  startPos.push_back( fStart - 1 );
+  endPos.push_back( fEnd - 1 );
   strand.push_back( fStrand );
 
   // Finished parsing this entry. Return true to indcate that this gene

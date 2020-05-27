@@ -40,11 +40,9 @@ bool Genome::parseGenome(
 // If the sequnce was updated, return true.
 bool Genome::getGeneSeq( std::string &seq )
 {
-  if ( numGenes == 0 ) return false;
-  
   // Get the sequence at the coordinates of this entry in the gff file
   bool isUpdated =
-    getSeqAtCoord( contig[ gIdx ] - 1, startPos[ gIdx ], endPos[ gIdx ], seq );
+    getSeqAtCoord( contig[ gIdx ], startPos[ gIdx ], endPos[ gIdx ], seq );
 
   // If these were not valid coordinates, return false indicating that
   // the sequnce was not updated
@@ -56,8 +54,8 @@ bool Genome::getGeneSeq( std::string &seq )
   }
 
   // If this is the reverse strand, get the reverse compliment
-  if ( strand[ gIdx ].compare("=") == 0 ) getReverseCompliment( seq );
-
+  if ( strand[ gIdx ].compare("-") == 0 ) getReverseCompliment( seq );
+  // Rcpp::Rcout << seq << std::endl;
   // Increment the index for the next gene
   gIdx ++;
 
@@ -103,12 +101,12 @@ bool Genome::translateSeqs()
 
     // Translate the nucleotide sequence
     if ( !codonMap.Translate( seq ) ) return false;
-
+    // Rcpp::Rcout << seq << std::endl;
     // If the gene was updated and translated, add it to the vector of
     // amino acid sequences
      aaSeqs.push_back( seq );
   }
-
+  
   return true;
 }
 

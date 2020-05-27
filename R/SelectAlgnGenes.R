@@ -22,6 +22,9 @@ SelectAlgnGenes = function(
   # Set the minimium number of genes to build the tree
   if ( missing(minGeneNum) ) minGeneNum = 2
 
+  if ( missing(maxMissGenes) ) maxMissGenes = 1
+  
+  
   # Save the number of genes and genomes before filtering
   numClusts  = length( geneEnv$clustList )
   numGenomes = length( geneEnv$genomeNames )
@@ -37,7 +40,9 @@ SelectAlgnGenes = function(
     isOutGroup = geneEnv$genomeNames %in% outGroup
     for ( i in which( isOutGroup ) ) isKeeper[ i ] = FALSE
   }
-
+  outGroup = NULL
+  save( file = "SelectAlgnGenes.Rdata", list = ls() )
+  # load("../SelectAlgnGenes.Rdata")
   repeat
   {
     # Check that there are suffienct gene counts in the data set to make the
@@ -76,19 +81,51 @@ SelectAlgnGenes = function(
     if ( coreGeneCount >= minGeneNum ) break
   }
 
-  if ( !missing(maxMissGenes) )
+  # Calcuate the fraction of missing genes
+  missingGeneFrac = sapply( 1:nrow(geneEnv$geneMat),
+    function(i) sum( geneEnv$geneMat[i, isCoreGene] == 0 ) / coreGeneCount
+    )
+  if ( 1 %in% missingGeneFrac )
   {
-    if ( maxMissGenes == 1 ) break
+    isMissingAll =  missingGeneFrac == 1
+    
+    if ( !missing(outGroup) )
+    {
+      if ( outGroup %in% geneEnv$genomeNames[ isMissingAll ] )
+      {
+        stop("The supplied outgroup (", outGroup, ") has none of the ",
+          "selected core genes. Consider altering the cd-hit parameters ",
+          " to be less stringent."
+          )
+      }
+    }
+    
+    # Update the genomes and genes that are still being used for the analysis
+    geneEnv$genomeNames = geneEnv$genomeNames[ !isMissingAll ]
+    geneEnv$geneMat     = geneEnv$geneMat[ !isMissingAll, ]
+    
+    cat(
+      "  -- Removing ", sum(isMissingAll), "genomes missing all of the ",
+      "selected core genes",
+      sep = ''
+      )
+    
+  }
+  
+  
+  if ( maxMissGenes < 1 )
+  {
     cat(
       "  -- Removing genomes with more than ", maxMissGenes * 100,
       "% missing genes\n",
       sep = ''
       )
+    
     # Calcuate the fraction of missing genes
     missingGeneFrac = sapply( 1:nrow(geneEnv$geneMat),
       function(i) sum( geneEnv$geneMat[i, isCoreGene] == 0 ) / coreGeneCount
       )
-
+    
     # Remove genomes that are missing too many genes
     isMissingTooMuch = missingGeneFrac > maxMissGenes
 
@@ -101,7 +138,6 @@ SelectAlgnGenes = function(
     if ( TRUE %in% isMissingTooMuch )
     {
       # Update the genomes and genes that are still being used for the analysis
-      geneEnv$gfList      = geneEnv$gfList[ !isMissingTooMuch ]
       geneEnv$genomeNames = geneEnv$genomeNames[ !isMissingTooMuch ]
       geneEnv$geneMat     = geneEnv$geneMat[ !isMissingTooMuch, ]
       numStillIn          = sum( !isMissingTooMuch )

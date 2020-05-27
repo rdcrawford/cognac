@@ -18,8 +18,6 @@ ReverseTranslateAlgn = function(
   geneEnv, concatGeneFa, outDir, runId, algnEnv
   )
 {
-  # save( file = "ReverseTranslateAlgn.Rdata", list = ls() )
-  # load("ReverseTranslateAlgn.Rdata")
   # Constant declarations
   AA_PARTITIONS  = 4 # Column index of the aa gene partitions 
   
@@ -66,7 +64,7 @@ ReverseTranslateAlgn = function(
     # If there are any missing genes core genes represented as na in the
     # vecotr, remove them
     if ( TRUE %in% is.na(gfRowIdxs) ) gfRowIdxs = gfRowIdxs[ !is.na(gfRowIdxs) ]
-
+    
     # Reverse translate the current sequence in the concatenated gene alignemnt
     TranslateAaAlgnToDna(
       geneEnv$gfList[[i]][ gfRowIdxs, ],
