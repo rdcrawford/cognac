@@ -110,8 +110,9 @@ bool GenomeFeatures::parseGffEntry( const std::string &line, BioSeq *wgs )
   // The final entry is the remainder of the line
   attributes = ss.str();
 
-  auto accnPos = faHeader.find( "accn|" );
-  if ( accnPos != string::npos ) faHeader.erase( 0, accnPos + 5 );
+  // Remove the accn string from the contig name if present 
+  auto accnPos = fContig.find( "accn|" );
+  if ( accnPos != string::npos ) fContig.erase( 0, accnPos + 5 );
 
   // If this contig was not able to be assigned, dont continue
   if ( !wgs->getSeqIndex( fContig, contIdx ) ) return false;
