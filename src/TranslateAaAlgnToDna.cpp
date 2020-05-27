@@ -57,7 +57,7 @@ void TranslateAaAlgnToDna(
 
   // Get the length of the aligment to use as the exit potiion
   // in the loop
-  int algnLen   = aaAlgn.size() - 1;
+  int algnLen = aaAlgn.size() - 1;
 
   // ---- Create  vector with the end positions for each gene ------------------
 

@@ -104,13 +104,12 @@ SelectAlgnGenes = function(
     }
     
     # Update the genomes and genes that are still being used for the analysis
-    RemoveGenomesFromAnalisys( geneEnv, geneEnv$genomeIdList[ isMissingAll ] )
+    RemoveGenomesFromAnalisys( geneEnv, geneEnv$genomeNamest[ isMissingAll ] )
     cat(
       "  -- Removing ", sum(isMissingAll), " genomes missing all of the ",
       "selected core genes\n",
       sep = ''
       )
-    
   }
   
   # If there is a threshold on the number of genes which can be missing
@@ -158,7 +157,7 @@ SelectAlgnGenes = function(
 
       # Remove the genomes missing too many genes from the analysis
       RemoveGenomesFromAnalisys( 
-        geneEnv, geneEnv$genomeIdList[ isMissingTooMuch ] 
+        geneEnv, geneEnv$genomeNames[ isMissingTooMuch ] 
         )
     }
   }
