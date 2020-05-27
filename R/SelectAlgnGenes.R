@@ -39,9 +39,7 @@ SelectAlgnGenes = function(
     isOutGroup = geneEnv$genomeNames %in% outGroup
     for ( i in which( isOutGroup ) ) isKeeper[ i ] = FALSE
   }
-  # outGroup = NULL
-  # save( file = "SelectAlgnGenes.Rdata", list = ls() )
-  # load("../SelectAlgnGenes.Rdata")
+
   repeat
   {
     # Check that there are suffienct gene counts in the data set to make the
@@ -80,10 +78,16 @@ SelectAlgnGenes = function(
     if ( coreGeneCount >= minGeneNum ) break
   }
 
+  # Subset to only include the core genes
+  geneEnv$clustList    = geneEnv$clustList[ isCoreGene ]
+  geneEnv$genomeIdList = geneEnv$genomeIdList[ isCoreGene ]
+  geneEnv$geneMat      = geneEnv$geneMat[ , isCoreGene ]
+  
   # Calcuate the fraction of missing genes
   missingGeneFrac = sapply( 1:nrow(geneEnv$geneMat),
     function(i) sum( geneEnv$geneMat[i, isCoreGene] == 0 ) / coreGeneCount
     )
+  
   if ( 1 %in% missingGeneFrac )
   {
     isMissingAll =  missingGeneFrac == 1
@@ -100,11 +104,9 @@ SelectAlgnGenes = function(
     }
     
     # Update the genomes and genes that are still being used for the analysis
-    geneEnv$genomeNames = geneEnv$genomeNames[ !isMissingAll ]
-    geneEnv$geneMat     = geneEnv$geneMat[ !isMissingAll, ]
-    geneEnv$gfList      = geneEnv$gfList[ !isMissingAll ]
+    RemoveGenomesFromAnalisys( geneEnv, geneEnv$genomeIdList[ isMissingAll ] )
     cat(
-      "  -- Removing ", sum(isMissingAll), "genomes missing all of the ",
+      "  -- Removing ", sum(isMissingAll), " genomes missing all of the ",
       "selected core genes\n",
       sep = ''
       )
@@ -136,11 +138,7 @@ SelectAlgnGenes = function(
 
     if ( TRUE %in% isMissingTooMuch )
     {
-      # Update the genomes and genes that are still being used for the analysis
-      geneEnv$genomeNames = geneEnv$genomeNames[ !isMissingTooMuch ]
-      geneEnv$geneMat     = geneEnv$geneMat[ !isMissingTooMuch, ]
-      geneEnv$gfList      = geneEnv$gfList[ !isMissingTooMuch ]
-      numStillIn          = sum( !isMissingTooMuch )
+      numStillIn = sum( !isMissingTooMuch )
 
       # Make sure there is an alignment for atleast two genomes
       if ( numStillIn < 2 )
@@ -158,15 +156,15 @@ SelectAlgnGenes = function(
         sep = ''
         )
 
+      RemoveGenomesFromAnalisys( 
+        geneEnv, geneEnv$genomeIdList[ isMissingTooMuch ] 
+        )
+      
       # Recalculate the number of core genes
       isCoreGene = CalcNumCoreGenes( geneEnv, coreGeneThresh )
     }
   }
 
-  # Subset to only include the core genes
-  geneEnv$clustList    = geneEnv$clustList[ isCoreGene ]
-  geneEnv$genomeIdList = geneEnv$genomeIdList[ isCoreGene ]
-  geneEnv$geneMat      = geneEnv$geneMat[ , isCoreGene ]
   cat(
     "  -- ",  numClusts, " orthologous genes were identified by cd-hit\n",
     "  -- ",  sum( isCoreGene ), 

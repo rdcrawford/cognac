@@ -237,11 +237,13 @@ cognac = function(
   cat("\nStep 1: parsing the data on the input genomes\n")
   if ( missing( geneEnv ) )
     geneEnv = CreateGeneDataEnv( featureFiles, fastaFiles, genomeIds, tempDir )
+  save( file = paste0( tempDir, "debug1.Rdata" ),  list = ls() )
   stepTime = GetSplit( startTime )
   
   # Identify orthologous genes with cd-hit
   cat("\nStep 2: finding orthologs with cd-hit\n")
   FindCogs( geneEnv, tempDir, percId, algnCovg, threadVal, cdHitFlags )
+  save( file = paste0( tempDir, "debug3.Rdata" ),  list = ls() )
   stepTime = GetSplit( startTime )
   
   # Find the copy number of each gene. Any gene that is present in 
@@ -249,18 +251,21 @@ cognac = function(
   # from the analysis.
   cat("\nStep 3: filtering for single copy genes\n")
   FilterMultiCopyGenes( geneEnv, copyNumTresh )
+  save( file = paste0( tempDir, "debug3.Rdata" ),  list = ls() )
   stepTime = GetSplit( stepTime )
   
   # Use the cd-hit results to identify a set of core genes present in all of
   # the input genomes.
   cat("\nStep 4: selecting genes to include in the alignment\n")
   SelectAlgnGenes( geneEnv, minGeneNum, coreGeneThresh, maxMissGenes, outGroup )
+  save( file = paste0( tempDir, "debug4.Rdata" ),  list = ls() )
   stepTime = GetSplit( stepTime )
   
   # Individually create a new fasta file for each gene and generate the
   # alignment each gene with mafft
   cat("\nStep 5: aligning and concatenating orthologous genes\n")
   concatGeneFa = ConcatenateGeneAlgns( geneEnv, outDir, runId )
+  save( file = paste0( tempDir, "debug5.Rdata" ),  list = ls() )
   stepTime     = GetSplit( stepTime )
 
   # Create the environment with the objects to export
