@@ -177,15 +177,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// test
-void test();
-RcppExport SEXP _cognac_test() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    test();
-    return R_NilValue;
-END_RCPP
-}
 
 // validate (ensure exported C++ functions exist before calling them)
 static int _cognac_RcppExport_validate(const char* sig) { 
@@ -216,7 +207,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cognac_ParseCdHit", (DL_FUNC) &_cognac_ParseCdHit, 4},
     {"_cognac_ParseFasta", (DL_FUNC) &_cognac_ParseFasta, 1},
     {"_cognac_TranslateAaAlgnToDna", (DL_FUNC) &_cognac_TranslateAaAlgnToDna, 6},
-    {"_cognac_test", (DL_FUNC) &_cognac_test, 0},
     {"_cognac_RcppExport_registerCCallable", (DL_FUNC) &_cognac_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
 };
