@@ -85,7 +85,7 @@ SelectAlgnGenes = function(
   
   # Calcuate the fraction of missing genes
   missingGeneFrac = sapply( 1:nrow(geneEnv$geneMat),
-    function(i) sum( geneEnv$geneMat[i, isCoreGene] == 0 ) / coreGeneCount
+    function(i) sum( geneEnv$geneMat[ i, ] == 0 ) / coreGeneCount
     )
   
   if ( 1 %in% missingGeneFrac )
@@ -156,12 +156,10 @@ SelectAlgnGenes = function(
         sep = ''
         )
 
+      # Remove the genomes missing too many genes from the analysis
       RemoveGenomesFromAnalisys( 
         geneEnv, geneEnv$genomeIdList[ isMissingTooMuch ] 
         )
-      
-      # Recalculate the number of core genes
-      isCoreGene = CalcNumCoreGenes( geneEnv, coreGeneThresh )
     }
   }
 
