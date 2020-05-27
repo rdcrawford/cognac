@@ -8,7 +8,9 @@
 // Ryan D. Crawford
 // 05/15/2020
 // -----------------------------------------------------------------------------
-// This function reads in the path to a multiple sequence alignment.
+// This function reads in the path to a multiple sequence alignment, and Then
+// generates a distance matrix at each of the partions specified in the input
+// vector, which specifies the end of the partitions.  
 // -----------------------------------------------------------------------------
 
 // [[Rcpp::export]]

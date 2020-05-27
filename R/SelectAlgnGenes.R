@@ -39,8 +39,8 @@ SelectAlgnGenes = function(
     isOutGroup = geneEnv$genomeNames %in% outGroup
     for ( i in which( isOutGroup ) ) isKeeper[ i ] = FALSE
   }
-  outGroup = NULL
-  save( file = "SelectAlgnGenes.Rdata", list = ls() )
+  # outGroup = NULL
+  # save( file = "SelectAlgnGenes.Rdata", list = ls() )
   # load("../SelectAlgnGenes.Rdata")
   repeat
   {
