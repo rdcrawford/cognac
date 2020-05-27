@@ -24,7 +24,6 @@ SelectAlgnGenes = function(
 
   if ( missing(maxMissGenes) ) maxMissGenes = 1
   
-  
   # Save the number of genes and genomes before filtering
   numClusts  = length( geneEnv$clustList )
   numGenomes = length( geneEnv$genomeNames )
@@ -112,7 +111,7 @@ SelectAlgnGenes = function(
     
   }
   
-  
+  # If there is a threshold on the number of genes which can be missing
   if ( maxMissGenes < 1 )
   {
     cat(
