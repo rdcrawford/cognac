@@ -102,10 +102,10 @@ SelectAlgnGenes = function(
     # Update the genomes and genes that are still being used for the analysis
     geneEnv$genomeNames = geneEnv$genomeNames[ !isMissingAll ]
     geneEnv$geneMat     = geneEnv$geneMat[ !isMissingAll, ]
-    
+    geneEnv$gfList      = geneEnv$gfList[ !isMissingAll ]
     cat(
       "  -- Removing ", sum(isMissingAll), "genomes missing all of the ",
-      "selected core genes",
+      "selected core genes\n",
       sep = ''
       )
     
@@ -139,6 +139,7 @@ SelectAlgnGenes = function(
       # Update the genomes and genes that are still being used for the analysis
       geneEnv$genomeNames = geneEnv$genomeNames[ !isMissingTooMuch ]
       geneEnv$geneMat     = geneEnv$geneMat[ !isMissingTooMuch, ]
+      geneEnv$gfList      = geneEnv$gfList[ !isMissingTooMuch ]
       numStillIn          = sum( !isMissingTooMuch )
 
       # Make sure there is an alignment for atleast two genomes
