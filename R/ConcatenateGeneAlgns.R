@@ -59,7 +59,7 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
     {
       stop( "The alignment for gene ", i, " is in the wrong order...\n" )
     }
-
+  
     # Append each alignment to the vector of the concatenated
     # alignemnt (passed by reference)
     ConcatenateAlignments( concatAlgn, algnList[[i]] )
