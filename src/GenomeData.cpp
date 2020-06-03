@@ -17,11 +17,14 @@ using namespace RcppParallel;
 
 // Value ctor for inputs of gff files, fasta files, and the corresponding
 // genome names
-GenomeData::GenomeData(const std::vector< std::string > &gffPaths,
+GenomeData::GenomeData(
+  const std::vector< std::string > &gffPaths,
   const std::vector< std::string > &faPaths,
-  const std::vector< std::string > &genomeIds)
+  const std::vector< std::string > &genomeIds
+  )
 {
   // Initialize the vector of genome class objects
+  genomeData.reserve( gffPaths.size() );
   for ( unsigned int i = 0; i < gffPaths.size(); i++ )
     genomeData.push_back( Genome( faPaths[i], gffPaths[i], genomeIds[i] ) );
 

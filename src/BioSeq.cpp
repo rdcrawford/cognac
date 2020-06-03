@@ -22,8 +22,13 @@ bool BioSeq::parseFasta( )
 
   // If the file stream has failed to open, return false
   ifs.open( faPath.c_str() );
-  if ( ifs.fail() ) return false;
+  if ( ifs.fail() || !ifs.is_open() )
+  {
+     Rcpp::Rcout << "Failed to open the fasta file..." << std::endl;
+     return false;
+  }
 
+  if ( ifs.peek() == std::ifstream::traits_type::eof() ) return false;
   // Read in the fasta file line by line
   while ( getline( ifs, line ) )
   {

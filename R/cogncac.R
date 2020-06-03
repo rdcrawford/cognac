@@ -208,12 +208,7 @@ cognac = function(
   options( future.globals.maxSize = Inf )
 
   # Set up multithreadding via future
-  if ( threadVal == 1 )
-  {
-    plan = future::sequential
-  } else {
-    plan = future::tweak( future::multiprocess, workers = threadVal )
-  }
+  plan = future::tweak( future::multiprocess, workers = threadVal )
   future::plan( plan )
 
   # Set the number of threads fot TBB

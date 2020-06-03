@@ -17,9 +17,10 @@ bool GenomeFeatures::parseGfs( BioSeq *wgs )
   ifstream    gff;
   std::string line;
 
-  // Open the input stream
+  // Open the input stream and check that it is correct 
   gff.open( gfPath.c_str() );
-  if ( !gff.is_open() ) return false;
+  if ( !gff.is_open() || gff.fail() ) return false;
+  if ( gff.peek() == std::ifstream::traits_type::eof() ) return false;
 
   // Read in the file line by line
   while ( getline( gff, line ) )
@@ -110,7 +111,7 @@ bool GenomeFeatures::parseGffEntry( const std::string &line, BioSeq *wgs )
   // The final entry is the remainder of the line
   attributes = ss.str();
 
-  // Remove the accn string from the contig name if present 
+  // Remove the accn string from the contig name if present
   auto accnPos = fContig.find( "accn|" );
   if ( accnPos != string::npos ) fContig.erase( 0, accnPos + 5 );
 

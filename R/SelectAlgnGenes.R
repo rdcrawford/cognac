@@ -115,15 +115,9 @@ SelectAlgnGenes = function(
   # If there is a threshold on the number of genes which can be missing
   if ( maxMissGenes < 1 )
   {
-    cat(
-      "  -- Removing genomes with more than ", maxMissGenes * 100,
-      "% missing genes\n",
-      sep = ''
-      )
-    
     # Calcuate the fraction of missing genes
     missingGeneFrac = sapply( 1:nrow(geneEnv$geneMat),
-      function(i) sum( geneEnv$geneMat[i, isCoreGene] == 0 ) / coreGeneCount
+      function(i) sum( geneEnv$geneMat[ i, ] == 0 ) / coreGeneCount
       )
     
     # Remove genomes that are missing too many genes
@@ -164,7 +158,7 @@ SelectAlgnGenes = function(
 
   cat(
     "  -- ",  numClusts, " orthologous genes were identified by cd-hit\n",
-    "  -- ",  sum( isCoreGene ), 
+    "  -- ",  length( geneEnv$clustList ), 
     " genes will be used to create the alignment\n",
     sep = ''
     )

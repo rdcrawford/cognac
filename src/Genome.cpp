@@ -17,15 +17,15 @@ using namespace std;
 
 void Genome::parseGenome()
 {
-  Rcpp::Rcout << "Parsing fasta file: " << faPath << endl;
+  // Rcpp::Rcout << "  -- Parse fasta: " << faPath << std::endl;
   // Read in the fasta file
   if ( !parseFasta() )
-    Rcpp::stop( "Failed parsing fasta file: ", faPath );
-  Rcpp::Rcout << "Parsing gff file: " << gfPath << endl;
+    Rcpp::stop( "Failed parsing fasta file: " + faPath );
+  // Rcpp::Rcout << "  -- Parse gff: " << gfPath << std::endl;
   // Parse the relevant attributes of the gff file to the component vectors
   if ( !parseGfs( this ) )
-    Rcpp::stop( "Failed parsing gff file: ", gfPath );
-  Rcpp::Rcout << "Finished" << endl;
+    Rcpp::stop( "Failed parsing gff file: " + gfPath );
+  // Rcpp::Rcout << "  -- fin" << std::endl;
 }
 
 bool Genome::parseGenome(
