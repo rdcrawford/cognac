@@ -16,7 +16,7 @@ RemoveGenomesFromAnalisys  = function( geneEnv, toRemove )
   geneEnv$genomeNames = geneEnv$genomeNames[ !isOut ]
   geneEnv$geneMat     = geneEnv$geneMat[ !isOut, ]
   geneEnv$gfList      = geneEnv$gfList[ !isOut ]
-  
+  geneEnv$fastaFiles  = geneEnv$fastaFiles[ !isOut ]
   
   for ( i in 1:length(geneEnv$genomeIdList) )
   {
