@@ -60,7 +60,7 @@ ReverseTranslateAlgn = function(
       geneId  = geneEnv$clustList[[ j ]][ listIdx ]
       return( which( geneEnv$gfList[[ i ]]$featId == geneId ) )
     })
-
+    
     # If there are any missing genes core genes represented as na in the
     # vecotr, remove them
     if ( TRUE %in% is.na(gfRowIdxs) ) gfRowIdxs = gfRowIdxs[ !is.na(gfRowIdxs) ]
