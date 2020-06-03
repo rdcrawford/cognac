@@ -22,16 +22,15 @@ void CreateCognacRunData(
   const std::string                &faaPath  // Paths to the faa to create
   )
 {
-  Rcpp::Rcout << "CreateCognacRunData step 1: get genome names" << std::endl;
   // Retrieve the genome names from the environment
   std::vector< std::string > genomeIds = geneEnv[ "genomeNames" ];
 
   // Intialize a vector of genome class objects to parse
   GenomeData genomeData( gfPaths, faPaths, genomeIds );
-  // Rcpp::Rcout << "CreateCognacRunData step 3: write the faa" << std::endl;
+
   // Write the gene sequences to an faa file to be the input for cd-hit
   genomeData.writeFaa( faaPath );
-  // Rcpp::Rcout << "CreateCognacRunData step 4: assign the data" << std::endl;
+
   // Parse the genome features to a data frames
   geneEnv.assign( "gfList", genomeData.createGeneDataFrames() );
   geneEnv.assign( "geneSeqs", genomeData.getAaSeqs() );
