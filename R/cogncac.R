@@ -230,7 +230,7 @@ cognac = function(
   # and a vector with the gene Ids. Additionally, the amino acid sequences
   # are written to create the input file for cd-hit. 
   cat("\nStep 1: parsing the data on the input genomes\n")
-  if ( missing( geneEnv ) )
+  # if ( missing( geneEnv ) )
     geneEnv = CreateGeneDataEnv( featureFiles, fastaFiles, genomeIds, tempDir )
   save( file = paste0( tempDir, "debug1.Rdata" ),  list = ls() )
   stepTime = GetSplit( startTime )

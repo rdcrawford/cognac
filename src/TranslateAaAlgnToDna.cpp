@@ -57,7 +57,7 @@ void TranslateAaAlgnToDna(
 
   // Get the length of the aligment to use as the exit potiion
   // in the loop
-  int algnLen = aaAlgn.size() - 1;
+  int algnLen = aaAlgn.size();
 
   // ---- Create  vector with the end positions for each gene ------------------
 
@@ -86,22 +86,9 @@ void TranslateAaAlgnToDna(
   // alignment in accordance with the aa alignment
   while ( algnPos < algnLen )
   {
-    // Write the codon correpsonding to thecurrent position in the alignment
-    if ( aaAlgn[ algnPos ] == '-' )
-    {
-      ofs << "---";
-    }
-    else
-    {
-      // Write the curren cdon and move the position in the gene to the
-      // next codon
-      ofs << seq.substr( genePos, 3 );
-      genePos += 3;
-    }
-
     // If this is the end of the gene, write the stop codon if the
     // gene is present in this genome
-    if ( algnPos == geneEnd[ alGeneIdx ] )
+    if ( algnPos > geneEnd[ alGeneIdx ] )
     {
 
       // Increment the current gene in the alignment to advance to the
@@ -113,12 +100,21 @@ void TranslateAaAlgnToDna(
       {
         // ofs << seq.substr( genePos, 3 );
         genome.getGeneSeq( seq );
-
-      } else {
-
-        // Insead of a stop codon, write a gap
-        // ofs << "---";
+        genePos = 0;
       }
+    }
+
+    // Write the codon correpsonding to thecurrent position in the alignment
+    if ( aaAlgn[ algnPos ] == '-' )
+    {
+      ofs << "---";
+    }
+    else
+    {
+      // Write the curren cdon and move the position in the gene to the
+      // next codon
+      ofs << seq.substr( genePos, 3 );
+      genePos += 3;
     }
 
     // Move to the aa residue in the alignment
