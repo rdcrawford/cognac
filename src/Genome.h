@@ -26,12 +26,14 @@ public:
   Genome()
   { ; }
 
-  // Value ctor: takes the
+  // Value ctor: takes the paths to the genome annoations file and fasta file
   Genome( const std::string &faPath, const std::string &gffPath,
     const std::string &genomeId ):
     BioSeq( faPath ), GenomeFeatures( gffPath, genomeId )
   { ; }
 
+  // Value ctor: takes the path to the fasta file and the vectors corresponding
+  // to the gene annotations necessary to parse the fasta file
   Genome( const std::string &faPath, vector<string> strand,
     vector<int> startPos, vector<int> endPos, vector<int> contig ):
     BioSeq( faPath ), GenomeFeatures( strand, startPos, endPos, contig )
@@ -40,7 +42,7 @@ public:
   // This functions takes and integer correponding the the current gene,
   // and a string corresponding to a gene sequence to be updated, both passed
   // by reference. The current gene index is incremented with each function
-  // call and the seq variable is updated to
+  // call and the seq variable is updated to the current gene
   bool getGeneSeq( std::string &seq );
 
   // Parse the inut files
