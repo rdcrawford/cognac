@@ -206,6 +206,9 @@ bool BioSeq::getSeqAtCoord(
   // Check that the requested direction is correct
   if ( startPos > endPos ) return false;
 
+  // Check the the end of the sequence is not out of range
+  if ( endPos > seqs[ seqIdx ].size() ) return false;
+
   // Update the sequence to return the substring for this contig. The start
   // is decremented by one because it is one indexed
   int len = endPos - startPos + 1;
