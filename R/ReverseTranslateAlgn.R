@@ -14,9 +14,7 @@
 #' @export
 #  -----------------------------------------------------------------------------
 
-ReverseTranslateAlgn = function( 
-  geneEnv, concatGeneFa, outDir, runId, algnEnv
-  )
+ReverseTranslateAlgn = function( geneEnv, concatGeneFa, outDir, runId, algnEnv )
 {
   # Constant declarations
   AA_PARTITIONS  = 4 # Column index of the aa gene partitions 
@@ -38,7 +36,8 @@ ReverseTranslateAlgn = function(
   # Define the name of the output file
   concatGeneDnaFa = 
     paste0( outDir, runId,  "concatenated_gene_nt_alignment.fasta" )
-  if ( file.exists( concatGeneDnaFa ) ) system( paste("rm", concatGeneDnaFa) )
+  if ( file.exists( concatGeneDnaFa ) )
+    system( paste( "rm", concatGeneDnaFa ) )
 
   # Read in the concatenated gene alignment
   concatGeneSeq = ParseFasta( concatGeneFa )

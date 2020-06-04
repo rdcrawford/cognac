@@ -141,6 +141,7 @@ cognac = function(
     featureFiles = GetFilePaths( featureDir, featureExt )
   }
   
+  
   # Check that the size of the vectors are the same length
   if ( length(fastaFiles) != length(featureFiles) )
   {
@@ -150,6 +151,9 @@ cognac = function(
       " or \"featureDir\"(directory containing gff or genbank files)",
       )
   }
+  
+  if ( length( fastaFiles ) == 0 )
+    stop( "No fasta files were input..." )
   
   # Create the genome IDs and/or check the ids to ensre they are valid
   genomeIds = GetGenomeIds( 
@@ -216,7 +220,6 @@ cognac = function(
 
   # ---- Find the target genes using the gene ids ------------------------------
 
-  
   cat(
     "\n\nCreating concatenated gene alignment:\n",
     "  -- ", length(featureFiles), " genomes were input\n",
@@ -230,7 +233,7 @@ cognac = function(
   # and a vector with the gene Ids. Additionally, the amino acid sequences
   # are written to create the input file for cd-hit. 
   cat("\nStep 1: parsing the data on the input genomes\n")
-  # if ( missing( geneEnv ) )
+  if ( missing( geneEnv ) )
     geneEnv = CreateGeneDataEnv( featureFiles, fastaFiles, genomeIds, tempDir )
   save( file = paste0( tempDir, "debug1.Rdata" ),  list = ls() )
   stepTime = GetSplit( startTime )

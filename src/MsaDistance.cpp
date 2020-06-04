@@ -42,10 +42,11 @@ double MsaDistance::calcRawDist(
 
   // Set the distance function to the
   setDistFunc();
+  
   // For each base in the two sequence, see if there is NOT a match at
   // the kth position of of the alignment and there is not an aligned,
   // base at that position increment the number of mutations.
-  for ( unsigned int i = 0; i < ref.size(); i++)
+  for ( unsigned int i = 0; i < ref.size(); i++ )
   {
     // If this position in the reference is not the same as the
     // query..
@@ -67,7 +68,7 @@ void MsaDistance::operator()(std::size_t begin, std::size_t end)
 {
   setDistFunc();
   double distVal;
-  
+
   for (std::size_t i = begin; i < end; i++)
   {
     for (std::size_t j = 0; j < i; j++)

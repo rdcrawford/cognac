@@ -15,9 +15,9 @@ using namespace std;
 // was able to be read in
 bool BioSeq::parseFasta( )
 {
-  std::string line;            // Current line in the fasta file
-  std::string *curContig;      // Pointer to the current contig
-  ifstream    ifs;             // File stream for the fasta file
+  std::string line;        // Current line in the fasta file
+  std::string *curContig;  // Pointer to the current contig
+  ifstream    ifs;         // File stream for the fasta file
   int         seqIdx = -1; // Index of the contig being parsed
 
   // If the file stream has failed to open, return false
@@ -48,11 +48,19 @@ bool BioSeq::parseFasta( )
       *curContig += line;
     }
   }
-
+  // Close up the output file stream
   ifs.close();
+
+  // Set the number of sequences included in the fasta file
   maxSeqIdx = seqIdx;
+
+  // Set the contig name iterator to the first position.
   curSeqName = seqNames.begin();
+
+  // Convert the sequence to upper-case
   convertToUper();
+
+  // Finished. Return true to indicate the the genome was parsed properly
   return true;
 }
 
@@ -63,7 +71,7 @@ bool BioSeq::parseFasta( std::vector< std::string > &faSeq )
   std::string *curContig;           // Pointer to the current contig
   ifstream    ifs;                  // File stream for the fasta file
   auto        line = faSeq.begin(); // Iterator for the line in the fasta file
-  int         seqIdx = -1;      // Index of the contig being parsed
+  int         seqIdx = -1;          // Index of the contig being parsed
 
   // If the file stream has failed to open, return false
   ifs.open( faPath.c_str() );
@@ -90,7 +98,17 @@ bool BioSeq::parseFasta( std::vector< std::string > &faSeq )
     }
   }
   ifs.close();
+
+  // Set the number of sequences included in the fasta file
+  maxSeqIdx = seqIdx;
+
+  // Set the contig name iterator to the first position.
+  curSeqName = seqNames.begin();
+
+  // Convert the sequence to upper-case
   convertToUper();
+
+  // Finished. Return true to indicate the the genome was parsed properly
   return true;
 }
 
@@ -112,6 +130,7 @@ void BioSeq::convertToUper()
   }
 }
 
+// Set the path to the fasta file and parse the data.
 bool BioSeq::setFasta( std::string faPath )
 {
   this->faPath = faPath;
@@ -173,6 +192,10 @@ void BioSeq::clearSeqs()
   seqs.clear();
 }
 
+// This function get the substring corresponding to the input parameters
+// the "seq" variable is passed by reference and updated if the parameters are
+// valid. If the parameters are valid and "seq" was sucess updated returns
+// true
 bool BioSeq::getSeqAtCoord(
   const int seqIdx, const int startPos, const int endPos, std::string &seq
   )
@@ -187,12 +210,8 @@ bool BioSeq::getSeqAtCoord(
   // is decremented by one because it is one indexed
   int len = endPos - startPos + 1;
 
+  // Subset the
   seq = seqs[ seqIdx ].substr( startPos, len );
-  // Rcpp::Rcout << "  -- Contig: " << seqIdx   << std::endl
-  //             << "  -- Start: "  << startPos << std::endl
-  //             << "  -- End: "    << endPos   << std::endl
-  //             << "  -- Len: "    << len      << std::endl
-  //             << seq                         << std::endl;
 
   return true;
 }

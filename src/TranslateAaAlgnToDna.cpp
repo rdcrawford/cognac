@@ -90,7 +90,6 @@ void TranslateAaAlgnToDna(
     // gene is present in this genome
     if ( algnPos > geneEnd[ alGeneIdx ] )
     {
-
       // Increment the current gene in the alignment to advance to the
       // next end position
       alGeneIdx ++;

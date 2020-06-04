@@ -87,6 +87,7 @@ private:
   // attributes of the gene
   std::string getDescription( std::string annotation );
 
+  // Counter for the number of genes that have been parsed 
   int numGenes = 0;
 };
 #endif

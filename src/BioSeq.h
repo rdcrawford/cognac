@@ -31,6 +31,7 @@ public:
   ~BioSeq()
   { ; }
 
+  // Set the path to the fasta file and parse the data.
   bool setFasta( std::string faPath );
 
   // This function reads in the fasta file. Returns true if the file
@@ -46,7 +47,9 @@ public:
   // Returns the count of the contigs for this genome
   int getNumSeqs() const;
 
-  // Find which contig
+  // Find the index of the input seq name. If the name is found the "seqIdx"
+  // variable is updated and true is returned. False is returned if the
+  // seq name is not found
   bool getSeqIndex( const std::string &seqName, int &seqIdx );
 
   // Free the memory associated with the whole genome sequence. The contig
@@ -57,8 +60,10 @@ public:
   // Create a vector with the names of the contigs including the fasta headers
   std::vector< std::string > getSeqNames();
 
-  // Updates the "seq" variable if true is returned. Returns false if
-  // the sequence was unable to be updated.
+// This function get the substring corresponding to the input parameters
+// the "seq" variable is passed by reference and updated if the parameters are
+// valid. If the parameters are valid and "seq" was sucess updated returns
+// true
   bool getSeqAtCoord( const int seqIdx, const int startPos, const int endPos,
     std::string &seq );
 
