@@ -66,11 +66,11 @@ SelectAlgnGenes = function(
     {
       geneEnv$geneMat      = geneEnv$geneMat[ , isNotConserved ]
       geneEnv$clustList    = geneEnv$clustList[ isNotConserved ]
-      geneEnv$genomeIdList = geneEnv$genomeIdList[ isNotConserved]
+      geneEnv$genomeIdList = geneEnv$genomeIdList[ isNotConserved ]
     }
 
     # Count the number of core genes in the dataset
-    isCoreGene = CalcNumCoreGenes( geneEnv, coreGeneThresh )
+    isCoreGene = CalcNumCoreGenes( geneEnv, coreGeneThresh, isKeeper )
     coreGeneCount = sum( isCoreGene )
 
     # If there is variation in all of the genes after removing outliers

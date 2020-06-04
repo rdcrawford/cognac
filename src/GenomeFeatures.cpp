@@ -17,7 +17,7 @@ bool GenomeFeatures::parseGfs( BioSeq *wgs )
   ifstream    gff;
   std::string line;
 
-  // Open the input stream and check that it is correct 
+  // Open the input stream and check that it is correct
   gff.open( gfPath.c_str() );
   if ( !gff.is_open() || gff.fail() ) return false;
   if ( gff.peek() == std::ifstream::traits_type::eof() ) return false;
@@ -91,7 +91,7 @@ bool GenomeFeatures::parseGffEntry( const std::string &line, BioSeq *wgs )
   string       method;
   string       type;
   string       attributes;
-  string         fStrand;
+  string       fStrand;
   int          fStart;
   int          fEnd;
   char         whoKnows;

@@ -80,9 +80,7 @@ void TranslateAaAlgnToDna(
 
   // Get the first gene to enter the loop
   if ( !genome.getGeneSeq( seq ) )
-  {
     Rcpp::stop( "Could not read in the first gene..." );
-  }
 
   // Iterate along the alignment and place the codons and gaps in the nt
   // alignment in accordance with the aa alignment
@@ -109,23 +107,12 @@ void TranslateAaAlgnToDna(
       // Increment the current gene in the alignment to advance to the
       // next end position
       alGeneIdx ++;
-      // Rcout << "Align gene idx: " << alGeneIdx << endl;
+
       // If we have written the entire sequece of this gene, get the next gene
       if ( genePos != 0 )
       {
         // ofs << seq.substr( genePos, 3 );
-        bool isUpdated = genome.getGeneSeq( seq );
-        genePos = 0;
-        int geneLen = ( seq.size() - 1 ) / 3;
-        int aaLen   = geneEnd[ alGeneIdx ] - algnPos;
-        // Rcout << "  -- geneLen: "     << geneLen << endl
-        //       << "  -- AA gene len: " << aaLen   << endl;
-
-        // if ( !isUpdated )
-        // {
-        //   Rcpp::stop( "Could not update gene!");
-        // }
-
+        genome.getGeneSeq( seq );
 
       } else {
 

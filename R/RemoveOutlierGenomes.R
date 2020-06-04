@@ -11,7 +11,7 @@ RemoveOutlierGenomes  = function(
   geneMat, targetGeneNum, coreGeneThresh, isKeeper
   )
 {
-
+  counter = 1
   # Iterativly remove genomes until there is the minimium number of core genes
   repeat 
   {
@@ -21,7 +21,7 @@ RemoveOutlierGenomes  = function(
       )
     
     # Find the top n genes in the dataset 
-    topGenes = order(geneCount, decreasing = TRUE)[ 1:targetGeneNum ]
+    topGenes = order( geneCount, decreasing = TRUE )[ 1:targetGeneNum ]
     
     # Find the minimum frequency to be considered a core gene
     coreCountVal = round( sum(isKeeper) * coreGeneThresh, 0 )
@@ -36,7 +36,7 @@ RemoveOutlierGenomes  = function(
     # core genes and remove it
     toTest = which( isKeeper )
     numMissing = sapply( toTest,
-      function(i) sum( geneMat[ i, topGenes ] == 0) 
+      function(i) sum( geneMat[ i, topGenes ] == 0 )
       )
     isKeeper[ toTest[ which.max(numMissing) ] ] = FALSE
     

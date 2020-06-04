@@ -9,14 +9,14 @@
 # at or above that threshold.
 # ------------------------------------------------------------------------------
 
-CalcNumCoreGenes = function( genePtr, coreGenomeThresh )
+CalcNumCoreGenes = function( genePtr, coreGenomeThresh, isKeeper )
 {
   # Define the minimium threshold for number of core genes
-  coreCountVal = round(  nrow(genePtr$geneMat) * coreGenomeThresh, 0 )
+  coreCountVal = round(  sum(isKeeper) * coreGenomeThresh, 0 )
 
   # Recalculate the number of core genes
   isCoreGene = sapply( 1:ncol(genePtr$geneMat),
-    function(j) sum( genePtr$geneMat[, j] > 0 ) >= coreCountVal
+    function(j) sum( genePtr$geneMat[ isKeeper, j ] > 0 ) >= coreCountVal
     )
 
   # Returnt the number of core genes
