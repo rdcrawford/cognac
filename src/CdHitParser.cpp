@@ -62,6 +62,9 @@ CdHitParser::CdHitParser(
   // The final end position is the last string in the vector
   tailers.push_back( cdHitResults.size() - 1 );
 
+  // Assign the number of cd-hit clusters to the environment
+  geneEnv.assign( "nCogs", headers.size() );
+
   // If requested remoeve any low frequency clusters
   if ( clSizeThesh > 1 )
   {

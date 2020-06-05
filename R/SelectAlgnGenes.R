@@ -157,9 +157,8 @@ SelectAlgnGenes = function(
   }
 
   cat(
-    "  -- ",  numClusts, " orthologous genes were identified by cd-hit\n",
     "  -- ",  length( geneEnv$clustList ), 
-    " genes will be used to create the alignment\n",
+    " genes met the critera to be included in the alignment\n",
     sep = ''
     )
   

@@ -45,6 +45,11 @@ CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
   geneEnv$fastaFiles = fastaFiles
   geneEnv$faaPath    = faaPath
   
+  cat(
+    "  -- Parsed the data for ", length( geneEnv$geneIds ), " coding genes", 
+    sep = ''
+    )
+  
   return( geneEnv )
 }
 

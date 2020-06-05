@@ -239,7 +239,9 @@ cognac = function(
   
   # Identify orthologous genes with cd-hit
   cat("\nStep 2: finding orthologs with cd-hit\n")
-  FindCogs( geneEnv, tempDir, percId, algnCovg, threadVal, cdHitFlags )
+  FindCogs( 
+    geneEnv, tempDir, percId, algnCovg, threadVal, cdHitFlags, maxMissGenes
+    )
   stepTime = GetSplit( startTime )
   
   # Find the copy number of each gene. Any gene that is present in 

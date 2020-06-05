@@ -29,14 +29,15 @@ FilterMultiCopyGenes = function( geneEnv, copyNumTresh )
   # data
   if ( FALSE %in% isSingleCopy )
   {
-    cat("  -- Before filtering there were ", nGenes, "genes\n")
     geneEnv$clustList    = geneEnv$clustList[ isSingleCopy ]
     geneEnv$genomeIdList = geneEnv$genomeIdList[ isSingleCopy ]
     geneEnv$geneMat      = geneEnv$geneMat[ , isSingleCopy ]
 
     cat(
-      "  -- After filtering there are", sum(isSingleCopy), 
-      "remaining genes\n"
+      "  -- ", sum( !isSingleCopy ), " multi-copy genes were identified\n",
+      "  -- After filtering there are ", sum(isSingleCopy), 
+      " remaining genes\n",
+      sep = ''
       )
 
     if ( !TRUE %in% isSingleCopy )

@@ -31,8 +31,9 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
     algnLens = algnLens[ !isEmpty ]
     algnList = algnList[ !isEmpty ]
     cat(
-      "  -- ", sum(isEmpty), "of", length(algnLens), "genes", 
-      "without variation were removed\n"
+      "  -- ", sum(isEmpty), "of genes without variation were removed\n",
+      "  -- ", length( algnLens ), " were included in the alignment",
+      sep = ''
       )
     
     # Remove any genes that had no variation form the data
@@ -72,7 +73,7 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
 
   # Print the statistics on the alignment 
   algnLen = sum( algnLens )
-  cat( "  -- The total alignment length is: ", algnLen, '\n' )
+  cat( "  -- The total alignment length is ", algnLen, '\n', sep = '' )
   
   # Write the concatenated gene file
   coGeneFa = paste0(outDir, runId, "concatenated_gene_aa_alignment.fasta" )
