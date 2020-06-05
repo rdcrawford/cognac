@@ -27,16 +27,18 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
   isEmpty  = algnLens == 0
   algnLens = algnLens[ !isEmpty ]
   algnList = algnList[ !isEmpty ]
-
+  cat(
+    "  -- Of the ", length(algnLens), " selcted genes, there are ", 
+    sum(isEmpty), "genes without variation that will not be ",
+    "included in the alignment\n"
+    )
+  
   # Remove any genes that had no variation form the data
   geneEnv$clustList    = geneEnv$clustList[ !isEmpty ]
   geneEnv$genomeIdList = geneEnv$genomeIdList[ !isEmpty ]
 
   # Generate a vector with the gene start positions in the alignment
   geneEnv$genePositions = algnLens[ 1 ]
-
-  # If there is more than one gene, create a vector wit the positions
-  # of the gene ends in the alignment
   if ( length(algnList) > 1 )
   {
     for ( i in 2:length( algnLens ) )
@@ -65,6 +67,10 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
     ConcatenateAlignments( concatAlgn, algnList[[i]] )
   }
 
+  # Print the statistics on the alignment 
+  algnLen = sum( algnLens )
+  cat( "  -- The total alignment length is: ", algnLen, '\n' )
+  
   # Write the concatenated gene file
   coGeneFa = paste0(outDir, runId, "concatenated_gene_aa_alignment.fasta" )
   sink( coGeneFa )
@@ -74,13 +80,6 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
   }
   sink()
   
-  # Print the statistics on the alignment 
-  algnLen = sum( algnLens )
-  cat(
-    "  -- Number of genes aligned: ", length(algnLens), '\n',
-    "  -- The total alignment length is: ", algnLen, '\n',
-    sep = ''
-    )
   
   return( coGeneFa )
 }
