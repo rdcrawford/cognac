@@ -25,17 +25,20 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
   # If there is no variation in the final sequence an empty list is returned.
   # Remove any empty genes from the list.
   isEmpty  = algnLens == 0
-  algnLens = algnLens[ !isEmpty ]
-  algnList = algnList[ !isEmpty ]
-  cat(
-    "  -- Of the ", length(algnLens), " selcted genes, there are ", 
-    sum(isEmpty), "genes without variation that will not be ",
-    "included in the alignment\n"
-    )
   
-  # Remove any genes that had no variation form the data
-  geneEnv$clustList    = geneEnv$clustList[ !isEmpty ]
-  geneEnv$genomeIdList = geneEnv$genomeIdList[ !isEmpty ]
+  if ( TRUE %in% isEmpty )
+  {
+    algnLens = algnLens[ !isEmpty ]
+    algnList = algnList[ !isEmpty ]
+    cat(
+      "  -- ", sum(isEmpty), "of", length(algnLens), "genes", 
+      "without variation were removed\n"
+      )
+    
+    # Remove any genes that had no variation form the data
+    geneEnv$clustList    = geneEnv$clustList[ !isEmpty ]
+    geneEnv$genomeIdList = geneEnv$genomeIdList[ !isEmpty ]
+  }
 
   # Generate a vector with the gene start positions in the alignment
   geneEnv$genePositions = algnLens[ 1 ]
