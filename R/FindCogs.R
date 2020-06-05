@@ -9,12 +9,13 @@
 # ------------------------------------------------------------------------------
 
 FindCogs = function(
-  geneEnv,   # Environment with the data on the genes
-  outDir,    # Directory to write Cd-Hit output files
-  percId,    # Percent ID clustering threashold
-  algnCovg,  # Percent coverage for the alignment
-  threadVal, # Number of threads to used
-  cdHitFlags # Any additional flags to pass to Cd-Hit
+  geneEnv,     # Environment with the data on the genes
+  outDir,      # Directory to write Cd-Hit output files
+  percId,      # Percent ID clustering threashold
+  algnCovg,    # Percent coverage for the alignment
+  threadVal,   # Number of threads to used
+  cdHitFlags,  # Any additional flags to pass to Cd-Hit
+  maxMissGenes # Maximium allowable missing genes to be included
   )
 {
   # ---- Parse the input arguments ---------------------------------------------
