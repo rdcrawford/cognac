@@ -80,7 +80,6 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
   }
   sink()
   
-  
   return( coGeneFa )
 }
 

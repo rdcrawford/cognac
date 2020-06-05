@@ -18,12 +18,32 @@ RemoveGenomesFromAnalisys  = function( geneEnv, toRemove )
   geneEnv$gfList      = geneEnv$gfList[ !isOut ]
   geneEnv$fastaFiles  = geneEnv$fastaFiles[ !isOut ]
   
+  # Initialize a vector of gene IDs to remove
+  toRemoveGenes = character()
+  
+  # For each cluster of genes find the genes that correspond to the genomes
+  # that will be removed from the analysis
   for ( i in 1:length(geneEnv$genomeIdList) )
   {
+    # Find the names of the genomes to remove
     isOut = geneEnv$genomeIdList[[ i ]] %in% toRemove
-    geneEnv$genomeIdList[[ i ]] = geneEnv$genomeIdList[[ i ]][ !isOut ]
-    geneEnv$clustList[[ i ]]    = geneEnv$clustList[[ i ]][ !isOut ]
+    
+    if ( TRUE %in% isOut )
+    {
+      addStart = length(toRemoveGenes ) + 1
+      addRange = addStart:( addStart + ( sum( isOut ) - 1 ) )
+      toRemoveGenes[ addRange ] = geneEnv$clustList[[ i ]][ isOut ]
+      
+      # Remove the gene ids
+      geneEnv$genomeIdList[[ i ]] = geneEnv$genomeIdList[[ i ]][ !isOut ]
+      geneEnv$clustList[[ i ]]    = geneEnv$clustList[[ i ]][ !isOut ] 
+    }
   }
+  
+  # Remove the genes from the analysis
+  isOutGene        = geneEnv$geneIds %in% toRemoveGenes
+  geneEnv$geneIds  = geneEnv$geneIds[ !isOutGene ]
+  geneEnv$geneSeqs = geneEnv$geneSeqs[ !isOutGene ]
 }
 
 # ------------------------------------------------------------------------------
