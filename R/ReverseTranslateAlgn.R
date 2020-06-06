@@ -47,7 +47,6 @@ ReverseTranslateAlgn = function(
   # in the gff file
   for ( i in 1:length(concatGeneSeq) )
   {
-    cat( i, " ", geneEnv$genomeNames[i], '\n' )
     # Look up the row in the gff file corresponging to each core gene
     gfRowIdxs = sapply( 1:length(geneEnv$clustList), function(j)
     {
