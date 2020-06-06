@@ -64,7 +64,8 @@ ReverseTranslateAlgn = function(
     
     # If there are any missing genes core genes represented as na in the
     # vecotr, remove them
-    if ( TRUE %in% is.na(gfRowIdxs) ) 2258
+    isMissingGene = is.na(gfRowIdxs)
+    if ( TRUE %in% isMissingGene ) gfRowIdxs = gfRowIdxs[ isMissingGene ]
     
     # Reverse translate the current sequence in the concatenated gene alignemnt
     TranslateAaAlgnToDna(
