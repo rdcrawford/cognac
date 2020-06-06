@@ -14,7 +14,9 @@
 #' @export
 #  -----------------------------------------------------------------------------
 
-ReverseTranslateAlgn = function( geneEnv, concatGeneFa, outDir, runId, algnEnv )
+ReverseTranslateAlgn = function( 
+  geneEnv, concatGeneFa, outDir, runId, algnEnv
+  )
 {
   # Constant declarations
   AA_PARTITIONS  = 4 # Column index of the aa gene partitions 
@@ -36,8 +38,7 @@ ReverseTranslateAlgn = function( geneEnv, concatGeneFa, outDir, runId, algnEnv )
   # Define the name of the output file
   concatGeneDnaFa = 
     paste0( outDir, runId,  "concatenated_gene_nt_alignment.fasta" )
-  if ( file.exists( concatGeneDnaFa ) )
-    system( paste( "rm", concatGeneDnaFa ) )
+  if ( file.exists( concatGeneDnaFa ) ) system( paste("rm", concatGeneDnaFa) )
 
   # Read in the concatenated gene alignment
   concatGeneSeq = ParseFasta( concatGeneFa )
@@ -46,6 +47,7 @@ ReverseTranslateAlgn = function( geneEnv, concatGeneFa, outDir, runId, algnEnv )
   # in the gff file
   for ( i in 1:length(concatGeneSeq) )
   {
+    cat( i, " ", geneEnv$genomeNames[i], '\n' )
     # Look up the row in the gff file corresponging to each core gene
     gfRowIdxs = sapply( 1:length(geneEnv$clustList), function(j)
     {
@@ -62,7 +64,7 @@ ReverseTranslateAlgn = function( geneEnv, concatGeneFa, outDir, runId, algnEnv )
     
     # If there are any missing genes core genes represented as na in the
     # vecotr, remove them
-    if ( TRUE %in% is.na(gfRowIdxs) ) gfRowIdxs = gfRowIdxs[ !is.na(gfRowIdxs) ]
+    if ( TRUE %in% is.na(gfRowIdxs) ) 2258
     
     # Reverse translate the current sequence in the concatenated gene alignemnt
     TranslateAaAlgnToDna(

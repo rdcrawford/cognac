@@ -106,48 +106,28 @@ bool CdHitParser::RemoveLowFreqClusts( )
 {
   auto headerIt  = headers.begin();      // Iterator for the cluster start
   auto tailerIt  = tailers.begin();      // Iterator for the cluster ends
-  auto lineIt    = cdHitResults.begin(); // Iterator for the line in the results
-  int  numErased = 0;                    // Number of lines erased
   int  clustSize;                        // Number of genes in the cluster
 
   // Remove any low frequency genes from the data
   while ( headerIt != headers.end() )
   {
     // Calculate the number of genes in the custer
-    clustSize = *tailerIt - *headerIt;
+    clustSize = ( *tailerIt - *headerIt ) + 1;
 
-    // If there are fewer than the required number of genes remove them
+    //   If there are fewer than the required number of genes remove them
     if ( clustSize < clSizeThesh )
     {
-      // Erase the lines in the cd-hit results
-      for ( int i = 0; i < clustSize; i++ )
-        cdHitResults.erase( lineIt );
-
-      // Add the erased elements to the cluster
-      numErased += clustSize;
-
-      // Erase this header and tailer
       headers.erase( headerIt );
       tailers.erase( tailerIt );
 
     } else {
 
-      // Subtract the number of erased lines from the header
-      // and tailer positions
-      *headerIt -= numErased;
-      *tailerIt -= numErased;
-
       // Move to the next cluster in the cd-hit resuls
       headerIt ++;
       tailerIt ++;
-      lineIt += clustSize;
     }
     R_CheckUserInterrupt();
   }
-
-  headers.shrink_to_fit();
-  tailers.shrink_to_fit();
-  cdHitResults.shrink_to_fit();
 
   if ( cdHitResults.size() ) return true;
   return false;
@@ -175,7 +155,6 @@ void CdHitParser::CreateClustList( )
 
   auto headerIt = headers.begin();      // Iterator for the cluster start
   auto tailerIt = tailers.begin();      // Iterator for the cluster ends
-  auto lineIt   = cdHitResults.begin(); // It for the line int the results
   auto clustIt  = clustList.begin();    // It for the list of gene IDs
   auto gIdIt    = gIdList.begin();      // It for the list of genomes IDs
 
@@ -187,13 +166,11 @@ void CdHitParser::CreateClustList( )
     for ( int i = *headerIt; i <= *tailerIt; i++ )
     {
       // Extract the name of the gene from the line in the results
-      std::string geneId = GetGeneName( *lineIt );
+      std::string geneId = GetGeneName( cdHitResults[i] );
 
       // Update the vectors in the gene id and genome ID
       clustIt->push_back( geneId );
       gIdIt->push_back( GetGenomeId( geneId ) );
-
-      lineIt ++; // Move to the next line in the results
     }
 
     // Move to the next cluster in the cd-hit resuls
@@ -221,7 +198,6 @@ void CdHitParser::CreateItentList( )
 
   auto headerIt = headers.begin();        // Iterator for the cluster start
   auto tailerIt = tailers.begin();        // Iterator for the cluster ends
-  auto lineIt   = cdHitResults.begin();   // It for the line int the results
   auto itentIt  = clustIdentList.begin(); // It for the list of gene IDs
 
   // Iterate over each header
@@ -232,9 +208,7 @@ void CdHitParser::CreateItentList( )
     for ( int i = *headerIt; i <= *tailerIt; i++ )
     {
       // Extract the identity of the gene from the line in the results
-      itentIt->push_back( GetGeneIdent( *lineIt ) );
-
-      lineIt ++; // Move to the next line in the results
+      itentIt->push_back( GetGeneIdent( cdHitResults[i] ) );
     }
 
     // Move to the next cluster in the cd-hit resuls

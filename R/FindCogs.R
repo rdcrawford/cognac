@@ -74,6 +74,7 @@ FindCogs = function(
     length(geneEnv$genomeNames) * ( 1 - maxMissGenes)  * 0.85
     )
   ParseCdHit( cdHitClstrFileName, FALSE, minGeneNum, geneEnv )
+  
   cat(
     "  -- The genes were classified into ", length( geneEnv$nCogs ), 
     " clusters of orthologous genes\n", 

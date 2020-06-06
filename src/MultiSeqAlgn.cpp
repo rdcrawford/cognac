@@ -136,7 +136,7 @@ std::list< Rcpp::NumericMatrix > MultiSeqAlgn::calcAlignPartitionDists(
   // row and column names
   Rcpp::CharacterVector names = Rcpp::wrap( seqNames );
 
-  for ( unsigned int i = 0; i < genePartitions.size(); i++ )
+  for ( unsigned  int i = 0; i < genePartitions.size(); i++ )
   {
     if ( i == 0 ) gStart = 0;
     else gStart = genePartitions[ i - 1 ];
