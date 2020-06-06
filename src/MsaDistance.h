@@ -47,7 +47,8 @@ struct MsaDistance : public Worker
     const std::string &qrySeq );
   DistFunction distFunction;
 
-   // Function call operator that work from the range specified by begin and end
+   // Function call operator that work from the range specified by begin and
+   // end
   void operator()(std::size_t begin, std::size_t end);
 
   // Set the function pointer to the type specified by the input

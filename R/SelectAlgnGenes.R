@@ -158,7 +158,7 @@ SelectAlgnGenes = function(
 
   cat(
     "  -- ",  length( geneEnv$clustList ), 
-    " genes met the critera to be included in the alignment\n",
+    " genes met the criteria to be included in the alignment\n",
     sep = ''
     )
   

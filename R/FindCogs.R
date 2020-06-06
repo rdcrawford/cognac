@@ -71,15 +71,15 @@ FindCogs = function(
   # Assign the clust list and gene matrix to varibles in the
   # environment containing the gene data
   minGeneNum = floor(
-    length(geneEnv$genomeNames) * ( 1 - maxMissGenes)  * 0.85
+    length(geneEnv$genomeNames) * ( 1 - maxMissGenes )  * 0.85
     )
   ParseCdHit( cdHitClstrFileName, FALSE, minGeneNum, geneEnv )
   
   cat(
-    "  -- The genes were classified into ", length( geneEnv$nCogs ), 
+    "  -- The genes were classified into ", geneEnv$nCogs, 
     " clusters of orthologous genes\n", 
     "  -- Continuing with ", length( geneEnv$clustList ), " genes present",
-    " in at least ", minGeneNum, " occurances",
+    " in at least ", minGeneNum, " occurrences\n",
     sep = ''
     )
 }
