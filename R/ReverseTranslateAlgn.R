@@ -62,21 +62,10 @@ ReverseTranslateAlgn = function(
       return( which( geneEnv$gfList[[ i ]]$featId == geneId ) )
     })
     
-    gff   = geneEnv$gfList[[i]][ gfRowIdxs, ]
-    fa    =  geneEnv$fastaFiles[i]
-    gId   = geneEnv$genomeNames[i]
-    aaSeq = concatGeneSeq[i]
-    save( 
-      file = paste0( outDir, "temp_rt_data.Rdata"), 
-      list = c( 
-        "gff", "fa", "genePartitions", "gfRowIdxs", "concatGeneDnaFa", "aaSeq"
-        )
-      )
-    
     # If there are any missing genes core genes represented as na in the
     # vecotr, remove them
-      isMissingGene = is.na(gfRowIdxs)
-      if ( TRUE %in% isMissingGene ) gfRowIdxs = gfRowIdxs[ !isMissingGene ]
+    isMissingGene = is.na( gfRowIdxs )
+    if ( TRUE %in% isMissingGene ) gfRowIdxs = gfRowIdxs[ !isMissingGene ]
     
     # Reverse translate the current sequence in the concatenated gene alignemnt
     TranslateAaAlgnToDna(
