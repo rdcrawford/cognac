@@ -41,7 +41,7 @@ bool Genome::parseGenome(
 // If the sequnce was updated, return true.
 bool Genome::getGeneSeq( std::string &seq )
 {
-  // Make sure that this gene exists 
+  // Make sure that a gene at the current index exists
   if ( gIdx > startPos.size() ) return false;
 
   // Get the sequence at the coordinates of this entry in the gff file
@@ -105,7 +105,7 @@ bool Genome::translateSeqs()
 
     // Translate the nucleotide sequence
     if ( !codonMap.Translate( seq ) ) return false;
-    // Rcpp::Rcout << seq << std::endl;
+
     // If the gene was updated and translated, add it to the vector of
     // amino acid sequences
      aaSeqs.push_back( seq );
