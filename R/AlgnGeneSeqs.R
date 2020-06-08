@@ -63,7 +63,7 @@ AlgnGeneSeqs = function(
 
   # Run Mafft
   system( mafftCmd )
-
+  
   # Read in the alignment
   algn = ParseFasta( algnPath )
 

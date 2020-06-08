@@ -265,6 +265,7 @@ cognac = function(
 
   # Create the environment with the objects to export
   cat( "\nStep 6: creating output files\n" )
+  save( file = paste0( outDir, "temp_cognac_data.Rdata" ), list = ls() )
   algnEnv            = new.env()
   algnEnv$geneData   = CreateGeneMetaData( geneEnv, revTranslate )
   algnEnv$aaAlgnPath = algnPath
