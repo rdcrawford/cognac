@@ -41,6 +41,9 @@ bool Genome::parseGenome(
 // If the sequnce was updated, return true.
 bool Genome::getGeneSeq( std::string &seq )
 {
+  // Make sure that this gene exists 
+  if ( gIdx > startPos.size() ) return false;
+
   // Get the sequence at the coordinates of this entry in the gff file
   bool isUpdated =
     getSeqAtCoord( contig[ gIdx ], startPos[ gIdx ], endPos[ gIdx ], seq );
