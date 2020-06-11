@@ -43,17 +43,16 @@ void TranslateAaAlgnToDna(
   vector< int >    start  = gffData[ LEFT_POS ];
   vector< int >    end    = gffData[ RIGHT_POS ];
   vector< int >    contig = gffData[ CONTIG ];
-
   Genome genome( faPath, strand, start, end, contig );
 
   // Read in th fasta file
   genome.parseFasta();
 
-  ofstream      ofs;            // Output file stream to write the nt alignment
-  std::string   seq       = ""; // String to keep the current gene sequence
-  int           algnPos   = 0;  // Current position in the aa alignment
-  int           genePos   = 0;  // Position in the nucleotide sequence
-  int           alGeneIdx = 0;  // Gene position in the amino acid alignment
+  ofstream    ofs;            // Output file stream to write the nt alignment
+  std::string seq       = ""; // String to keep the current gene sequence
+  int         algnPos   = 0;  // Current position in the aa alignment
+  int         genePos   = 0;  // Position in the nucleotide sequence
+  int         alGeneIdx = 0;  // Gene position in the amino acid alignment
 
   // Get the length of the aligment to use as the exit potiion
   // in the loop

@@ -59,7 +59,7 @@ bool Genome::getGeneSeq( std::string &seq )
 
   // If this is the reverse strand, get the reverse compliment
   if ( strand[ gIdx ].compare("-") == 0 ) getReverseCompliment( seq );
-  // Rcpp::Rcout << seq << std::endl;
+
   // Increment the index for the next gene
   gIdx ++;
 

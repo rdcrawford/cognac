@@ -290,7 +290,7 @@ cognac = function(
   stepTime = GetSplit( stepTime )
   
   # If requested, make a neighbor joining tree with ape
-  if ( njTree ) 
+  if ( njTree )
     algnEnv$njTree = ape::nj( as.dist(algnEnv$distMat) )
 
   # If requested, write a partition file with the positions of each

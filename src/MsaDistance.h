@@ -49,7 +49,7 @@ struct MsaDistance : public Worker
 
    // Function call operator that work from the range specified by begin and
    // end
-  void operator()(std::size_t begin, std::size_t end);
+  void operator()( std::size_t begin, std::size_t end );
 
   // Set the function pointer to the type specified by the input
   // argument "distFunType"

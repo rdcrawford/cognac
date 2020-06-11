@@ -192,19 +192,19 @@ void BioSeq::clearSeqs()
   seqs.clear();
 }
 
-// This function get the substring corresponding to the input parameters
-// the "seq" variable is passed by reference and updated if the parameters are
-// valid. If the parameters are valid and "seq" was sucess updated returns
-// true
+// This function parses sequences to retrieve the substring corresponding
+// to the input coordinates. The "seq" variable is passed by reference and
+// updated if the input coordinates are valid. If "seq" was successfully
+// updated returns true, false otherwise.
 bool BioSeq::getSeqAtCoord(
   const int seqIdx, const int startPos, const int endPos, std::string &seq
   )
 {
-  // Check that this is a contig in this file
-  if ( seqIdx > maxSeqIdx ) return false;
+  // Check that this index corresponds to a contig in this file
+  if ( seqIdx > maxSeqIdx || seqIdx < 0 ) return false;
 
   // Check that the requested direction is correct
-  if ( startPos > endPos ) return false;
+  if ( startPos >= endPos ) return false;
 
   // Check the the end of the sequence is not out of range
   if ( endPos > seqs[ seqIdx ].size() ) return false;
