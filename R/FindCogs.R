@@ -21,12 +21,13 @@ FindCogs = function(
   # ---- Parse the input arguments ---------------------------------------------
 
   # Assign missing arguemnts to the default values
-  if ( missing(percId) )     percId     = 0.7
-  if ( missing(algnCovg) )   algnCovg   = 0.80
-  if ( missing(outDir) )     outDir     = paste0(getwd(), '/')
-  if ( missing(cdHitFlags) ) cdHitFlags = "-M 0 -d 0 -g 1"
-  if ( missing(threadVal) )  threadVal  = 1
-
+  if ( missing(percId) )       percId       = 0.7
+  if ( missing(algnCovg) )     algnCovg     = 0.80
+  if ( missing(outDir) )       outDir       = paste0(getwd(), '/')
+  if ( missing(cdHitFlags) )   cdHitFlags   = "-M 0 -d 0 -g 1"
+  if ( missing(threadVal) )    threadVal    = 1
+  if ( missing(maxMissGenes) ) maxMissGenes = 1
+  
   # The working directory has to end in a forward slash. If it doesn't,
   # add one
   if (!grepl("/$", outDir)) outDir = paste0(outDir, '/')
