@@ -22,7 +22,7 @@ Rcpp::CharacterVector ParseFasta( const std::string &faPath )
   if ( !bioSeq.parseFasta() ) Rcpp::stop( "Unable to read: ", faPath );
 
   // Convert the contigs to a character vector
-  Rcpp::CharacterVector seqs = Rcpp::wrap(  bioSeq.getSeqs() );
+  Rcpp::CharacterVector seqs = Rcpp::wrap( bioSeq.getSeqs() );
 
   seqs.attr("names") = Rcpp::wrap( bioSeq.getSeqNames() );
 
