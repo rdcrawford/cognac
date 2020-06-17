@@ -270,7 +270,6 @@ cognac = function(
   algnEnv$aaAlgnPath = algnPath
   stepTime           = GetSplit( stepTime )
   
-  cat("  -- Reverse translate:\n")
   # If requested, convert the AA alignment to DNA
   if ( revTranslate )
   {
@@ -281,13 +280,10 @@ cognac = function(
     # Assign the path to the nt alignment to the output environment
     algnEnv$ntAlgnPath = algnPath
   }
-  stepTime = GetSplit( stepTime )
   
   # If requested, create a distance matrix with the
-  cat("  -- Distance matrix:\n")
   if ( distMat )
     algnEnv$distMat = CreateAlgnDistMat( algnPath, "shared", FALSE )
-  stepTime = GetSplit( stepTime )
   
   # If requested, make a neighbor joining tree with ape
   if ( njTree )
