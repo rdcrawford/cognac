@@ -21,7 +21,7 @@ Rcpp::NumericMatrix CreateCoreGenomeDistMat( std::string msaPath )
   multiSeqAlgn.parseMsa();
 
   // Remove any gap positions from the Msa
-  multiSeqAlgn.removeGaps();
+  multiSeqAlgn.filterMsaColumns( 0, 1 );
 
   // Create a distance matrix with the raw alignment distances -- number
   // of mutations between each pair of sequences

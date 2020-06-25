@@ -5,6 +5,8 @@
 #include <RcppParallel.h>
 #include "MultiSeqAlgn.h"
 #include "MsaDistance.h"
+#include "AlgnColumn.h"
+#include "AlgnSubCalc.h"
 using namespace Rcpp;
 using namespace RcppParallel;
 
@@ -59,63 +61,87 @@ void MultiSeqAlgn::parseMsa()
   }
 }
 
-// This function iterates over sequence in the  alignment positions until a
-// gap is found. If a gap is present at this position in the alignment,
-// return true. If a gap is found in none of the sequences return false.
-bool MultiSeqAlgn::findGapPosition( )
-{
-  // Set the iterator to the first sequence
-  auto it = seqIts.begin();
-
-  // Iterate over the sequences until a gap is found
-  while ( it != seqIts.end() )
-  {
-    // If this position in the sequnce is a gap, return true
-    if ( **it == '-' ) return true;
-
-    // Advance to the next reside in the sequence
-    ++it;
-  }
-  // If we have iterated over every sequence in the alignment and not
-  // found a gap, return false -- no gap found
-  return false;
-}
-
 // Create a vector with iterators to each sequence in the alignment
-void MultiSeqAlgn::getSeqIterators()
+std::vector< std::string::iterator > MultiSeqAlgn::getSeqIterators()
 {
   // Allocate sufficient space for each sequence in the alignment
+  std::vector< std::string::iterator > seqIts;
   seqIts.reserve( seqs.size() );
 
   // Iterate over the alignment and get a pointer to the start of each
   // sequence in the alginment
   for ( auto it = seqs.begin(); it != seqs.end(); it++ )
     seqIts.push_back( it->begin() );
+
+  return seqIts;
 }
 
 // Iterate over each position in the alignment and remove any position with
 // a gap to generte the core genome alignment
-void MultiSeqAlgn::removeGaps()
+
+void MultiSeqAlgn::filterMsaColumns( double minGapFrac,
+  int minSubThresh, std::vector<int> & genePositions
+  )
 {
   // Create iterators for each sequence in the alignment
-  getSeqIterators();
+  auto seqIts = getSeqIterators();
+
+  // Check each column in the alignment there there is at least one
+  // subsitiution and there there is less than 50% gaps
+  std::vector< AlgnColumn > algnCols;
+  algnCols.reserve( seqLen );
+  for ( unsigned int i = 0; i < seqLen; i++ )
+    algnCols.push_back( AlgnColumn(& seqs, i ) );
+
+  // Use tbb parallel for to iterate over each column in the alingmnet and
+  // check that each position is of sufficient quality
+  tbb::parallel_for_each(
+    algnCols.begin(),
+    algnCols.end(),
+    [&] ( AlgnColumn & algnColumn )
+  {
+    algnColumn.calcColStats( minGapFrac, minSubThresh );
+  });
 
   // Iterate over each position in the alignment
-  for ( unsigned int algnPos = 0; algnPos < seqs[0].size(); algnPos ++ )
+  for ( auto it = algnCols.begin(); it != algnCols.end(); it++ )
   {
-    // If there is a gap at the curret position in the algnment, remove it
-    if ( findGapPosition() )
-    {
-      for ( unsigned int i = 0; i < seqs.size(); i ++ )
-        seqs[ i ].erase( seqIts[i] );
-    }
-    // If there is not a gap advance to the next position
-    else
+    // If there are too many gaps or no variants at this position in the
+    // alignment, advance the iterators
+    if ( it->getColStatus() )
     {
       for ( auto & it : seqIts ) ++it;
     }
+    // If this position is of low quality, erase it
+    else
+    {
+      for ( unsigned int i = 0; i < seqs.size(); i ++ )
+        seqs[ i ].erase( seqIts[ i ] );
+    }
 
     R_CheckUserInterrupt();
+  }
+
+  // If a vector of gene positions was input, update the vector so it now
+  // reflects the gene partitions that were erased
+  if ( genePositions.size() )
+  {
+    int algnIdx   = 0; // Position in the alignment
+    int numErased = 0; // Nnumber of positions in the alignemt that were erased
+
+    // Iterate over each position in the alignment
+    for ( auto & pos : genePositions )
+    {
+      while ( algnIdx < pos )
+      {
+        algnIdx ++;
+        if ( !algnCols[ algnIdx ].getColStatus() ) numErased ++;
+      }
+
+      pos -= numErased;
+
+      R_CheckUserInterrupt();
+    }
   }
 }
 

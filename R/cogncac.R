@@ -301,7 +301,7 @@ cognac = function(
   
   cat( "\nRun complete\n" )
   cat( "  -- Amino acid alignment written to:", algnEnv$aaAlgnPath, '\n' )
-  if ( revTranslate ) 
+  if ( revTranslate )
     cat( "  -- Nucleotide alignment written to:", algnEnv$ntAlgnPath, '\n' )
   endTime = GetSplit( startTime )
   cat( "\n\n" )

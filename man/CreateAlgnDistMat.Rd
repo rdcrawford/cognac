@@ -8,7 +8,7 @@
 
 \item{method}{Method for calculating distance: "raw", or "shared."}
 
-\item{isCore}{Logical to specify whether to remove gap positions from the 
+\item{isCore}{Logical to specify whether to remove gap positions from the
 alignment to create the core genome.}
 }
 \value{
@@ -16,7 +16,7 @@ A numeric matrix
 }
 \description{
 This function reads in the path to a multiple sequence alignment. The
-  pairwise alignment distances for each sequence are returned. The 
-  pairwise distances are calculated in parallel via the RcppParallel 
+  pairwise alignment distances for each sequence are returned. The
+  pairwise distances are calculated in parallel via the RcppParallel
   package.
 }

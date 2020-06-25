@@ -98,10 +98,13 @@ void GenomeData::writeFaa( std::string faaPath )
   // Initialize the output file stream and open for writing
   std::ofstream ofs;
   ofs.open( faaPath.c_str() );
+
+  // Write the fasta file
   for ( unsigned int i = 0; i < aaSeqs.size(); i++ )
   {
     ofs << ">" << geneIds[i] << endl << aaSeqs[i] << endl;
   }
+  ofs.close();
 }
 
 // Count the total number of genes that are in this dataset

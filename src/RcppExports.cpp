@@ -8,6 +8,17 @@
 
 using namespace Rcpp;
 
+// CalcAlgnSubMatrix
+Rcpp::NumericMatrix CalcAlgnSubMatrix(std::vector< std::string > seqs);
+RcppExport SEXP _cognac_CalcAlgnSubMatrix(SEXP seqsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector< std::string > >::type seqs(seqsSEXP);
+    rcpp_result_gen = Rcpp::wrap(CalcAlgnSubMatrix(seqs));
+    return rcpp_result_gen;
+END_RCPP
+}
 // CalcAlgnPartitionDists
 std::list < Rcpp::NumericMatrix > CalcAlgnPartitionDists(std::string msaPath, std::string method, std::vector< int > genePartitions);
 RcppExport SEXP _cognac_CalcAlgnPartitionDists(SEXP msaPathSEXP, SEXP methodSEXP, SEXP genePartitionsSEXP) {
@@ -33,15 +44,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // CreateAlgnDistMat
-Rcpp::NumericMatrix CreateAlgnDistMat(std::string msaPath, std::string method, bool isCore);
-RcppExport SEXP _cognac_CreateAlgnDistMat(SEXP msaPathSEXP, SEXP methodSEXP, SEXP isCoreSEXP) {
+Rcpp::NumericMatrix CreateAlgnDistMat(std::string msaPath, std::string method);
+RcppExport SEXP _cognac_CreateAlgnDistMat(SEXP msaPathSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type msaPath(msaPathSEXP);
     Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
-    Rcpp::traits::input_parameter< bool >::type isCore(isCoreSEXP);
-    rcpp_result_gen = Rcpp::wrap(CreateAlgnDistMat(msaPath, method, isCore));
+    rcpp_result_gen = Rcpp::wrap(CreateAlgnDistMat(msaPath, method));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -89,6 +99,34 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
     Rcpp::traits::input_parameter< std::string >::type ext(extSEXP);
     rcpp_result_gen = Rcpp::wrap(GetGenomeNameWithExt(path, ext));
+    return rcpp_result_gen;
+END_RCPP
+}
+// FilterAlgnPositions
+void FilterAlgnPositions(std::string msaPath, std::string filterMsaPath, double minGapFrac, int minSubThresh);
+RcppExport SEXP _cognac_FilterAlgnPositions(SEXP msaPathSEXP, SEXP filterMsaPathSEXP, SEXP minGapFracSEXP, SEXP minSubThreshSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type msaPath(msaPathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type filterMsaPath(filterMsaPathSEXP);
+    Rcpp::traits::input_parameter< double >::type minGapFrac(minGapFracSEXP);
+    Rcpp::traits::input_parameter< int >::type minSubThresh(minSubThreshSEXP);
+    FilterAlgnPositions(msaPath, filterMsaPath, minGapFrac, minSubThresh);
+    return R_NilValue;
+END_RCPP
+}
+// FilterPartitionedAlgnPositions
+std::vector< int > FilterPartitionedAlgnPositions(std::string msaPath, std::string filterMsaPath, std::vector<int> genePositions, double minGapFrac, int minSubThresh);
+RcppExport SEXP _cognac_FilterPartitionedAlgnPositions(SEXP msaPathSEXP, SEXP filterMsaPathSEXP, SEXP genePositionsSEXP, SEXP minGapFracSEXP, SEXP minSubThreshSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type msaPath(msaPathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type filterMsaPath(filterMsaPathSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type genePositions(genePositionsSEXP);
+    Rcpp::traits::input_parameter< double >::type minGapFrac(minGapFracSEXP);
+    Rcpp::traits::input_parameter< int >::type minSubThresh(minSubThreshSEXP);
+    rcpp_result_gen = Rcpp::wrap(FilterPartitionedAlgnPositions(msaPath, filterMsaPath, genePositions, minGapFrac, minSubThresh));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -195,13 +233,16 @@ RcppExport SEXP _cognac_RcppExport_registerCCallable() {
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_cognac_CalcAlgnSubMatrix", (DL_FUNC) &_cognac_CalcAlgnSubMatrix, 1},
     {"_cognac_CalcAlgnPartitionDists", (DL_FUNC) &_cognac_CalcAlgnPartitionDists, 3},
     {"_cognac_ConcatenateAlignments", (DL_FUNC) &_cognac_ConcatenateAlignments, 2},
-    {"_cognac_CreateAlgnDistMat", (DL_FUNC) &_cognac_CreateAlgnDistMat, 3},
+    {"_cognac_CreateAlgnDistMat", (DL_FUNC) &_cognac_CreateAlgnDistMat, 2},
     {"_cognac_CreateCognacRunData", (DL_FUNC) &_cognac_CreateCognacRunData, 4},
     {"_cognac_CreateCoreGenomeDistMat", (DL_FUNC) &_cognac_CreateCoreGenomeDistMat, 1},
     {"_cognac_ExtractGenomeNameFromPath", (DL_FUNC) &_cognac_ExtractGenomeNameFromPath, 1},
     {"_cognac_GetGenomeNameWithExt", (DL_FUNC) &_cognac_GetGenomeNameWithExt, 2},
+    {"_cognac_FilterAlgnPositions", (DL_FUNC) &_cognac_FilterAlgnPositions, 4},
+    {"_cognac_FilterPartitionedAlgnPositions", (DL_FUNC) &_cognac_FilterPartitionedAlgnPositions, 5},
     {"_cognac_FindIdenticalGenes", (DL_FUNC) &_cognac_FindIdenticalGenes, 2},
     {"_cognac_GetGenomeId", (DL_FUNC) &_cognac_GetGenomeId, 1},
     {"_cognac_ParseCdHit", (DL_FUNC) &_cognac_ParseCdHit, 4},

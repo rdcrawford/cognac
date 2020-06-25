@@ -1,3 +1,7 @@
+// [[Rcpp::plugins(cpp11)]]
+#include <Rcpp.h>
+#include "AlgnSubCalc.h"
+
 // -----------------------------------------------------------------------------
 // CalcSubstitutionMatrix
 // Ryan D. Crawford

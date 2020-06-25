@@ -41,6 +41,9 @@ public:
   // Parses the fasta file from a vector of strings
   bool parseFasta( std::vector< std::string > &faSeq );
 
+  // Write the sequence in a multi-fasta file
+  bool writeSeqs( std::string faPath );
+
   // This function returns the sequence as a vector
   std::vector< std::string > getSeqs();
 
@@ -60,10 +63,10 @@ public:
   // Create a vector with the names of the contigs including the fasta headers
   std::vector< std::string > getSeqNames();
 
-// This function get the substring corresponding to the input parameters
-// the "seq" variable is passed by reference and updated if the parameters are
-// valid. If the parameters are valid and "seq" was sucess updated returns
-// true
+  // This function get the substring corresponding to the input parameters
+  // the "seq" variable is passed by reference and updated if the parameters are
+  // valid. If the parameters are valid and "seq" was sucess updated returns
+  // true
   bool getSeqAtCoord( const int seqIdx, const int startPos, const int endPos,
     std::string &seq );
 

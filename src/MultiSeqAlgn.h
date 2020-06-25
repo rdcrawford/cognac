@@ -15,7 +15,7 @@ using namespace RcppParallel;
 // to retrieve the core genome. Then a distance matrix can be calculated
 // with the paiwise distances between the sequences in the alignmnet
 // -----------------------------------------------------------------------------
-
+static std::vector<int> DEFAULT_VECTOR;
 #ifndef _MULTI_SEQ_ALGN_
 #define _MULTI_SEQ_ALGN_
 class MultiSeqAlgn : public BioSeq
@@ -36,7 +36,8 @@ public:
 
   // Iterate over each position in the alignment and remove any position with
   // a gap to generte the core genome alignment
-  void removeGaps();
+  void filterMsaColumns( double minGapFrac,  int minSubThresh,
+     std::vector<int> & genePositions=DEFAULT_VECTOR );
 
   // Create a list distance matricies for each of the individual partitions.
   // The specified by the input vector of integers.
@@ -45,16 +46,8 @@ public:
 
 private:
 
-  // Vector of iterators that each point to a sequence in the MSA
-  std::vector< std::string::iterator > seqIts;
-
-  // This function iterates over sequence in the  alignment positions until a
-  // gap is found. If a gap is present at this position in the alignment,
-  // return true. If a gap is found in none of the sequences return false.
-  bool findGapPosition();
-
   // Create a vector with iterators to each sequence in the alignment
-  void getSeqIterators();
+  std::vector< std::string::iterator > getSeqIterators();
 
   // The length of the msa
   unsigned int seqLen;

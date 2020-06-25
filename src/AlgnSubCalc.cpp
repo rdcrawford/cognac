@@ -1,6 +1,7 @@
 // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
 #include <cmath>
+#include "AlgnSubCalc.h"
 using namespace Rcpp;
 
 // -----------------------------------------------------------------------------
@@ -116,7 +117,6 @@ void AlgnSubCalc::countSubs( const std::string &ref, const std::string &qry )
       }
     }
   }
-}
 }
 
 // -----------------------------------------------------------------------------
