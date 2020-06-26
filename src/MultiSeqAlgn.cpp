@@ -132,7 +132,7 @@ void MultiSeqAlgn::filterMsaColumns( double minGapFrac,
     // Iterate over each position in the alignment
     for ( auto & pos : genePositions )
     {
-      while ( algnIdx < pos )
+      while ( algnIdx <= pos )
       {
         algnIdx ++;
         if ( !algnCols[ algnIdx ].getColStatus() ) numErased ++;

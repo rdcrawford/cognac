@@ -21,6 +21,8 @@ void AlgnColumn::calcColStats( double minGapFrac, unsigned int minSubThresh )
 
   // Check if there are too many gaps at this position
   auto it = charCounts.find( '-' );
+
+  // Find if there is a gap in the alignment
   if ( it == charCounts.end() )
   {
     isNotGappy = true;
@@ -31,7 +33,7 @@ void AlgnColumn::calcColStats( double minGapFrac, unsigned int minSubThresh )
   }
 
   // Check that there is the correct count of symbols at this position
-  if ( charCounts.size() >= minSubThresh ) isHighDiversity = true;
+  if ( this->getNumMinorAlleles() >= minSubThresh ) isHighDiversity = true;
   else isHighDiversity = false;
 }
 
@@ -52,6 +54,32 @@ void AlgnColumn::updatCharCounts( char algnChar )
     it->second ++;
   }
 }
+
+// Calcuate the number of sequences with the minor allele
+int AlgnColumn::getNumMinorAlleles( )
+{
+  // If there is only one char
+  if ( charCounts.size() == 1 ) return 0;
+
+  // Initialize the counts for the number of sequences with an alignment
+  // and the count with the major allele
+  int numChars     = 0;
+  int numMajAllele = 0;
+
+  // Iterate over the counts. Find the number of sequences without a gap and
+  // which is the major allele
+  for ( auto it = charCounts.begin(); it != charCounts.end(); it++ )
+  {
+    if ( it->first != '-' )
+    {
+      numChars += it->second;
+      if ( it->second > numMajAllele ) numMajAllele = it->second;
+    }
+  }
+
+  return numChars - numMajAllele;
+}
+
 
 // Return a bool to check if this postion meeths the qualifications to
 // keep in the alignment

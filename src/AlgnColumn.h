@@ -48,6 +48,9 @@ private:
   // Update the counts for a character in the alignemnt. If there isn't an
   // entry for this character then one is added to the map
   void updatCharCounts( char algnChar );
+
+  // Calcuate the number of sequences with the minor allele
+  int getNumMinorAlleles();
 };
 #endif
 

@@ -11,23 +11,20 @@
 //' @name FilterAlignmentPositions
 //' @title Filter Alignment Positions
 //' @description
-//'   This function removes gaps and/or positions without sufficient varition
-//'   from the alingment.
+//'   This function
 //' @param msaPath Path to the alignment
 //' @param filterMsaPath Path to write the filtered alignment
-//' @param minGapFrac Double representing the minimium fraction of gaps to
-//'   remain in the alignment.Defaults to 0.01.
-//' @param minSubThresh Integer representing the minimum number of
-//'   substitutions to remain in the alignment. This is the number of instances
-//'   of any minor allele to remain. Defaults to 0.
+//' @param double minGapFrac=0.01,
+//' @param minSubThresh Minimium number o subsititutions
+//' @param genePositions Optional vector of partitions within the alignment
 //' @return void
 //' @export
 //  ----------------------------------------------------------------------------
 
 // [[Rcpp::export]]
-void FilterAlgnPositions(
-  std::string msaPath, std::string filterMsaPath, double minGapFrac=0.01,
-  int minSubThresh=0
+std::vector< int > FilterPartitionedAlgnPositions(
+  std::string msaPath, std::string filterMsaPath,
+  std::vector<int> genePositions, double minGapFrac=0.01, int minSubThresh=0
   )
 {
   // Create the msa class object
@@ -37,11 +34,13 @@ void FilterAlgnPositions(
   multiSeqAlgn.parseMsa();
 
   // Remove columns from the msa that dont meet the parameters
-  multiSeqAlgn.filterMsaColumns( minGapFrac, minSubThresh );
+  multiSeqAlgn.filterMsaColumns( minGapFrac, minSubThresh, genePositions );
 
   // Write the MSA to a new fle
   if ( !multiSeqAlgn.writeSeqs( filterMsaPath ) )
     Rcpp::stop( "Writing to file " + filterMsaPath + "failed..." );
+
+  return genePositions;
 }
 
 // -----------------------------------------------------------------------------
