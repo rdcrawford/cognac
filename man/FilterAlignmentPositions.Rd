@@ -4,6 +4,9 @@
 \alias{FilterAlignmentPositions}
 \title{Filter Alignment Positions}
 \arguments{
+\item{minGapFrac}{Double representing the minimium fraction of gaps to
+remain in the alignment.Defaults to 0.01.}
+
 \item{msaPath}{Path to the alignment}
 
 \item{filterMsaPath}{Path to write the filtered alignment}
@@ -16,7 +19,12 @@
 }
 \value{
 void
+
+void
 }
 \description{
+This function removes gaps and/or positions without sufficient varition
+  from the alingment.
+
 This function
 }

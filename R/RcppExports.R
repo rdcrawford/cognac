@@ -51,6 +51,26 @@ GetGenomeNameWithExt <- function(path, ext) {
 #' @name FilterAlignmentPositions
 #' @title Filter Alignment Positions
 #' @description
+#'   This function removes gaps and/or positions without sufficient varition
+#'   from the alingment.
+#' @param msaPath Path to the alignment
+#' @param filterMsaPath Path to write the filtered alignment
+#' @param minGapFrac Double representing the minimium fraction of gaps to
+#'   remain in the alignment.Defaults to 0.01.
+#' @param minSubThresh Integer representing the minimum number of
+#'   substitutions to remain in the alignment. This is the number of instances
+#'   of any minor allele to remain. Defaults to 0.
+#' @return void
+#' @export
+NULL
+
+FilterAlgnPositions <- function(msaPath, filterMsaPath, minGapFrac = 0.01, minSubThresh = 0L) {
+    invisible(.Call(`_cognac_FilterAlgnPositions`, msaPath, filterMsaPath, minGapFrac, minSubThresh))
+}
+
+#' @name FilterAlignmentPositions
+#' @title Filter Alignment Positions
+#' @description
 #'   This function
 #' @param msaPath Path to the alignment
 #' @param filterMsaPath Path to write the filtered alignment
@@ -60,10 +80,6 @@ GetGenomeNameWithExt <- function(path, ext) {
 #' @return void
 #' @export
 NULL
-
-FilterAlgnPositions <- function(msaPath, filterMsaPath, minGapFrac = 0.01, minSubThresh = 0L) {
-    invisible(.Call(`_cognac_FilterAlgnPositions`, msaPath, filterMsaPath, minGapFrac, minSubThresh))
-}
 
 FilterPartitionedAlgnPositions <- function(msaPath, filterMsaPath, genePositions, minGapFrac = 0.01, minSubThresh = 0L) {
     .Call(`_cognac_FilterPartitionedAlgnPositions`, msaPath, filterMsaPath, genePositions, minGapFrac, minSubThresh)

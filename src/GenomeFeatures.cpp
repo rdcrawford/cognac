@@ -72,7 +72,7 @@ std::string GenomeFeatures::getDescription( std::string attributes )
   string description = attributes.substr( start, end - start );
 
   // Check if there is a note in the attributes
-  auto noteStart = attributes.find( "Note=" );
+  auto noteStart = attributes.find( "note=" );
   if ( noteStart == string::npos ) return description;
   else noteStart += 5;
 
