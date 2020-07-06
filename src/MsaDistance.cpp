@@ -36,12 +36,8 @@ double MsaDistance::calcRawDist(
   const std::string &ref, const std::string &qry
   )
 {
-
   // Initialize a counter for the number of mutations between two sequences
   double numMutations = 0;
-
-  // Set the function pointer
-  setDistFunc();
 
   // For each base in the two sequence, see if there is NOT a match at
   // the kth position of of the alignment and there is not an aligned,
@@ -112,9 +108,9 @@ double MsaDistance::calcSharedDist(
       // the counter for the numer of numations
       if ( ref[i] != qry[i] )
       {
-        numMutations =+ 1;
+        numMutations += 1.0;
       }
-      numSites += 1;
+      numSites += 1.0;
     }
   }
   return numMutations / numSites;

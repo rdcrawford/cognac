@@ -15,7 +15,11 @@ using namespace RcppParallel;
 // to retrieve the core genome. Then a distance matrix can be calculated
 // with the paiwise distances between the sequences in the alignmnet
 // -----------------------------------------------------------------------------
+
+// Define a static vector to stand in for the vector of integers
+// so that it can be passed as argument by default
 static std::vector<int> DEFAULT_VECTOR;
+
 #ifndef _MULTI_SEQ_ALGN_
 #define _MULTI_SEQ_ALGN_
 class MultiSeqAlgn : public BioSeq

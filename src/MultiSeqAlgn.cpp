@@ -49,9 +49,7 @@ void MultiSeqAlgn::parseMsa()
 
   // Make sure that this alignment contains sequences
   if ( !seqLen )
-  {
     Rcpp::stop( "There are no sequences in this alignment...\n" );
-  }
 
   for ( auto it = seqs.begin(); it != seqs.end(); it++ )
   {
@@ -103,6 +101,12 @@ void MultiSeqAlgn::filterMsaColumns( double minGapFrac,
     algnColumn.calcColStats( minGapFrac, minSubThresh );
   });
 
+  // Allocate a new vector with the new alignment sequnces
+  std::vector< std::string > filterSeqs( seqs.size() );
+
+  // Reserve enough space for each string to encompass the entire alignments
+  for ( auto & seq : filterSeqs ) seq.reserve( seqLen );
+
   // Iterate over each position in the alignment
   for ( auto it = algnCols.begin(); it != algnCols.end(); it++ )
   {
@@ -110,17 +114,23 @@ void MultiSeqAlgn::filterMsaColumns( double minGapFrac,
     // alignment, advance the iterators
     if ( it->getColStatus() )
     {
-      for ( auto & it : seqIts ) ++it;
-    }
-    // If this position is of low quality, erase it
-    else
-    {
+      // Get the current column
+      unsigned int colIdx = std::distance( algnCols.begin(), it );
+
+      // Add this position to the filtered alignment
       for ( unsigned int i = 0; i < seqs.size(); i ++ )
-        seqs[ i ].erase( seqIts[ i ] );
+        filterSeqs[ i ].push_back( seqs[ i ][ colIdx ] );
+
     }
 
     R_CheckUserInterrupt();
   }
+
+  // Get rid of any unused space
+  for ( auto & seq : filterSeqs ) seq.shrink_to_fit();
+
+  // Reseq the sequences in the msa to the filtered sequences
+  seqs = filterSeqs;
 
   // If a vector of gene positions was input, update the vector so it now
   // reflects the gene partitions that were erased
