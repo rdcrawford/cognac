@@ -52,7 +52,7 @@ double MsaDistance::calcRawDist(
       // the counter for the numer of numations
       if ( ref[i] != '-' && qry[i] != '-' && ref[i] != 'N' &&  qry[i] != 'N' )
       {
-        numMutations ++;
+        numMutations =+ 1;
       }
     }
   }

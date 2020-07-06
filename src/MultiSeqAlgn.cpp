@@ -27,7 +27,7 @@ Rcpp::NumericMatrix MultiSeqAlgn::createDistMat( const std::string & distType )
 
   // Call tbb::parallel_for, the code in the functor will be executed
   // on the availible number of threads.
-  parallelFor( 0, getNumSeqs(), msaDistance );
+  parallelFor( 0, seqs.size(), msaDistance );
 
   Rcpp::CharacterVector names = Rcpp::wrap( seqNames );
   rownames( distMat )         = names;
