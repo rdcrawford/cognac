@@ -48,6 +48,10 @@ public:
   std::list< Rcpp::NumericMatrix > calcAlignPartitionDists(
     std::string distType, std::vector< int > genePartitions );
 
+  // Delete a selected partitions in the alignment
+  void deletePartitions( const std::vector<int> &delStart,
+    const std::vector<int> &delEnd );
+
 private:
 
   // Create a vector with iterators to each sequence in the alignment

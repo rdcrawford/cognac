@@ -10,7 +10,6 @@
 //
 // -----------------------------------------------------------------------------
 
-
 // [[Rcpp::export]]
 Rcpp::NumericMatrix CalcAlgnSubMatrix( std::vector< std::string > seqs )
 {

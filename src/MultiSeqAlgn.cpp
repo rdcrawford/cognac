@@ -205,4 +205,20 @@ std::list< Rcpp::NumericMatrix > MultiSeqAlgn::calcAlignPartitionDists(
   return distMatList;
 }
 
+// Delete a selected partitions in the alignment
+void MultiSeqAlgn::deletePartitions( const std::vector<int> &delStart,
+  const std::vector<int> &delEnd )
+{
+  // Get an iterator with the beginning of each string
+  auto seqIts = getSeqIterators();
+
+  // Iterate over the partitions to be delected and remove them from each
+  // sequence in the alignement
+  for ( unsigned int i = 0; i < delStart.size(); i++ )
+  {
+    for ( unsigned int j = 0; j < seqs.size(); j++ )
+      seqs[ j ].erase( seqIts[ j ] + delStart[ i ], seqIts[ j ] + delEnd[ j ] );
+  }
+}
+
 // -----------------------------------------------------------------------------

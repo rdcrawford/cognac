@@ -79,6 +79,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// DeletePartitions
+void DeletePartitions(std::string msaPath, std::vector<int> delStart, std::vector<int> delEnd, std::string outPath);
+RcppExport SEXP _cognac_DeletePartitions(SEXP msaPathSEXP, SEXP delStartSEXP, SEXP delEndSEXP, SEXP outPathSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type msaPath(msaPathSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type delStart(delStartSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type delEnd(delEndSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outPath(outPathSEXP);
+    DeletePartitions(msaPath, delStart, delEnd, outPath);
+    return R_NilValue;
+END_RCPP
+}
 // ExtractGenomeNameFromPath
 std::string ExtractGenomeNameFromPath(std::string path);
 RcppExport SEXP _cognac_ExtractGenomeNameFromPath(SEXP pathSEXP) {
@@ -239,6 +252,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cognac_CreateAlgnDistMat", (DL_FUNC) &_cognac_CreateAlgnDistMat, 2},
     {"_cognac_CreateCognacRunData", (DL_FUNC) &_cognac_CreateCognacRunData, 4},
     {"_cognac_CreateCoreGenomeDistMat", (DL_FUNC) &_cognac_CreateCoreGenomeDistMat, 1},
+    {"_cognac_DeletePartitions", (DL_FUNC) &_cognac_DeletePartitions, 4},
     {"_cognac_ExtractGenomeNameFromPath", (DL_FUNC) &_cognac_ExtractGenomeNameFromPath, 1},
     {"_cognac_GetGenomeNameWithExt", (DL_FUNC) &_cognac_GetGenomeNameWithExt, 2},
     {"_cognac_FilterAlgnPositions", (DL_FUNC) &_cognac_FilterAlgnPositions, 4},

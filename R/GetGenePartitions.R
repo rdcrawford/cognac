@@ -33,12 +33,12 @@ GetGenePartitions = function( genePtr, revTranslate )
   
   # Calculate the boundaries of the genes
   ntGenePartitions      = character( length( ntGenePositions ) )
-  ntGenePartitions[ 1 ] = paste0( "1-", aaGenePartitions[ 1 ] * 3 )
+  ntGenePartitions[ 1 ] = paste0( "1-", ntGenePartitions[ 1 ] * 3 )
   for ( i in 2:length( ntGenePartitions ) )                                           
   {
     # Find the partitions of the genes in the nt alignment
     ntGenePartitions[ i ] = paste0( 
-      ntGenePositions[ i  + 1 ] + 1, "-", aaGenePartitions[ i ] * 3
+      ntGenePositions[ i  - 1 ] + 1, "-", ntGenePositions[ i ]
       )
   }
 

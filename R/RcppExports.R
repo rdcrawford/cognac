@@ -40,6 +40,10 @@ CreateCoreGenomeDistMat <- function(msaPath) {
     .Call(`_cognac_CreateCoreGenomeDistMat`, msaPath)
 }
 
+DeletePartitions <- function(msaPath, delStart, delEnd, outPath) {
+    invisible(.Call(`_cognac_DeletePartitions`, msaPath, delStart, delEnd, outPath))
+}
+
 ExtractGenomeNameFromPath <- function(path) {
     .Call(`_cognac_ExtractGenomeNameFromPath`, path)
 }
