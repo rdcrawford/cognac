@@ -283,7 +283,7 @@ cognac = function(
   
   # If requested, create a distance matrix with the
   if ( distMat )
-    algnEnv$distMat = CreateAlgnDistMat( algnPath, "shared", FALSE )
+    algnEnv$distMat = CreateAlgnDistMat( algnPath, "shared" )
   
   # If requested, make a neighbor joining tree with ape
   if ( njTree )
