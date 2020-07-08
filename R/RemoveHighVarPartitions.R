@@ -19,10 +19,10 @@ RemoveHighVarPartitions = function( algnData, algnType, outAlgnPath )
   if ( algnType == "aa" )
   {
     cIdx = 3
-    algn = algnData$ntAlgnPath
+    algn = algnData$aaAlgnPath
   } else if ( algnType == "nt" ) {
     cIdx = 4
-    algn = algnData$aaAlgnPath
+    algn = algnData$ntAlgnPath
   } else {
     stop("Type must be \"aa\" or \"nt\" ")
   }
@@ -64,6 +64,30 @@ RemoveHighVarPartitions = function( algnData, algnType, outAlgnPath )
     # Delete the outlier partitions from the alignment 
     DeletePartitions( algn, delStartPos, delEndPos, outAlgnPath )
   }
+  
+  
+  # Calculate the boundaries of the genes
+  genePartitions      = character( length( algnLens ) )
+  genePartitions[ 1 ] = paste0( "1-", algnLens[1] )
+  
+  curEnd = algnLens[1]
+  for ( i in 2:length( algnLens ) )
+  {
+    if ( isOutlier[i] )
+    {
+      genePartitions[ i ] = NA
+    } else {
+      
+      curStart = curEnd + 1
+      curEnd   = curStart + algnLens[ i ] - 1
+      
+      # Find the partitions of the genes in the nt alignment
+      genePartitions[ i ] = paste0( curStart, "-", curEnd )
+    }
+  }
+  
+  # Add the gene partitions for the updated alignment to the dataframe
+  cbind.data.frame( algnData$geneData,  genePartitions )
 }
 
 # ------------------------------------------------------------------------------
