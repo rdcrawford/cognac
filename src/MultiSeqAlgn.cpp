@@ -217,20 +217,10 @@ void MultiSeqAlgn::deletePartitions( const std::vector<int> &delStart,
   int delLen = 0;
   for ( unsigned int i = 0; i < delStart.size(); i++ )
   {
-    Rcout << "Parition: " << i << std::endl;
     for ( unsigned int j = 0; j < seqs.size(); j++ )
     {
-
       auto curStart = seqIts[ j ] + ( delStart[ i ] - delLen );
       auto curEnd = seqIts[ j ] + ( delEnd[ i ] - delLen + 1 );
-
-      auto x = std::distance( seqIts[ j ], curStart );
-      auto y = std::distance( seqIts[ j ], curEnd );
-      Rcout << "  -- Seq len: " << seqs[ j ].size()
-            << " delLen: " << delLen
-            << " Start: " << x
-            << " End: " << y << std::endl;
-      seqs[ j ].erase( curStart, curEnd );
     }
     delLen += delEnd[i] - delStart[i] + 1;
   }
