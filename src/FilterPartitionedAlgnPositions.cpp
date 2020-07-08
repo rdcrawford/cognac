@@ -4,20 +4,23 @@
 #include "MultiSeqAlgn.h"
 
 // -----------------------------------------------------------------------------
-//  Filter Alignment Positions
+//  Filter Partitioned Algn Positions
 //  Ryan D. Crawford
 //  05/15/2020
 //  ----------------------------------------------------------------------------
-//' @name FilterAlignmentPositions
-//' @title Filter Alignment Positions
+//' @name FilterPartitionedAlgnPositions
+//' @title Filter Partitioned Algn Positions
 //' @description
 //'   This function
 //' @param msaPath Path to the alignment
 //' @param filterMsaPath Path to write the filtered alignment
-//' @param double minGapFrac=0.01,
-//' @param minSubThresh Minimium number o subsititutions
-//' @param genePositions Optional vector of partitions within the alignment
-//' @return void
+//' @param genePositions Vector of gene partitions in the alignment
+//' @param minGapFrac Double representing the minimium fraction of gaps to
+//'   remain in the alignment.Defaults to 0.01.
+//' @param minSubThresh Integer representing the minimum number of
+//'   substitutions to remain in the alignment. This is the number of instances
+//'   of any minor allele to remain. Defaults to 0.
+//' @return Updated vector with the partions in the filtered alignment
 //' @export
 //  ----------------------------------------------------------------------------
 

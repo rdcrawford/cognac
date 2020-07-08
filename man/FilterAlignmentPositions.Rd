@@ -4,27 +4,21 @@
 \alias{FilterAlignmentPositions}
 \title{Filter Alignment Positions}
 \arguments{
-\item{minGapFrac}{Double representing the minimium fraction of gaps to
-remain in the alignment.Defaults to 0.01.}
-
 \item{msaPath}{Path to the alignment}
 
 \item{filterMsaPath}{Path to write the filtered alignment}
 
-\item{double}{minGapFrac=0.01,}
+\item{minGapFrac}{Double representing the minimium fraction of gaps to
+remain in the alignment.Defaults to 0.01.}
 
-\item{minSubThresh}{Minimium number o subsititutions}
-
-\item{genePositions}{Optional vector of partitions within the alignment}
+\item{minSubThresh}{Integer representing the minimum number of
+substitutions to remain in the alignment. This is the number of instances
+of any minor allele to remain. Defaults to 0.}
 }
 \value{
-void
-
 void
 }
 \description{
 This function removes gaps and/or positions without sufficient varition
   from the alingment.
-
-This function
 }

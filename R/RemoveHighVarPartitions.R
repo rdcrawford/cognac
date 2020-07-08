@@ -15,7 +15,7 @@ RemoveHighVarPartitions = function( algnData, algnType, outAlgnPath )
   START = 1
   END   = 2
   
-  # Get the column index of the 
+  # Get the column index of the gene partitions and the path to the alignment
   if ( algnType == "aa" )
   {
     cIdx = 3
@@ -23,6 +23,8 @@ RemoveHighVarPartitions = function( algnData, algnType, outAlgnPath )
   } else if ( algnType == "nt" ) {
     cIdx = 4
     algn = algnData$aaAlgnPath
+  } else {
+    stop("Type must be \"aa\" or \"nt\" ")
   }
   
   # Get the positions of the genes in the alignment
@@ -31,11 +33,11 @@ RemoveHighVarPartitions = function( algnData, algnType, outAlgnPath )
     )
   
   # Calculate the distances for each partition in the ali
-  distMatList = CalcAlgnPartitionDists( algn, "raw", geneParitions[ 2, ] )
+  distMatList = CalcAlgnPartitionDists( algn, "raw", geneParitions[ END, ] )
   
   # Get the length of the alignment for each gene
-  algnLens =  sapply( 1:nrow(geneParitions),
-    function(i) geneParitions[ i, 2 ] - geneParitions[ i, 1 ] + 1
+  algnLens =  sapply( 1:ncol(geneParitions),
+    function(j) geneParitions[ END, j ] - geneParitions[ START, j ] + 1
     )
   
   # Get the total number of variants in the alignment, normalized 

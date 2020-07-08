@@ -27,23 +27,21 @@ GetGenePartitions = function( genePtr, revTranslate )
   # Get the positions of the genes in the nucluetide alignment. This is 
   # the number of amino acids + 1 for the stop codon, and multiplied by
   # 3 for nucleotides per amino acid
-  ntGenePositions = sapply( genePtr$genePositions,
-    function(x) ( x + 1 ) * 3
-    )
+  ntGeneEnds = genePtr$genePositions * 3
   
   # Calculate the boundaries of the genes
-  ntGenePartitions      = character( length( ntGenePositions ) )
-  ntGenePartitions[ 1 ] = paste0( "1-", ntGenePartitions[ 1 ] * 3 )
+  ntGenePartitions      = character( length( ntGeneEnds ) )
+  ntGenePartitions[ 1 ] = paste0( "1-", ntGeneEnds[ 1 ] )
   for ( i in 2:length( ntGenePartitions ) )                                           
   {
     # Find the partitions of the genes in the nt alignment
     ntGenePartitions[ i ] = paste0( 
-      ntGenePositions[ i  - 1 ] + 1, "-", ntGenePositions[ i ]
+      ntGeneEnds[ i  - 1 ] + 1, "-", ntGeneEnds[ i ]
       )
   }
 
   # Return the gene positions asa character matrix
-  return( cbind( aaGenePartitions, ntGenePositions ) )
+  return( cbind( aaGenePartitions, ntGenePartitions ) )
 }
 
 # ------------------------------------------------------------------------------
