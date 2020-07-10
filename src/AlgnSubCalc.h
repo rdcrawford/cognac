@@ -26,8 +26,8 @@ public:
   // Return the subsitiution matrix with the alignment
   Rcpp::NumericMatrix getSubMat();
 
-
-  // Return the probability of substitutions between two symbols
+  // Return the probability of substitutions corresponding to the two symbols
+  // The 'rCh' refers to the row index and the 'qCh' refers to the column index
   double getSubPr( char rCh, char qCh );
 
   // Calculate the log liklihood of each substitution in the matrix
@@ -35,7 +35,6 @@ public:
 
   // Calculate the log normalized substitution probabilities
   void calcNormalizedProbs();
-
 
 private:
 

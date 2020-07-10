@@ -36,7 +36,7 @@ void MsaDistance::setDistFunc( std::string distFunType )
     // Normalize the matirx to get the log liklihood
     algnSubCalc.calcNormalizedProbs();
   }
-  else if ( distFunType ==  "logLik" )
+  else if ( distFunType ==  "logLike" )
   {
     distFunction = &MsaDistance::calcBlosum;
 
@@ -51,7 +51,7 @@ void MsaDistance::setDistFunc( std::string distFunType )
   {
     std::string errStr = "Distance function type " + distFunType +
       " is not supported\nSupported types are:\n  -- raw\n  -- shared\n" +
-      "  -- normProb\n  -- logLik";
+      "  -- normProb\n  -- logLike";
     Rcpp::stop( errStr );
   }
 }
@@ -97,9 +97,9 @@ void MsaDistance::operator()(std::size_t begin, std::size_t end)
   double distVal;
 
   // FInd the pairwise differences for each sequence
-  for (std::size_t i = begin; i < end; i++)
+  for ( std::size_t i = begin; i < end; i++ )d
   {
-    for (std::size_t j = 0; j < i; j++)
+    for ( std::size_t j = 0; j < i; j++ )
     {
       // Value to store the count of mismatches between the two sequences
       if ( j == i ) distVal = 0;

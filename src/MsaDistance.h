@@ -67,7 +67,7 @@ struct MsaDistance : public Worker
   double calcNormProbDist( const std::string &ref, const std::string &qry );
 
   // Calculate the loglilihood of each position in the alignment -- similar
-  // to blossum distance
+  // to blossum distance without the scaling factor. 
   double calcBlosum( const std::string &ref, const std::string &qry );
 
   // There are several ways to calculate the distance from an MSA. This
