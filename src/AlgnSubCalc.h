@@ -26,8 +26,16 @@ public:
   // Return the subsitiution matrix with the alignment
   Rcpp::NumericMatrix getSubMat();
 
-  // Divide the counts of
-  void normalizeMatrix();
+
+  // Return the probability of substitutions between two symbols
+  double getSubPr( char rCh, char qCh );
+
+  // Calculate the log liklihood of each substitution in the matrix
+  void calcLogLikelihoods();
+
+  // Calculate the log normalized substitution probabilities
+  void calcNormalizedProbs();
+
 
 private:
 
@@ -40,6 +48,9 @@ private:
   // Matrix with the substitution frequencies
   Rcpp::NumericMatrix subMat;
 
+  // Bool indicating if the matrix has been normalized
+  bool isNormalized = false;
+
   // Count the chars in a sequence
   void countAaCodes( const std::string &seq );
 
@@ -48,8 +59,12 @@ private:
   // sequence.
   void countSubs( const std::string &ref, const std::string &qry );
 
-  //
+  // Look up the row/column index of the input char. If this is a valid aa/nt
+  // symbol true is returned and the "idx" variable is updated.
   bool getAaIdx( char aa, unsigned int &idx );
+
+  // Calculate the subsitiution probabilities for each pair of amino acids
+  void calcSubProbabilities();
 
 };
 #endif

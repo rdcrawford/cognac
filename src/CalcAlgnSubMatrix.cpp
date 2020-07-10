@@ -20,7 +20,7 @@ Rcpp::NumericMatrix CalcAlgnSubMatrix( std::vector< std::string > seqs )
   algnSubCalc.updateSubMat( seqs );
 
   // Normalize the matrix by the probability of each mutation occuring
-  algnSubCalc.normalizeMatrix();
+  algnSubCalc.calcLogLikelihoods();
 
   // Calculate the distance matrix and return
   return algnSubCalc.getSubMat();

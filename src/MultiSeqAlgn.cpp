@@ -1,8 +1,8 @@
 // [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
-#include "BioSeq.h"
 #include <RcppParallel.h>
+#include "BioSeq.h"
 #include "MultiSeqAlgn.h"
 #include "MsaDistance.h"
 #include "AlgnColumn.h"
@@ -23,7 +23,10 @@ Rcpp::NumericMatrix MultiSeqAlgn::createDistMat( const std::string & distType )
   Rcpp::NumericMatrix distMat( getNumSeqs(), getNumSeqs() );
 
   // Create the functor
-  MsaDistance msaDistance( seqs, distMat, distType );
+  MsaDistance msaDistance( seqs, distMat );
+
+  // Set the function pointer to the requested distance function
+  msaDistance.setDistFunc(distType );
 
   // Call tbb::parallel_for, the code in the functor will be executed
   // on the availible number of threads.
@@ -107,7 +110,8 @@ void MultiSeqAlgn::filterMsaColumns( double minGapFrac,
   // Reserve enough space for each string to encompass the entire alignments
   for ( auto & seq : filterSeqs ) seq.reserve( seqLen );
 
-  // Iterate over each position in the alignment
+  // Iterate over each position in the alignment and copy over each char
+  // that meets the criteria for inclusion in the alignment
   for ( auto it = algnCols.begin(); it != algnCols.end(); it++ )
   {
     // If there are too many gaps or no variants at this position in the
@@ -115,12 +119,11 @@ void MultiSeqAlgn::filterMsaColumns( double minGapFrac,
     if ( it->getColStatus() )
     {
       // Get the current column
-      unsigned int colIdx = std::distance( algnCols.begin(), it );
+      auto colIdx = std::distance( algnCols.begin(), it );
 
       // Add this position to the filtered alignment
       for ( unsigned int i = 0; i < seqs.size(); i ++ )
         filterSeqs[ i ].push_back( seqs[ i ][ colIdx ] );
-
     }
 
     R_CheckUserInterrupt();
@@ -172,23 +175,33 @@ std::list< Rcpp::NumericMatrix > MultiSeqAlgn::calcAlignPartitionDists(
   // row and column names
   Rcpp::CharacterVector names = Rcpp::wrap( seqNames );
 
+  // Allocate the matrix to store the differences between aligned
+  // sequences we will return
+  Rcpp::NumericMatrix distMat( numSeqs, numSeqs );
+
+  // Initialize the functor with the entire alignment
+  MsaDistance msaDistance( seqs, distMat );
+
+  // Set the function pointer to the requested distance function. If the
+  // function type requires, the alignment substitution probabilities are
+  // calculated once on the entire alignment
+  msaDistance.setDistFunc( distType );
+
+  // For each set of patitions
   for ( unsigned  int i = 0; i < genePartitions.size(); i++ )
   {
     if ( i == 0 ) gStart = 0;
     else gStart = genePartitions[ i - 1 ];
     len = genePartitions[ i ] - gStart;
 
-    // Allocate the matrix to store the differences between aligned
-    // sequences we will return
-    Rcpp::NumericMatrix distMat( numSeqs, numSeqs );
-
     // Create an alignment with only the sequences in the partitions
     std::vector< std::string > subSeqs( numSeqs );
     for ( unsigned int j = 0; j < numSeqs; j++ )
       subSeqs[ j ] = seqs[ j ].substr( gStart, len );
 
-    // Create the functor
-    MsaDistance msaDistance( subSeqs, distMat, distType );
+    // Set the sequences to calculate the distance for to the subsequence
+    // corresponding to this partition
+    msaDistance.setMsaSeqs( subSeqs );
 
     // Call tbb::parallel_for, the code in the functor will be executed
     // on the availible number of threads.

@@ -15,7 +15,7 @@ GetGenePartitions = function( genePtr, revTranslate )
   aaGenePartitions[ 1 ] = paste0( "1-", genePtr$genePositions[ 1 ] )
   for ( i in 2:length( aaGenePartitions ) )                                           
   {
-    aaGenePartitions[ i ] = paste0( 
+    aaGenePartitions[ i ] = paste0(
       genePtr$genePositions[ i  - 1 ] + 1, "-", genePtr$genePositions[ i ] 
       )
   }

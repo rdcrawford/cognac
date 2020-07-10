@@ -3,6 +3,7 @@
 #include <RcppParallel.h>
 #include <Rcpp.h>
 #include "MsaDistance.h"
+#include "AlgnSubCalc.h"
 using namespace Rcpp;
 using namespace RcppParallel;
 
@@ -14,7 +15,7 @@ using namespace RcppParallel;
 
 // Set the function pointer to the type specified by the input
 // argument "distFunType"
-void MsaDistance::setDistFunc()
+void MsaDistance::setDistFunc( std::string distFunType )
 {
   if ( distFunType == "raw" )
   {
@@ -24,14 +25,44 @@ void MsaDistance::setDistFunc()
   {
     distFunction = &MsaDistance::calcSharedDist;
   }
+  else if ( distFunType ==  "normProb" )
+  {
+    distFunction = &MsaDistance::calcNormProbDist;
+
+    // Read in the alignment and calcualte the pairwise substitutions in they
+    // alignment
+    algnSubCalc.updateSubMat( msa );
+
+    // Normalize the matirx to get the log liklihood
+    algnSubCalc.calcNormalizedProbs();
+  }
+  else if ( distFunType ==  "logLik" )
+  {
+    distFunction = &MsaDistance::calcBlosum;
+
+    // Read in the alignment and calcualte the pairwise substitutions in the
+    // alignment
+    algnSubCalc.updateSubMat( msa );
+
+    // Normalize the matirx to get the log liklihood
+    algnSubCalc.calcLogLikelihoods();
+  }
   else
   {
     std::string errStr = "Distance function type " + distFunType +
-      " is not supported\nSupported types are:\n  -- raw\n  -- shared\n";
+      " is not supported\nSupported types are:\n  -- raw\n  -- shared\n" +
+      "  -- normProb\n  -- logLik";
     Rcpp::stop( errStr );
   }
 }
 
+// Set the sequences contained in this alignment.
+void MsaDistance::setMsaSeqs( const std::vector< std::string > & msa )
+{
+  this->msa = msa;
+}
+
+// Calculate the raw number of mutations between two sequences
 double MsaDistance::calcRawDist(
   const std::string &ref, const std::string &qry
   )
@@ -40,7 +71,7 @@ double MsaDistance::calcRawDist(
   double numMutations = 0;
 
   // For each base in the two sequence, see if there is NOT a match at
-  // the kth position of of the alignment and there is not an aligned,
+  // the ith position of of the alignment and there is not an aligned,
   // base at that position increment the number of mutations.
   for ( unsigned int i = 0; i < ref.size(); i++ )
   {
@@ -62,9 +93,6 @@ double MsaDistance::calcRawDist(
 // Function call operator that work from the range specified by begin and end
 void MsaDistance::operator()(std::size_t begin, std::size_t end)
 {
-  // Set the function pointer
-  setDistFunc();
-
   // Initialize the value that stores the distances
   double distVal;
 
@@ -97,7 +125,7 @@ double MsaDistance::calcSharedDist(
   double numSites     = 0;
 
   // For each base in the two sequence, see if there is NOT a match at
-  // the kth position of of the alignment and there is not an aligned,
+  // the ith position of of the alignment and there is not an aligned,
   // base at that position increment the number of mutations.
   for ( unsigned int i = 0; i < ref.size(); i++ )
   {
@@ -115,6 +143,57 @@ double MsaDistance::calcSharedDist(
     }
   }
   return numMutations / numSites;
+}
+
+double MsaDistance::calcNormProbDist(
+  const std::string &ref, const std::string &qry
+  )
+{
+  // Initialize a value to store the calulated distance between the two
+  // sequences
+  double seqDist = 0;
+
+  // For each base in the two sequence, see if there is NOT a match at
+  // the ith position of of the alignment and there is not an aligned,
+  // base at that position increment the number of mutations.
+  for ( unsigned int i = 0; i < ref.size(); i++ )
+  {
+    // If this position in the reference is not the same as the
+    // query..
+    if (  ref[i] != '-' && qry[i] != '-' && ref[i] != 'N' &&  qry[i] != 'N' )
+    {
+      // And neither sequence has a gap at this position, increment
+      // the counter for the numer of numations
+      if ( ref[i] != qry[i] )
+      {
+        seqDist += algnSubCalc.getSubPr( ref[i], qry[i] );
+      }
+    }
+  }
+  return seqDist;
+}
+
+double MsaDistance::calcBlosum(
+  const std::string &ref, const std::string &qry
+  )
+{
+  // Initialize a value to store the calulated distance between the two
+  // sequences
+  double seqDist = 0;
+
+  // For each base in the two sequence, see if there is NOT a match at
+  // the ith position of of the alignment and there is not an aligned,
+  // base at that position increment the number of mutations.
+  for ( unsigned int i = 0; i < ref.size(); i++ )
+  {
+    // If this position in the reference is not the same as the
+    // query..
+    if (  ref[i] != '-' && qry[i] != '-' && ref[i] != 'N' &&  qry[i] != 'N' )
+    {
+      seqDist += algnSubCalc.getSubPr( ref[i], qry[i] );
+    }
+  }
+  return seqDist;
 }
 
 // -----------------------------------------------------------------------------

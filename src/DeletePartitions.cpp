@@ -15,6 +15,7 @@ void DeletePartitions( std::string msaPath, std::vector<int> delStart,
   std::vector<int> delEnd, std::string outPath
   )
 {
+  // Make sure the partitions are the correct size
   if ( delStart.size() != delEnd.size() )
     Rcpp::stop( "The start positions and the end positions are not equal size");
 
@@ -35,7 +36,7 @@ void DeletePartitions( std::string msaPath, std::vector<int> delStart,
   multiSeqAlgn.deletePartitions( delStart, delEnd );
 
   if ( !multiSeqAlgn.writeSeqs( outPath ) )
-    Rcpp::stop("Unable to write the alignment to " + outPath );
+    Rcpp::stop( "Unable to write the alignment to " + outPath );
 }
 
 // -----------------------------------------------------------------------------

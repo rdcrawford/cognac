@@ -7,7 +7,7 @@ using namespace Rcpp;
 // Ryan D. Crawford
 // 2020/01/23
 // -----------------------------------------------------------------------------
-//
+// This class defines the column of an alignment and specifys
 // -----------------------------------------------------------------------------
 
 #ifndef _ALGN_COLUMN_

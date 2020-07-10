@@ -65,7 +65,6 @@ RemoveHighVarPartitions = function( algnData, algnType, outAlgnPath )
     DeletePartitions( algn, delStartPos, delEndPos, outAlgnPath )
   }
   
-  
   # Calculate the boundaries of the genes
   genePartitions      = character( length( algnLens ) )
   genePartitions[ 1 ] = paste0( "1-", algnLens[1] )

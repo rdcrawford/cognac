@@ -2,6 +2,7 @@
 // [[Rcpp::plugins(cpp11)]]
 #include <RcppParallel.h>
 #include <Rcpp.h>
+#include "AlgnSubCalc.h"
 using namespace RcppParallel;
 
 // -----------------------------------------------------------------------------
@@ -26,9 +27,8 @@ struct MsaDistance : public Worker
   // can be automatically converted to from the Rcpp matrix type). Additionally
   // The integer indicating the type of function to sue
   MsaDistance(
-    const std::vector<std::string> &msa, Rcpp::NumericMatrix distMat,
-    std::string distFunType): msa(msa), distMat(distMat),
-    distFunType(distFunType)
+    const std::vector<std::string> &msa, Rcpp::NumericMatrix distMat):
+    msa(msa), distMat(distMat)
   { ; }
 
   // Input multipe sequence alignment to calculate distance from
@@ -37,31 +37,45 @@ struct MsaDistance : public Worker
   // Output matrix to write distances to
   RMatrix< double > distMat;
 
-  // String for the type of distance function to use
-  std::string distFunType;
+  // Object the calculates the substitution matrix between amino acids or
+  // nucleotides in the alignment
+  AlgnSubCalc algnSubCalc;
 
-  // There are several ways to calculate the distance from an MSA. This
-  // provides a function pointer to be called when creating the distance
-  // matrx.
-  typedef double ( MsaDistance::*DistFunction )( const std::string &refSeq,
-    const std::string &qrySeq );
-  DistFunction distFunction;
-
-   // Function call operator that work from the range specified by begin and
-   // end
+  // Function call operator that work from the range specified by begin and
+  // end
   void operator()( std::size_t begin, std::size_t end );
 
   // Set the function pointer to the type specified by the input
   // argument "distFunType"
-  void setDistFunc();
+  void setDistFunc( std::string distFunType );
+
+  // Set the sequences contained in this alignment.
+  void setMsaSeqs( const std::vector< std::string > & msa );
+
+  // This function cacluates the subsiion probabilities between sequences
+  // in the alignmet
+  void calcSubProbabilities();
 
   // Returns the raw number of mutations between two sequences
   double calcRawDist( const std::string &ref, const std::string &qry );
 
-  // Returns the number of mutations normalized to the number of shared
-  // sites (excluding gap potitions)
+  // Returns the sum of the log liklihood of substitutions between two
+  // sequences in the alignment
   double calcSharedDist( const std::string &ref, const std::string &qry );
 
+  // Returns the log odds of the substitutions between the two sequences
+  double calcNormProbDist( const std::string &ref, const std::string &qry );
+
+  // Calculate the loglilihood of each position in the alignment -- similar
+  // to blossum distance
+  double calcBlosum( const std::string &ref, const std::string &qry );
+
+  // There are several ways to calculate the distance from an MSA. This
+  // provides a function pointer to be called when creating the distance
+  // matrx. By default, calculate the raw number of substitutions
+  typedef double ( MsaDistance::*DistFunction )( const std::string &refSeq,
+    const std::string &qrySeq );
+  DistFunction distFunction = &MsaDistance::calcRawDist;
 };
 #endif
 

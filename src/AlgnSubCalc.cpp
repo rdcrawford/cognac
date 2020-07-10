@@ -77,19 +77,73 @@ void AlgnSubCalc::updateSubMat(
   }
 }
 
-void AlgnSubCalc::normalizeMatrix()
+void AlgnSubCalc::calcSubProbabilities()
 {
-  // Transform the matrix. Each non-zero entry is the log of the
-  // frequency of the mutation divided by the probability of the amino
-  // acid ( log Mij / pi )
-  auto aaCount = aaCounts.begin();
+  for ( unsigned int i = 0; i < subMat.nrow(); i++ )
+  {
+    int charCount = 0;
+    for ( unsigned int j = 0; j < subMat.ncol(); j++ )
+      charCount += subMat( i, j );
+
+    // For each Additional sequence,
+    for ( unsigned int j = 0; j < subMat.ncol(); j++ )
+    {
+      if ( subMat( i, j ) )
+      {
+        subMat( i, j ) = subMat( i, j ) / charCount;
+      }
+    }
+  }
+}
+
+// Calculate the log liklihood of each substitution in the matrix
+void AlgnSubCalc::calcLogLikelihoods()
+{
+  // Calculate the subsitiution probabilities for each pair of amino acids
+  calcSubProbabilities();
+
+  // Get the total counts of the amino acids
+  int aaCount = 0;
+  for ( auto it = aaCounts.begin(); it != aaCounts.end(); it ++ )
+    aaCount += it->second;
+
+  // Initialize an iterator for the first amino acid count
+  auto it  = aaCounts.begin();
+
+  for ( unsigned int i = 0; i < subMat.nrow(); i++ )
+  {
+    // Calculate the probability of amino acid i
+    double aaProb = ( double ) it->second / aaCount;
+
+    // For each Additional sequence,
+    for ( unsigned int j = 0; j < subMat.ncol(); j++ )
+    {
+      if ( subMat( i, j ) )
+      {
+        subMat( i, j ) = -log( subMat( i, j ) / aaProb );
+      }
+    }
+
+    // Increment the iterator to the next amino acid
+    ++it;
+  }
+}
+
+// Calculate the log normalized substitution probabilities
+void AlgnSubCalc::calcNormalizedProbs()
+{
+  // Calculate the subsitiution probabilities for each pair of amino acids
+  calcSubProbabilities();
+
   for ( unsigned int i = 0; i < subMat.nrow(); i++ )
   {
     // For each Additional sequence,
     for ( unsigned int j = 0; j < subMat.ncol(); j++ )
     {
       if ( subMat( i, j ) )
-        subMat( i, j ) = -log( subMat( i, j ) / aaCount->second );
+      {
+        subMat( i, j ) = -log( subMat( i, j ) );
+      }
     }
   }
 }
@@ -105,18 +159,28 @@ void AlgnSubCalc::countSubs( const std::string &ref, const std::string &qry )
     // query..
     if (  ref[i] != '-' && qry[i] != '-' && ref[i] != 'N' &&  qry[i] != 'N' )
     {
-      // And neither sequence has a gap at this position, increment
-      // the counter for the numer of numations
-      if ( ref[i] != qry[i] )
+      if ( getAaIdx( ref[i], rIdx ) && getAaIdx( qry[i], qIdx ) )
       {
-        if ( getAaIdx( ref[i], rIdx ) && getAaIdx( qry[i], qIdx ) )
-        {
-          subMat( rIdx, qIdx ) ++;
-          subMat( qIdx, rIdx ) ++;
-        }
+        subMat( rIdx, qIdx ) ++;
+        subMat( qIdx, rIdx ) ++;
       }
     }
   }
 }
+
+double AlgnSubCalc::getSubPr( char rCh, char qCh )
+{
+  // Initialize the row and column indicies
+  unsigned int rIdx;
+  unsigned int qIdx;
+
+  // Look up the row and column indicies in the matrix
+  if ( getAaIdx( rCh, rIdx ) && getAaIdx( qCh, qIdx ) )
+  {
+    return subMat( rIdx, qIdx );
+  }
+  return 0;
+}
+
 
 // -----------------------------------------------------------------------------

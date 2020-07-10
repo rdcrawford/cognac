@@ -29,7 +29,7 @@ Rcpp::NumericMatrix CalcSubMatrixForAlgns( std::vector< std::string > msaPaths )
   }
 
   // Normalize the matrix by the probability of each mutation occuring
-  algnSubCalc.normalizeMatrix();
+  algnSubCalc.calcLogLikelihoods();
 
   return algnSubCalc.getSubMat();
 }

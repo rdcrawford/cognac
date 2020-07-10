@@ -56,7 +56,7 @@ void AlgnColumn::updatCharCounts( char algnChar )
 }
 
 // Calcuate the number of sequences with the minor allele
-int AlgnColumn::getNumMinorAlleles( )
+int AlgnColumn::getNumMinorAlleles()
 {
   // If there is only one char
   if ( charCounts.size() == 1 ) return 0;
