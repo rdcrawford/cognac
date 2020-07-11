@@ -97,7 +97,7 @@ void MsaDistance::operator()(std::size_t begin, std::size_t end)
   double distVal;
 
   // FInd the pairwise differences for each sequence
-  for ( std::size_t i = begin; i < end; i++ )d
+  for ( std::size_t i = begin; i < end; i++ )
   {
     for ( std::size_t j = 0; j < i; j++ )
     {

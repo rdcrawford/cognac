@@ -8,7 +8,9 @@ using namespace Rcpp;
 // Ryan D. Crawford
 // 2020/01/23
 // -----------------------------------------------------------------------------
-//
+// This is an "alignment substitution calculator" class object which has
+// functionality for calculating a substituion matrix to calcuate the
+// probability of substitutions between pairs of amino acids. 
 // -----------------------------------------------------------------------------
 
 #ifndef _ALGN_SUB_CALC_

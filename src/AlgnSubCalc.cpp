@@ -108,24 +108,20 @@ void AlgnSubCalc::calcLogLikelihoods()
     aaCount += it->second;
 
   // Initialize an iterator for the first amino acid count
-  auto it  = aaCounts.begin();
+  std::vector< double > aaProbs;
+  for ( auto it = aaCounts.begin(); it != aaCounts.end(); it ++ )
+    aaProbs.push_back( ( double ) it->second / aaCount );
 
   for ( unsigned int i = 0; i < subMat.nrow(); i++ )
   {
-    // Calculate the probability of amino acid i
-    double aaProb = ( double ) it->second / aaCount;
-
     // For each Additional sequence,
     for ( unsigned int j = 0; j < subMat.ncol(); j++ )
     {
       if ( subMat( i, j ) )
       {
-        subMat( i, j ) = -log( subMat( i, j ) / aaProb );
+        subMat( i, j ) = log( subMat( i, j ) / ( aaProbs[i] * aaProbs[j] ) );
       }
     }
-
-    // Increment the iterator to the next amino acid
-    ++it;
   }
 }
 
