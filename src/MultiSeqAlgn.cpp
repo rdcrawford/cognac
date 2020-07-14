@@ -212,7 +212,7 @@ std::list< Rcpp::NumericMatrix > MultiSeqAlgn::calcAlignPartitionDists(
     colnames( distMat ) = names;
 
     // Set the row and column names of the matirx and Return
-    distMatList.push_back( distMat );
+    distMatList.push_back( Rcpp::clone( distMat ) );
   }
 
   return distMatList;

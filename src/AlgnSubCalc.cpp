@@ -81,18 +81,37 @@ void AlgnSubCalc::calcSubProbabilities()
 {
   for ( unsigned int i = 0; i < subMat.nrow(); i++ )
   {
-    int charCount = 0;
     for ( unsigned int j = 0; j < subMat.ncol(); j++ )
-      charCount += subMat( i, j );
+    {
+      Rcout << subMat( i, j ) << ' ';
+    }
+    Rcout << std::endl;
+  }
 
-    // For each Additional sequence,
+  double numSubs;
+  for ( unsigned int i = 0; i < subMat.nrow(); i++ )
+    for ( unsigned int j = 0; j < subMat.ncol(); j++ )
+      numSubs += subMat( i, j );
+  Rcout << std::endl << "numSubs: " << numSubs
+        << std::endl << std::endl << std::endl;
+
+  for ( unsigned int i = 0; i < subMat.nrow(); i++ )
+  {
     for ( unsigned int j = 0; j < subMat.ncol(); j++ )
     {
       if ( subMat( i, j ) )
       {
-        subMat( i, j ) = subMat( i, j ) / charCount;
+        subMat( i, j ) = subMat( i, j ) / numSubs;
       }
     }
+  }
+  for ( unsigned int i = 0; i < subMat.nrow(); i++ )
+  {
+    for ( unsigned int j = 0; j < subMat.ncol(); j++ )
+    {
+      Rcout << subMat( i, j ) << ' ';
+    }
+    Rcout << std::endl;
   }
 }
 
@@ -119,8 +138,17 @@ void AlgnSubCalc::calcLogLikelihoods()
     {
       if ( subMat( i, j ) )
       {
-        subMat( i, j ) = log( subMat( i, j ) / ( aaProbs[i] * aaProbs[j] ) );
+        subMat( i, j ) =
+          log( ( subMat( i, j ) / ( aaProbs[i] * aaProbs[j] ) ) );
       }
+    }
+  }
+  Rcout << std::endl<< std::endl<< std::endl<< std::endl;
+  for ( unsigned int i = 0; i < subMat.nrow(); i++ )
+  {
+    for ( unsigned int j = 0; j < subMat.ncol(); j++ )
+    {
+      Rcout << subMat( i, j ) << ' ';
     }
   }
 }
@@ -153,7 +181,7 @@ void AlgnSubCalc::countSubs( const std::string &ref, const std::string &qry )
   {
     // If this position in the reference is not the same as the
     // query..
-    if (  ref[i] != '-' && qry[i] != '-' && ref[i] != 'N' &&  qry[i] != 'N' )
+    if ( ref[i] != '-' && qry[i] != '-' && ref[i] != 'N' &&  qry[i] != 'N' )
     {
       if ( getAaIdx( ref[i], rIdx ) && getAaIdx( qry[i], qIdx ) )
       {
