@@ -142,6 +142,11 @@ double MsaDistance::calcSharedDist(
       numSites += 1.0;
     }
   }
+  // If there are no shared sites between these sequences (which will happen
+  // if the alignment is only gap positions) then return zero
+  if ( numSites == 0 ) return 0;
+
+  // Return the fraction of mutations per non-gap position
   return numMutations / numSites;
 }
 
