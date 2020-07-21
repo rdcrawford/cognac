@@ -228,13 +228,20 @@ void MultiSeqAlgn::deletePartitions( const std::vector<int> &delStart,
   // Iterate over the partitions to be delected and remove them from each
   // sequence in the alignement
   int delLen = 0;
+
+  // Iterate over each partions to delete 
   for ( unsigned int i = 0; i < delStart.size(); i++ )
   {
     for ( unsigned int j = 0; j < seqs.size(); j++ )
     {
+      // Find the position to erase and delete the sequence from the alignmnt
       auto curStart = seqIts[ j ] + ( delStart[ i ] - delLen );
       auto curEnd = seqIts[ j ] + ( delEnd[ i ] - delLen + 1 );
+      seqs[ j ].erase( curStart, curEnd );
     }
+
+    // Keep track of how much of the sequence has been deleted to adjust the
+    // start positions
     delLen += delEnd[i] - delStart[i] + 1;
   }
 }
