@@ -52,6 +52,10 @@ public:
   void deletePartitions( const std::vector<int> &delStart,
     const std::vector<int> &delEnd );
 
+  //
+  std::vector< double > calcAlgnQualScores(
+    std::string method, int stepVal, int windowSize );
+
 private:
 
   // Create a vector with iterators to each sequence in the alignment

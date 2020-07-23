@@ -229,7 +229,7 @@ void MultiSeqAlgn::deletePartitions( const std::vector<int> &delStart,
   // sequence in the alignement
   int delLen = 0;
 
-  // Iterate over each partions to delete 
+  // Iterate over each partions to delete
   for ( unsigned int i = 0; i < delStart.size(); i++ )
   {
     for ( unsigned int j = 0; j < seqs.size(); j++ )
@@ -244,6 +244,65 @@ void MultiSeqAlgn::deletePartitions( const std::vector<int> &delStart,
     // start positions
     delLen += delEnd[i] - delStart[i] + 1;
   }
+}
+
+std::vector< double > MultiSeqAlgn::calcAlgnQualScores(
+  std::string method, int stepVal, int windowSize
+  )
+{
+  // Initialize the start of the gene partition
+  unsigned int numSeqs = getNumSeqs();
+
+  // Allocate the matrix to store the differences between aligned
+  // sequences we will return
+  Rcpp::NumericMatrix distMat( numSeqs, numSeqs );
+
+  // Initialize the functor with the entire alignment
+  MsaDistance msaDistance( seqs, distMat );
+
+  // Set the function pointer to the requested distance function. If the
+  // function type requires, the alignment substitution probabilities are
+  // calculated once on the entire alignment
+  msaDistance.setDistFunc( method );
+
+  //
+  unsigned int startPos = 0;
+  unsigned int endPos   = windowSize;
+
+  //
+  std::vector< double > minDistVals;
+
+  while ( endPos < seqLen )
+  {
+    // Create an alignment with only the sequences in the partitions
+    std::vector< std::string > subSeqs( numSeqs );
+    for ( unsigned int j = 0; j < numSeqs; j++ )
+      subSeqs[ j ] = seqs[ j ].substr( startPos, windowSize );
+
+    // Set the sequences to calculate the distance for to the subsequence
+    // corresponding to this partition
+    msaDistance.setMsaSeqs( subSeqs );
+
+    // Call tbb::parallel_for, the code in the functor will be executed
+    // on the availible number of threads.
+    parallelFor( 0, numSeqs, msaDistance );
+
+
+    double minVal = distMat( 0 , 1 );
+    for ( int i = 0; i < distMat.nrow(); i++ )
+     for ( int j = i + 1; j < distMat.ncol(); j++ )
+       if ( distMat( i , j ) < minVal ) minVal = distMat( i , j );
+
+
+    // Set the row and column names of the matirx and Return
+    minDistVals.push_back( minVal );
+
+    // Increment he start position by the window size
+    startPos += stepVal;
+    endPos   = startPos + windowSize;
+  }
+
+  return minDistVals;
 }
 
 // -----------------------------------------------------------------------------

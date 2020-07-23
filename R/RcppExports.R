@@ -96,6 +96,10 @@ FindIdenticalGenes <- function(genes, geneIds) {
     .Call(`_cognac_FindIdenticalGenes`, genes, geneIds)
 }
 
+GetAlgnQualScores <- function(msaPath, method, stepVal, windowSize) {
+    .Call(`_cognac_GetAlgnQualScores`, msaPath, method, stepVal, windowSize)
+}
+
 GetGenomeId <- function(inStr) {
     .Call(`_cognac_GetGenomeId`, inStr)
 }

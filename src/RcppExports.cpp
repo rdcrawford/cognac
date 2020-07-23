@@ -155,6 +155,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// GetAlgnQualScores
+std::vector< double > GetAlgnQualScores(std::string msaPath, std::string method, int stepVal, int windowSize);
+RcppExport SEXP _cognac_GetAlgnQualScores(SEXP msaPathSEXP, SEXP methodSEXP, SEXP stepValSEXP, SEXP windowSizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type msaPath(msaPathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< int >::type stepVal(stepValSEXP);
+    Rcpp::traits::input_parameter< int >::type windowSize(windowSizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(GetAlgnQualScores(msaPath, method, stepVal, windowSize));
+    return rcpp_result_gen;
+END_RCPP
+}
 // GetGenomeId
 std::string GetGenomeId(std::string inStr);
 static SEXP _cognac_GetGenomeId_try(SEXP inStrSEXP) {
@@ -258,6 +272,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cognac_FilterAlgnPositions", (DL_FUNC) &_cognac_FilterAlgnPositions, 4},
     {"_cognac_FilterPartitionedAlgnPositions", (DL_FUNC) &_cognac_FilterPartitionedAlgnPositions, 5},
     {"_cognac_FindIdenticalGenes", (DL_FUNC) &_cognac_FindIdenticalGenes, 2},
+    {"_cognac_GetAlgnQualScores", (DL_FUNC) &_cognac_GetAlgnQualScores, 4},
     {"_cognac_GetGenomeId", (DL_FUNC) &_cognac_GetGenomeId, 1},
     {"_cognac_ParseCdHit", (DL_FUNC) &_cognac_ParseCdHit, 4},
     {"_cognac_ParseFasta", (DL_FUNC) &_cognac_ParseFasta, 1},
