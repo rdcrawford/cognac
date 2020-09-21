@@ -259,7 +259,7 @@ cognac = function(
   
   # Individually create a new fasta file for each gene and generate the
   # alignment each gene with mafft
-  cat("\nStep 5: aligning and concatenating orthologous genes\n")
+  cat( "\nStep 5: aligning and concatenating orthologous genes\n" )
   algnPath = ConcatenateGeneAlgns( geneEnv, outDir, runId )
   stepTime = GetSplit( stepTime )
 
@@ -287,7 +287,7 @@ cognac = function(
   
   # If requested, make a neighbor joining tree with ape
   if ( njTree )
-    algnEnv$njTree = ape::nj( as.dist(algnEnv$distMat) )
+    algnEnv$njTree = ape::nj( as.dist( algnEnv$distMat ) )
 
   # If requested, write a partition file with the positions of each
   # gene in the a lignment
