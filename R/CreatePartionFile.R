@@ -22,6 +22,7 @@
 
 CreatePartionFile = function( algnEnv, outDir, runId, subModel, seqType )
 {
+  # Constant declarations: column indicies in the gene metadata
   CLUST_REPS     = 1
   GENE_LENS      = 2
   GENE_DESC      = 3
@@ -29,20 +30,24 @@ CreatePartionFile = function( algnEnv, outDir, runId, subModel, seqType )
   DNA_PARTITIONS = 5
   
   # Set the default substitution model if none was provided
-  if ( missing(seqType) )
+  if ( missing( seqType ) && ncol( algnEnv$geneData ) )
   {
     colIdx = ncol( algnEnv$geneData )
-  } else if ( seqType == "DNA" ) {
+  }
+  else if ( seqType == "nt" )
+  {
     colIdx = DNA_PARTITIONS
-  } else {
+  } 
+  else 
+  {
     colIdx = AA_PARTITIONS
   }
   
   # Set the substitution model to be used 
-  if ( missing(subModel)  && colIdx == DNA_PARTITIONS )
+  if ( missing( subModel )  && colIdx == DNA_PARTITIONS )
   {
     subModel = "DNA"
-  } else if ( missing(subModel)  && colIdx == AA_PARTITIONS ) {
+  } else if ( missing( subModel )  && colIdx == AA_PARTITIONS ) {
     subModel = "LG"
   }
   

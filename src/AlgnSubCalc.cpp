@@ -79,14 +79,14 @@ void AlgnSubCalc::updateSubMat(
 
 void AlgnSubCalc::calcSubProbabilities()
 {
-  for ( unsigned int i = 0; i < subMat.nrow(); i++ )
-  {
-    for ( unsigned int j = 0; j < subMat.ncol(); j++ )
-    {
-      Rcout << subMat( i, j ) << ' ';
-    }
-    Rcout << std::endl;
-  }
+  // for ( unsigned int i = 0; i < subMat.nrow(); i++ )
+  // {
+  //   for ( unsigned int j = 0; j < subMat.ncol(); j++ )
+  //   {
+  //     Rcout << subMat( i, j ) << ' ';
+  //   }
+  //   Rcout << std::endl;
+  // }
 
   double numSubs;
   for ( unsigned int i = 0; i < subMat.nrow(); i++ )
@@ -105,14 +105,14 @@ void AlgnSubCalc::calcSubProbabilities()
       }
     }
   }
-  for ( unsigned int i = 0; i < subMat.nrow(); i++ )
-  {
-    for ( unsigned int j = 0; j < subMat.ncol(); j++ )
-    {
-      Rcout << subMat( i, j ) << ' ';
-    }
-    Rcout << std::endl;
-  }
+  // for ( unsigned int i = 0; i < subMat.nrow(); i++ )
+  // {
+  //   for ( unsigned int j = 0; j < subMat.ncol(); j++ )
+  //   {
+  //     Rcout << subMat( i, j ) << ' ';
+  //   }
+  //   Rcout << std::endl;
+  // }
 }
 
 // Calculate the log liklihood of each substitution in the matrix
@@ -126,6 +126,11 @@ void AlgnSubCalc::calcLogLikelihoods()
   for ( auto it = aaCounts.begin(); it != aaCounts.end(); it ++ )
     aaCount += it->second;
 
+  for ( auto it = aaCounts.begin(); it != aaCounts.end(); it ++ )
+  {
+    Rcout << it->first << ": "<< it->second << std::endl;
+  }
+  Rcout << std::endl;
   // Initialize an iterator for the first amino acid count
   std::vector< double > aaProbs;
   for ( auto it = aaCounts.begin(); it != aaCounts.end(); it ++ )
@@ -143,14 +148,14 @@ void AlgnSubCalc::calcLogLikelihoods()
       }
     }
   }
-  Rcout << std::endl<< std::endl<< std::endl<< std::endl;
-  for ( unsigned int i = 0; i < subMat.nrow(); i++ )
-  {
-    for ( unsigned int j = 0; j < subMat.ncol(); j++ )
-    {
-      Rcout << subMat( i, j ) << ' ';
-    }
-  }
+  // Rcout << std::endl<< std::endl<< std::endl<< std::endl;
+  // for ( unsigned int i = 0; i < subMat.nrow(); i++ )
+  // {
+  //   for ( unsigned int j = 0; j < subMat.ncol(); j++ )
+  //   {
+  //     Rcout << subMat( i, j ) << ' ';
+  //   }
+  // }
 }
 
 // Calculate the log normalized substitution probabilities
