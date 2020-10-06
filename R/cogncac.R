@@ -158,9 +158,9 @@ cognac = function(
       featureFiles, fastaFiles, fastaExt, featureExt, genomeIds
       )
     
-    nGeneomes = length(featureFiles)
+    nGenomes = length(featureFiles)
   } else {
-    nGeneomes = length( geneEnv$gfList )
+    nGenomes = length( geneEnv$gfList )
   }
   
   # If now output directory was specified, write to the working directory
