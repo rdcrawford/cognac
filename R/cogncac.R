@@ -157,6 +157,10 @@ cognac = function(
     genomeIds = GetGenomeIds( 
       featureFiles, fastaFiles, fastaExt, featureExt, genomeIds
       )
+    
+    nGeneomes = length(featureFiles)
+  } else {
+    nGeneomes = length( geneEnv$gfList )
   }
   
   # If now output directory was specified, write to the working directory
@@ -218,7 +222,7 @@ cognac = function(
 
   cat(
     "\n\nCreating concatenated gene alignment:\n",
-    "  -- ", length(featureFiles), " genomes were input\n",
+    "  -- ", nGenomes, " genomes were input\n",
     "  -- Writing results to: ", outDir, "\n",
     "  -- Running on: ", threadVal, " cores\n",
     sep = ''
