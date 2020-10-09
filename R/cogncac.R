@@ -1,17 +1,21 @@
 #  -----------------------------------------------------------------------------
-#' cogncac: Core Gene Alignement Concatenation
+#' cognac: Core Gene Alignement Concatenation
 #  2019/07/15
 #  Ryan D. Crawford
 #  -----------------------------------------------------------------------------
 #' @description 
-#'   The cognac function idetentifies shared genes to be used as phylogenetic
+#'   The cognac function identifies shared genes to be used as phylogenetic
 #'   markers. Genes are aligned individually wth mafft and concatenates them
 #'   into a single alignment.
-#' @param fastaDir Directory containing the fasta files
-#' @param featureDir Directory containing the Gff3 or genbank files 
-#' @param fastaFiles In place of a directory with fasta files, a character 
-#'   vector with the paths to the the fasta files for each genome can be
-#'   input. Incompatible with "fasta dir."
+#' @param fastaDir Directory containing the fasta files, if there are 
+#'   additional files in this directory "fastaExt" can also be supplied to
+#'   select only the appropriate files. Alternatively, the files used in this 
+#'   analysis can be supplied to the function as as character vector with the 
+#'   parameter "fastaFiles."
+#' @param fastaExt Optional. File extension for the fasta files
+#' @param featureDir to "Directory containing the Gff3 files, functions the 
+#'   "fastaDir." 
+#' @param featureExt Optional. Extension used on the gff or genbank files 
 #' @param fastaFiles In place of a directory with fasta files, a character 
 #'   vector with the paths to the the fasta files for each genome can be
 #'   input. Incompatible with "fasta dir."
@@ -59,13 +63,13 @@
 #' @param percId Optional double for the identity threshold for identifying
 #'   orthologous genes by cd-hit. See "-c" in the cd-hit manual. Defaults 
 #'   to 0.7. 
-#' @param algnCovg Optional double for the maximum disparity in the lenght
+#' @param algnCovg Optional double for the maximum disparity in the length
 #'   of the genes to be considered orthologous by cd-hit. See -aL" in the
 #'   cd-hit manual. Defaults to 0.8.
 #' @param cdHitFlags Optional string with parameters to pass to cd-hit to 
 #' define clusters aside from "-c" and "-aL" that can be used to define the
 #'   clustering parameters.
-#' @return An envrioment with the alignmnet data. Variables included
+#' @return An environment with the alignmnet data. Variables included
 #'   by default are "aaAlgnPath" and "metaData"
 #' @export
 #  -----------------------------------------------------------------------------
@@ -239,7 +243,7 @@ cognac = function(
   
   # Identify orthologous genes with cd-hit
   cat("\nStep 2: finding orthologs with cd-hit\n")
-  FindCogs( 
+  FindCogs(
     geneEnv, tempDir, percId, algnCovg, threadVal, cdHitFlags, maxMissGenes
     )
   stepTime = GetSplit( startTime )
