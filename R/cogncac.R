@@ -111,14 +111,14 @@ cognac = function(
   {
     # Make sure that there aren't incompatible arguments with respect to 
     # fastaFiles and fastaDir
-    if ( (!missing(fastaFiles) && !missing(fastaDir)) ||  
-      (missing(fastaFiles) && missing(fastaDir)) 
+    if ( ( !missing(fastaFiles) && !missing(fastaDir) ) ||  
+      ( missing(fastaFiles) && missing(fastaDir) ) 
       )
     {
       stop(
         "Input arguments must contain one of \"fastaFiles\" (",
         "character vector with paths to fasta files)",
-        " or \"fastaDir\"(directory containing fasta files)",
+        " or \"fastaDir\"(directory containing fasta files)"
         )
       
     } else if ( missing(fastaFiles) ) {
@@ -136,7 +136,7 @@ cognac = function(
       stop(
         "Input arguments must contain one of \"featureFiles\" (",
         "character vector with paths to fasta files)",
-        " or \"featureDir\"(directory containing fasta files)",
+        " or \"featureDir\"(directory containing fasta files)"
         )
       
     } else if ( missing(featureFiles) ) {
