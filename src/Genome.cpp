@@ -103,14 +103,13 @@ bool Genome::translateSeqs()
     // Get the sequnece of the current gene
     if ( !getGeneSeq( seq ) ) return false;
 
-    // Translate the nucleotide sequence
-    if ( !codonMap.Translate( seq ) ) return false;
-
-    // If the gene was updated and translated, add it to the vector of
-    // amino acid sequences
-     aaSeqs.push_back( seq );
+    // Translate the nucleotide sequence and if the gene was updated and 
+    // translated, add it to the vector of amino acid sequences
+    if ( codonMap.Translate( seq ) ) aaSeqs.push_back( seq );
   }
 
+  // If translation failed for every sequence, return false
+  if ( !aaSeqs.size() ) return false;
   return true;
 }
 

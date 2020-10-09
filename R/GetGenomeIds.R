@@ -34,7 +34,6 @@ GetGenomeIds = function(
       genomeIds = sapply(
         fastaFiles, GetGenomeNameWithExt, fastaExt, USE.NAMES = FALSE
         )
-
     }
     
     # If no extension was supplied, get the extension as the last

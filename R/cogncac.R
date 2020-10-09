@@ -6,24 +6,24 @@
 #' @description 
 #'   The cognac function identifies shared genes to be used as phylogenetic
 #'   markers. Marker genes are aligned individually wth mafft and concatenates
-#'    them into a single alignment for downstream phylogenetic analysis.
+#'   them into a single alignment for downstream phylogenetic analysis.
 #' @param fastaDir Directory containing the fasta files. By default, this uses
 #'   all of the files in the directory. If there are additional files in this 
 #'   directory "fastaExt" can also be supplied to select only the appropriate 
-#'   files. Alternatively, the files used in this analysis can be supplied 
-#'   to the function as as character vector with the parameter "fastaFiles."
+#'   files. This argument is incompatible with "fastaFiles," which can be used
+#'   to supply the paths to the fasta files as a character vector.
 #' @param fastaExt Optional. File extension for the fasta files.
 #' @param featureDir to "Directory containing the Gff3 files, functionality is 
-#'   the same as to the "fastaDir" argument. 
+#'   the same as to the "fastaDir" argument. Incompatible with "featureFiles"
 #' @param featureExt Optional. Extension used on the gff or genbank files 
-#' @param fastaFiles In place of a directory with fasta files, a character 
-#'   vector with the paths to the the fasta files for each genome can be
-#'   input. Incompatible with "fasta dir."
-#' @param featureFiles A character vector with a gff3 or genbank files
+#' @param fastaFiles A character vector with the paths to the the fasta files 
+#'   for each genome can be input. Incompatible with "fasta dir."
+#' @param featureFiles A character vector with a gff3
 #'  for each genome
-#' @param genomeIds Optional character vector with the unique ID for each 
+#' @param genomeIds Optional character vector with a unique ID for each 
 #'   genome. If not supplied each genome is created by removing the file 
-#'   extension from the fasta file.
+#'   extension from the fasta file. Genome Ids will be used as the headers
+#'   in the alignment file.
 #' @param geneEnv Optional. Environment created by "CreateGeneDataEnv", this
 #'   allows a user to parse the genomic data ahead of time. This may be 
 #'   useful when troubleshooting parameters with respect to the alignment
@@ -38,8 +38,8 @@
 #'   in selecting core genes. An out-group is useful for many phylogenetic 
 #'   analysis, but the intersection of genes in all genomes in the analysis
 #'   may be smaller if phylogenetically divergent genomes are included when 
-#'   selecting core genes. This enables identification of a larger number of 
-#'   core genes while still maintaining an outgroup for down-stream analysis.
+#'   selecting marker genes. This enables identification of an optimal set of
+#'   maker genes while still maintaining an outgroup for down-stream analysis.
 #' @param maxMissGenes Optional double specifying what fraction of genes are
 #'   permitted to be missing to be allowed to be included in the alignment
 #'   If an out-group is input these genomes are not removed.
@@ -182,7 +182,7 @@ cognac = function(
     outDir = paste0( outDir, '/' )
   }
  
-  # If missing a run ID assign it to an empty string
+  # If missing a run ID assign it to an empty string  
   if ( missing( runId ) )
   {
     runId = ''
@@ -297,7 +297,13 @@ cognac = function(
   
   # If requested, make a neighbor joining tree with ape
   if ( njTree )
+  {
     algnEnv$njTree = ape::nj( as.dist( algnEnv$distMat ) )
+    
+    # Write the tree to the output directory
+    treePath = paste0( outDir, runId, "_cognac_nj.tre" )
+    ape::write.tree( algnEnv$njTree, treePath )
+  }
   
   # Remove any temp files
   if ( !keepTempFiles ) 
@@ -308,6 +314,9 @@ cognac = function(
   cat( "  -- Amino acid alignment written to:", algnEnv$aaAlgnPath, '\n' )
   if ( revTranslate )
     cat( "  -- Nucleotide alignment written to:", algnEnv$ntAlgnPath, '\n' )
+  if ( njTree )
+    cat( "  -- Neighbor joining tree written to:", treePath, '\n' )
+  
   endTime = GetSplit( startTime )
   cat( "\n\n" )
   
