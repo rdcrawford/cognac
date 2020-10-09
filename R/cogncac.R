@@ -5,16 +5,16 @@
 #  -----------------------------------------------------------------------------
 #' @description 
 #'   The cognac function identifies shared genes to be used as phylogenetic
-#'   markers. Genes are aligned individually wth mafft and concatenates them
-#'   into a single alignment.
-#' @param fastaDir Directory containing the fasta files, if there are 
-#'   additional files in this directory "fastaExt" can also be supplied to
-#'   select only the appropriate files. Alternatively, the files used in this 
-#'   analysis can be supplied to the function as as character vector with the 
-#'   parameter "fastaFiles."
-#' @param fastaExt Optional. File extension for the fasta files
-#' @param featureDir to "Directory containing the Gff3 files, functions the 
-#'   "fastaDir." 
+#'   markers. Marker genes are aligned individually wth mafft and concatenates
+#'    them into a single alignment for downstream phylogenetic analysis.
+#' @param fastaDir Directory containing the fasta files. By default, this uses
+#'   all of the files in the directory. If there are additional files in this 
+#'   directory "fastaExt" can also be supplied to select only the appropriate 
+#'   files. Alternatively, the files used in this analysis can be supplied 
+#'   to the function as as character vector with the parameter "fastaFiles."
+#' @param fastaExt Optional. File extension for the fasta files.
+#' @param featureDir to "Directory containing the Gff3 files, functionality is 
+#'   the same as to the "fastaDir" argument. 
 #' @param featureExt Optional. Extension used on the gff or genbank files 
 #' @param fastaFiles In place of a directory with fasta files, a character 
 #'   vector with the paths to the the fasta files for each genome can be
@@ -32,7 +32,7 @@
 #'   and temp files created by cd-hit and mafft. Defaults to the current 
 #'   working directory.
 #' @param runId Optional string to prepend to the output files.
-#' @param minGeneNum An integer specifing the minimum number of genes to
+#' @param minGeneNum An integer specifying the minimum number of genes to
 #'   use in creating the alignment. Default: 1.
 #' @param outGroup Optional character vector of genomes IDs that are not used
 #'   in selecting core genes. An out-group is useful for many phylogenetic 
@@ -41,12 +41,12 @@
 #'   selecting core genes. This enables identification of a larger number of 
 #'   core genes while still maintaining an outgroup for down-stream analysis.
 #' @param maxMissGenes Optional double specifying what fraction of genes are
-#'   permitted to be missing to be allowed to be included in the alignmnet.
+#'   permitted to be missing to be allowed to be included in the alignment
 #'   If an out-group is input these genomes are not removed.
 #' @param coreGeneThresh Optional double specifying what fraction of genomes
-#'   that a gene must occur in to be considered core. Defaults to 0.99.
+#'   that a gene must occur to be considered core. Defaults to 0.99.
 #' @param copyNumTresh Optional double specifying what fraction of genomes
-#'   that a gene can be duplicate in and remain in the analysis. If a gene
+#'   that a gene can be duplicated in and remain in the analysis. If a gene
 #'   is duplicated, the first gene is taken and used in the alignment.
 #'   Defaults to 0.001 -- a gene can be duplicated in 1 in 1000 genomes. 
 #' @param threadVal Number of threads available. Defaults to all available 
@@ -69,8 +69,10 @@
 #' @param cdHitFlags Optional string with parameters to pass to cd-hit to 
 #' define clusters aside from "-c" and "-aL" that can be used to define the
 #'   clustering parameters.
-#' @return An environment with the alignmnet data. Variables included
-#'   by default are "aaAlgnPath" and "metaData"
+#' @return An environment with the alignment data. Variables included
+#'   by default are "aaAlgnPath" and "metaData." If reverse translated,
+#'   the alignment is present under "ntAlgnPath," distance matrices are
+#'   stored under "distMat"
 #' @export
 #  -----------------------------------------------------------------------------
 

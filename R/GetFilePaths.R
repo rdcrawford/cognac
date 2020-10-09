@@ -12,9 +12,6 @@ GetFilePaths = function( dir, ext )
   # Check that there is a '/' on the input directory
   if ( !grepl("/$", dir) && dir != '' ) dir = paste0( dir, '/' )
   
-  if ( !file.exists(dir) )
-    stop( "Cannot find directory ", dir )
-  
   # It no file extension was input, set the default extension to an 
   # empty string
   if ( missing(ext) ) ext = ''
