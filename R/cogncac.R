@@ -115,14 +115,15 @@ cognac = function(
       ( missing(fastaFiles) && missing(fastaDir) ) 
       )
     {
-      stop(
+      errorMsg = paste0(
         "Input arguments must contain one of \"fastaFiles\" (",
         "character vector with paths to fasta files)",
         " or \"fastaDir\"(directory containing fasta files)"
         )
+      stop( errorMsg )
       
     } else if ( missing(fastaFiles) ) {
-      
+
       # Get the paths to the fasta files 
       fastaFiles = GetFilePaths( fastaDir, fastaExt )
     }
@@ -133,11 +134,12 @@ cognac = function(
       ( missing(featureFiles) && missing(featureDir) )   
       )
     {
-      stop(
+      errorMsg = paste0(
         "Input arguments must contain one of \"featureFiles\" (",
         "character vector with paths to fasta files)",
         " or \"featureDir\"(directory containing fasta files)"
         )
+      stop( errorMsg )
       
     } else if ( missing(featureFiles) ) {
       
@@ -149,11 +151,13 @@ cognac = function(
     # Check that the size of the vectors are the same length
     if ( length(fastaFiles) != length(featureFiles) )
     {
-      stop(
-        "Input arguments must contain one of \"featureFiles\" (",
-        "character vector with paths to gff or genbank files)",
-        " or \"featureDir\"(directory containing gff or genbank files)",
+      errorMsg = paste0( 
+        "The length of the fasta files (", length(fastaFiles), ")", 
+        " is not equal to the length of the feature files (", 
+        length(featureFiles), ")\n"
         )
+      
+      stop( errorMsg )
     }
     
     if ( length( fastaFiles ) == 0 )
