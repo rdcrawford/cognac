@@ -116,6 +116,9 @@ GetGenomeIds = function(
       )
   }
   
+  # The genome ids name have names that accompany them. Set the names to 
+  # null, or there will be errors downstream
+  names( genomeIds ) = NULL
   return( genomeIds )
 }
 

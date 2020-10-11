@@ -43,7 +43,7 @@ AlgnGeneSeqs = function(
   }
 
   # If there are no duplication, align all of the genes
-  isGeneRep = geneEnv$geneIds[ isAlgnGene ] %in% names(identList)
+  isGeneRep  = geneEnv$geneIds[ isAlgnGene ] %in% names(identList)
   toAlgnIdxs = which(isAlgnGene)[ isGeneRep ]
 
   # Write the input fasta file

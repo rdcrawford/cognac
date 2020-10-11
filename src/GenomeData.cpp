@@ -53,7 +53,9 @@ void GenomeData::parseGenomeData()
 
     // Translate the amino acid sequences
     if ( !g.translateSeqs() )
-      Rcpp::stop( "Translating genes failed for " + g.getGenomeId() );
+      Rcpp::stop( 
+        "No coding genes were able to be translated for " + g.getGenomeId() 
+        );
   });
 }
 
