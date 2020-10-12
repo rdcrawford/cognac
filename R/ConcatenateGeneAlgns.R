@@ -31,7 +31,7 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId )
     algnLens = algnLens[ !isEmpty ]
     algnList = algnList[ !isEmpty ]
     cat(
-      "  -- ", sum(isEmpty), " of genes without variation were removed\n",
+      "  -- ", sum(isEmpty), " genes without variation were removed\n",
       "  -- ", length( algnLens ), " were included in the alignment\n",
       sep = ''
       )

@@ -230,10 +230,12 @@ cognac = function(
 
   # ---- Find the target genes using the gene ids ------------------------------
 
+  if ( outDir == '' ) wd = "the current working directory"
+  else wd = outDir
   cat(
     "\n\nCreating concatenated gene alignment:\n",
     "  -- ", nGenomes, " genomes were input\n",
-    "  -- Writing results to: ", outDir, "\n",
+    "  -- Writing results to: ", wd, "\n",
     "  -- Running on: ", threadVal, " cores\n",
     sep = ''
     )
