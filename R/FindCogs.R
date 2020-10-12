@@ -21,12 +21,19 @@ FindCogs = function(
   # ---- Parse the input arguments ---------------------------------------------
 
   # Assign missing arguemnts to the default values
-  if ( missing(percId) )       percId       = 0.7
-  if ( missing(algnCovg) )     algnCovg     = 0.80
-  if ( missing(outDir) )       outDir       = paste0(getwd(), '/')
-  if ( missing(cdHitFlags) )   cdHitFlags   = "-M 0 -d 0 -g 1"
-  if ( missing(threadVal) )    threadVal    = 1
-  if ( missing(maxMissGenes) ) maxMissGenes = 1
+  if ( missing( percId ) )       percId     = 0.7
+  if ( missing( algnCovg ) )     algnCovg   = 0.80
+  if ( missing( outDir ) )       outDir     = paste0(getwd(), '/')
+  if ( missing( cdHitFlags ) )   cdHitFlags = "-M 0 -d 0 -g 1"
+  if ( missing( threadVal ) )    threadVal  = 1
+  if ( missing( maxMissGenes ) )
+  {
+    minGeneNum = 2
+  } else {
+    minGeneNum = floor(
+      length( geneEnv$genomeNames ) * ( 1 - maxMissGenes )  * 0.85
+      )
+  }
   
   # The working directory has to end in a forward slash. If it doesn't,
   # add one
@@ -62,7 +69,7 @@ FindCogs = function(
     "-aL", algnCovg,           # Minimum disparity in the length of the seqs
     "-T",  threadVal,          # Number of threads
     "-n",  wordSize,           # Size word to fraction sequences into
-    trimws(cdHitFlags),        # Additional flags for the cd-hit run
+    trimws( cdHitFlags ),      # Additional flags for the cd-hit run
     ">",   cdHitLogFile        # Write the output to a temp log file
     )
   system( cdHitCmd )
@@ -71,9 +78,6 @@ FindCogs = function(
 
   # Assign the clust list and gene matrix to varibles in the
   # environment containing the gene data
-  minGeneNum = floor(
-    length(geneEnv$genomeNames) * ( 1 - maxMissGenes )  * 0.85
-    )
   ParseCdHit( cdHitClstrFileName, FALSE, minGeneNum, geneEnv )
   
   # Remove any genome from the analysis that have 0 genes
@@ -97,7 +101,7 @@ FindCogs = function(
       )
   }
   
-  
+  # Print out the relevant stats from the cd-hit run
   cat(
     "  -- The genes were classified into ", geneEnv$nCogs, 
     " clusters of orthologous genes\n", 
