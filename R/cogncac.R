@@ -3,20 +3,19 @@
 #  2019/07/15
 #  Ryan D. Crawford
 #  -----------------------------------------------------------------------------
-#' @description 
-#'   The cognac function identifies shared genes to be used as phylogenetic
-#'   markers within the input set of genomes. Marker genes are aligned 
-#'   individually with mafft and concatenated into a single alignment for 
-#'   downstream phylogenetic analysis.
+#' @description The cognac function identifies shared genes to be used as 
+#'   phylogenetic markers within the input set of genomes. Marker genes are  
+#'   aligned individually with mafft and concatenated into a single alignment  
+#'   for downstream phylogenetic analysis.
 #' @param fastaDir Directory containing the fasta files. By default, this uses
 #'   all of the files in the directory. If there are additional files in this 
 #'   directory "fastaExt" can also be supplied to select only the appropriate 
 #'   files. This argument is incompatible with "fastaFiles," which can be used
 #'   to supply the paths to the fasta files as a character vector.
-#' @param fastaExt Optional. File extension for the fasta files.
+#' @param fastaExt Optional file extension for the fasta files.
 #' @param featureDir Directory containing the Gff3 files, functionality is 
 #'   the same as the "fastaDir" argument. Incompatible with "featureFiles"
-#' @param featureExt Optional. Extension used on the gff or genbank files 
+#' @param featureExt Optional extension used on the gff or genbank files 
 #' @param fastaFiles A character vector with the paths to the the fasta files 
 #'   for each genome can be input. Incompatible with "fasta dir."
 #' @param featureFiles A character vector with a gff3
@@ -66,17 +65,16 @@
 #'   orthologous genes by cd-hit. See "-c" in the cd-hit manual. Defaults 
 #'   to 0.7. 
 #' @param algnCovg Optional double for the maximum disparity in the length
-#'   of the genes to be considered orthologous by cd-hit. See -aL" in the
+#'   of the genes to be considered orthologous by cd-hit. See "-aL" in the
 #'   cd-hit manual. Defaults to 0.8.
 #' @param cdHitFlags Optional string with parameters to pass to cd-hit to 
-#' define clusters aside from "-c" and "-aL" that can be used to define the
+#'   define clusters aside from "-c" and "-aL" that can be used to define the
 #'   clustering parameters.
 #' @return An environment with the alignment data. Variables included
 #'   by default are "aaAlgnPath" and "metaData." If reverse translated,
-#'   the alignment is present under "ntAlgnPath," distance matrices are
-#'   stored under "distMat"
+#'   the alignment is present under "ntAlgnPath," alignment distance matrix
+#'   is stored under "distMat"
 #' @export
-
 #  -----------------------------------------------------------------------------
 
 cognac = function(
