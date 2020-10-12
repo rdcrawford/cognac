@@ -76,6 +76,28 @@ FindCogs = function(
     )
   ParseCdHit( cdHitClstrFileName, FALSE, minGeneNum, geneEnv )
   
+  # Remove any genome from the analysis that have 0 genes
+  nGenesPerGenome = sapply( 1:nrow( geneEnv$geneMat ),
+    function(i) sum( geneEnv$geneMat[ i, ] != 0 )
+    )
+  hasNoGenes =  nGenesPerGenome == 0
+  if ( TRUE %in% hasNoGenes )
+  {
+    # Remove any trace that these genomes ever existed
+    RemoveGenomesFromAnalisys( geneEnv, geneEnv$genomeNames[ hasNoGenes ] )
+    
+    nBadGenomes = sum( hasNoGenes )
+    cat(
+      "  -- There were ", nBadGenomes, 
+      " genomes with no genes shared by at least ", minGeneNum, 
+      " other genomes in this dataset\n",
+      "  -- Continuing with the ", length( geneEnv$genomeNames ), 
+      " remaining genomes\n",
+      sep = ''
+      )
+  }
+  
+  
   cat(
     "  -- The genes were classified into ", geneEnv$nCogs, 
     " clusters of orthologous genes\n", 
