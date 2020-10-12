@@ -5,33 +5,34 @@
 #  -----------------------------------------------------------------------------
 #' @description 
 #'   The cognac function identifies shared genes to be used as phylogenetic
-#'   markers. Marker genes are aligned individually wth mafft and concatenates
-#'   them into a single alignment for downstream phylogenetic analysis.
+#'   markers within the input set of genomes. Marker genes are aligned 
+#'   individually with mafft and concatenated into a single alignment for 
+#'   downstream phylogenetic analysis.
 #' @param fastaDir Directory containing the fasta files. By default, this uses
 #'   all of the files in the directory. If there are additional files in this 
 #'   directory "fastaExt" can also be supplied to select only the appropriate 
 #'   files. This argument is incompatible with "fastaFiles," which can be used
 #'   to supply the paths to the fasta files as a character vector.
 #' @param fastaExt Optional. File extension for the fasta files.
-#' @param featureDir to "Directory containing the Gff3 files, functionality is 
-#'   the same as to the "fastaDir" argument. Incompatible with "featureFiles"
+#' @param featureDir Directory containing the Gff3 files, functionality is 
+#'   the same as the "fastaDir" argument. Incompatible with "featureFiles"
 #' @param featureExt Optional. Extension used on the gff or genbank files 
 #' @param fastaFiles A character vector with the paths to the the fasta files 
 #'   for each genome can be input. Incompatible with "fasta dir."
 #' @param featureFiles A character vector with a gff3
 #'  for each genome
+#' @param outDir Directory to write the alignments, other output files, 
+#'   and temp files created by cd-hit and mafft. Defaults to the current 
+#'   working directory.
+#' @param runId Optional string to prepend to the output files.
 #' @param genomeIds Optional character vector with a unique ID for each 
-#'   genome. If not supplied each genome is created by removing the file 
+#'   genome. If not supplied, a genome id is created by removing the file 
 #'   extension from the fasta file. Genome Ids will be used as the headers
 #'   in the alignment file.
 #' @param geneEnv Optional. Environment created by "CreateGeneDataEnv", this
 #'   allows a user to parse the genomic data ahead of time. This may be 
 #'   useful when troubleshooting parameters with respect to the alignment
 #'   or cd-hit clustering step.
-#' @param outDir Directory to write the alignments, other output files, 
-#'   and temp files created by cd-hit and mafft. Defaults to the current 
-#'   working directory.
-#' @param runId Optional string to prepend to the output files.
 #' @param minGeneNum An integer specifying the minimum number of genes to
 #'   use in creating the alignment. Default: 1.
 #' @param outGroup Optional character vector of genomes IDs that are not used
@@ -55,7 +56,8 @@
 #'   distance matrix is calculated as the pairwise number of mutations 
 #'   between genomes. Stored in the output environment as "distMat."
 #' @param njTree Optional logical to create a neighbor joining tree with ape.
-#'   returned in the output environment as "njTree." Defaults to false.
+#'   Returned to the output environment as "njTree" and the path to the neighbor 
+#'   joining tree is written to the output directory. Defaults to false.
 #' @param revTranslate Optional logical to to convert the aa alignment to dna.
 #'   Defaults to false.
 #' @param keepTempFiles Optional logical to keep any temporary files 
@@ -74,6 +76,7 @@
 #'   the alignment is present under "ntAlgnPath," distance matrices are
 #'   stored under "distMat"
 #' @export
+
 #  -----------------------------------------------------------------------------
 
 cognac = function(
@@ -280,7 +283,6 @@ cognac = function(
   algnEnv            = new.env()
   algnEnv$geneData   = CreateGeneMetaData( geneEnv, revTranslate )
   algnEnv$aaAlgnPath = algnPath
-  stepTime           = GetSplit( stepTime )
   
   # If requested, convert the AA alignment to DNA
   if ( revTranslate )
@@ -303,7 +305,7 @@ cognac = function(
     algnEnv$njTree = ape::nj( as.dist( algnEnv$distMat ) )
     
     # Write the tree to the output directory
-    treePath = paste0( outDir, runId, "_cognac_nj.tre" )
+    treePath = paste0( outDir, runId, "cognac_nj.tre" )
     ape::write.tree( algnEnv$njTree, treePath )
   }
   
@@ -311,6 +313,16 @@ cognac = function(
   if ( !keepTempFiles ) 
     system( paste( "rm -r", tempDir ) )
   stepTime = GetSplit( stepTime )
+  
+  # Write the data on the alignment genes
+  write.table( 
+    algnEnv$geneData, 
+    file      = paste0( outDir, runId, "cognac_gene_data.tsv" ), 
+    append    = FALSE, 
+    sep       = "\t",
+    row.names = FALSE,
+    col.names = TRUE
+    )
   
   cat( "\nRun complete\n" )
   cat( "  -- Amino acid alignment written to:", algnEnv$aaAlgnPath, '\n' )
