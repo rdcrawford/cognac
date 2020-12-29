@@ -2,7 +2,8 @@
 % Please edit documentation in R/CreateGeneDataEnv.R
 \name{CreateGeneDataEnv}
 \alias{CreateGeneDataEnv}
-\title{Create a gene data environment}
+\title{Create an environment contining the parsed data on the coding 
+sequences in the analysis}
 \usage{
 CreateGeneDataEnv(featureFiles, fastaFiles, genomeIds, outDir)
 }

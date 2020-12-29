@@ -80,11 +80,19 @@ FindCogs = function(
   # environment containing the gene data
   ParseCdHit( cdHitClstrFileName, FALSE, minGeneNum, geneEnv )
   
-  # Remove any genome from the analysis that have 0 genes
+  # ---- Check if there are genomes that dont share genmes ---------------------
+  
+  # Find the number of genes present in each genome
   nGenesPerGenome = sapply( 1:nrow( geneEnv$geneMat ),
     function(i) sum( geneEnv$geneMat[ i, ] != 0 )
     )
+  
+  # Find if there are any genomes with 0 genes
   hasNoGenes =  nGenesPerGenome == 0
+  
+  # If there are genomes with no genes, remove them from the analysis. 
+  # Most likely, these genomes are of poor quality and will have a negative 
+  # impact on the down stream analysis.
   if ( TRUE %in% hasNoGenes )
   {
     # Remove any trace that these genomes ever existed
@@ -94,7 +102,7 @@ FindCogs = function(
     cat(
       "  -- There were ", nBadGenomes, 
       " genomes with no genes shared by at least ", minGeneNum, 
-      " other genomes in this dataset\n",
+      " genomes in this dataset\n",
       "  -- Continuing with the ", length( geneEnv$genomeNames ), 
       " remaining genomes\n",
       sep = ''

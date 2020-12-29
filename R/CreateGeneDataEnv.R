@@ -3,7 +3,8 @@
 #  2020/02/05
 #  Ryan D. Crawford
 #  -----------------------------------------------------------------------------
-#' Create a gene data environment
+#' Create an environment contining the parsed data on the coding 
+#' sequences in the analysis
 #' @description
 #'   This function initializes the environment containing data on the genes
 #'   used in the analysis. This function adds the list of parsed gff files,

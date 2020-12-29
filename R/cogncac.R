@@ -161,11 +161,10 @@ cognac = function(
       stop( errorMsg )
     }
     
-    if ( length( fastaFiles ) == 0 )
-      stop( "No fasta files were input..." )
+    if ( length( fastaFiles ) == 0 ) stop( "No fasta files were input..." )
     
     # Create the genome IDs and/or check the ids to ensre they are valid
-    genomeIds = GetGenomeIds( 
+    genomeIds = GetGenomeIds(
       featureFiles, fastaFiles, fastaExt, featureExt, genomeIds
       )
     
@@ -193,7 +192,7 @@ cognac = function(
   }
   
   # Make a temporary directory to store any files made during the run
-  tempDir = paste0( outDir, runId, "temp_congnac_files/" )
+  tempDir = paste0( outDir, runId, "temp_cognac_files/" )
   if ( !file.exists(tempDir) ) system( paste("mkdir", tempDir) )
 
   # By default, delete any temporary file that are created
