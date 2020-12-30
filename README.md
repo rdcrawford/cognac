@@ -2,7 +2,7 @@
 
 ## Description
 
-Cognac is an R package which function identifies shared genes to be used as phylogenetic markers within the input set of genomes. Marker genes are aligned individually with mafft and concatenated into a single alignment for downstream phylogenetic analysis. The algorithm uses mutli-threading and several algorithmic tricks to improve speed and efficiency, which make cognac capable of generating core-gene alignments for thousands of genomes in only a few hours. 
+Cognac is an R package for for generating concatenated gene alignments. The main function identifies shared genes to be used as phylogenetic markers within the input set of genomes. Marker genes are aligned individually with mafft and concatenated into a single alignment for downstream phylogenetic analysis. The algorithm uses mutli-threading and several algorithmic tricks to improve speed and efficiency, which make cognac capable of generating core-gene alignments for thousands of genomes in only a few hours. 
 
 For more information on the algorithm and bench marking, see our preprint posted on [bioRxiv](https://www.biorxiv.org/content/10.1101/2020.10.15.340901v1).
 
@@ -14,13 +14,12 @@ devtools::install_github("rdcrawford/cognac")
 library(cognac)
 ```
 
-[Mafft](mafft.cbrc.jp) and [cd-hit](https://github.com/weizhongli/cdhit) must be in your path. 
+[Mafft](https://mafft.cbrc.jp/alignment/software/) and [cd-hit](https://github.com/weizhongli/cdhit) must be in your path. 
 
 
 ## Usage
 
-The most basic command to use cognac is to supply a directories containing
-the fasta and gff3 files. Multithreading is available at multiple steps. The number of threads to be used can be supplied as a By default, all available threads are used. 
+The most basic command to use cognac is to supply a directories containing whole genome seqences in fasta files and genome annotations in the form of gff. Multithreading is available at multiple steps. The number of threads to be used can be supplied as argument. By default, all available threads are used. 
 
 ```
 algnEnv = cognac(
@@ -30,7 +29,7 @@ algnEnv = cognac(
   )
 ```
 
-Alternatively you can supply character vectors with the paths to the fasta files and the gff files
+Alternatively you can supply character vectors with the paths to the fasta files and the gff files.
 
 ```
 fastaFiles   = c( genome1.fasta, genome2.fasta, genome3.fasta )
@@ -56,16 +55,15 @@ algnEnv = cognac(
 ```
 
 
-The output for cognac is an [environment](http://adv-r.had.co.nz/Environments.html), where multiple objects can be stored and accessed. By Default, cognac produces two objects: the path to the concatenated gene alignment and the meta-data on the genes included. The meta-data includes columns: the gene description, the comma eliminated gene IDs, the positions of the partitions in the amino alignment, and the positions of the partitions in the nucleotide alignment, if requested. 
+The output for cognac is an [environment](http://adv-r.had.co.nz/Environments.html), where multiple objects can be stored and accessed. By Default, cognac produces two objects: the path to the concatenated gene alignment and the meta-data on the genes included. If the nucleotide alignment was requested the path to the alignment is included in the environment. The meta-data includes columns: the gene description, the comma eliminated gene IDs, the positions of the partitions in the amino alignment, and the positions of the partitions in the nucleotide alignment, if requested. 
 
 ```
 cat( algnEnv$aaAlgnPath )
 cat( algnEnv$ntAlgnPath )
 cat( head( algnEnv$geneData ) )
-
 ```
 
-We offer the option to create a neighbor joining tree within the cognac function. The neighbor joining tree is a useful method for generating a tree based off of the genetic distances. This is a useful method to rapidly generate a tree, especially for large data sets where other methods may be too computationally intensive. However, this method may not be appropriate for distantly related sequences.
+We offer the option to create a neighbor joining tree within the cognac function. This a useful method for generating trees based off of the genetic distances, especially for large data sets where other methods may be too computationally intensive. However, this method may not be appropriate for distantly related sequences.
 
 ```
 algnEnv = cognac(
@@ -86,7 +84,7 @@ system( paste( "FastTree <", algnEnv$aaAlgnPath, "> cognac_fastTree.tre" ) )
 
 Cognac requires genome annotations in gff format. There are many tools available for generating annotations such as [RAST](https://docs.patricbrc.org/cli_tutorial/rasttk_getting_started.html), [prokka](https://github.com/tseemann/prokka), or [prodigal](https://github.com/hyattpd/Prodigal).
 
-If gff files are not available for your genomes, we have provided a function to generate them with RAST using the command line interface (installation instructions can be found [here](https://docs.patricbrc.org/cli_tutorial/index.html#installing-the-cli-release). 
+If gff files are not available for your genomes, we have provided a function to generate them with RAST using the command line interface -- installation instructions can be found [here](https://docs.patricbrc.org/cli_tutorial/index.html#installing-the-cli-release). 
 
 ```
 gffFiles = sapply( fastaFiles, AnnotateGenome, outDir = "path/to/gff_files/" )
