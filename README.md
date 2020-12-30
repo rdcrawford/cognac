@@ -17,9 +17,9 @@ library(cognac)
 [Mafft](https://mafft.cbrc.jp/alignment/software/) and [cd-hit](https://github.com/weizhongli/cdhit) must be in your path. 
 
 
-## Usage
+## Creating core gene aliments
 
-The most basic command to use cognac is to supply a directories containing whole genome seqences in fasta files and genome annotations in the form of gff. Multithreading is available at multiple steps. The number of threads to be used can be supplied as argument. By default, all available threads are used. 
+The most basic command to use cognac is to supply a directories containing whole genome sequences in fasta files and genome annotations in the form of gff. Multithreading is available at multiple steps. The number of threads to be used can be supplied as argument. By default, all available threads are used. 
 
 ```
 algnEnv = cognac(
@@ -63,6 +63,8 @@ cat( algnEnv$ntAlgnPath )
 cat( head( algnEnv$geneData ) )
 ```
 
+## Creating phylogenetic trees
+
 We offer the option to create a neighbor joining tree within the cognac function. This a useful method for generating trees based off of the genetic distances, especially for large data sets where other methods may be too computationally intensive. However, this method may not be appropriate for distantly related sequences.
 
 ```
@@ -81,6 +83,7 @@ While neighbor joining trees are useful, often times higher resolution methods a
 system( paste( "FastTree <", algnEnv$aaAlgnPath, "> cognac_fastTree.tre" ) )
 ```
 
+## Annotating genomes
 
 Cognac requires genome annotations in gff format. There are many tools available for generating annotations such as [RAST](https://docs.patricbrc.org/cli_tutorial/rasttk_getting_started.html), [prokka](https://github.com/tseemann/prokka), or [prodigal](https://github.com/hyattpd/Prodigal).
 
