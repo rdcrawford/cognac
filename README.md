@@ -69,9 +69,9 @@ We offer the option to create a neighbor joining tree within the cognac function
 
 ```
 algnEnv = cognac(
-  fastaDir      = "path/to/your/fasta/files/",
-  featureDir    = "path/to/your/gff/files/",
-  njTree        = TRUE
+  fastaDir   = "path/to/your/fasta/files/",
+  featureDir = "path/to/your/gff/files/",
+  njTree     = TRUE
   )
   
 ape::plot.phylo( algnEnv$njTree )
@@ -91,5 +91,4 @@ If gff files are not available for your genomes, we have provided a function to 
 
 ```
 gffFiles = sapply( fastaFiles, AnnotateGenome, outDir = "path/to/gff_files/" )
-
 ```
