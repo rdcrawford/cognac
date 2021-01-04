@@ -22,7 +22,7 @@ cognac(
   threadVal,
   distMat,
   njTree,
-  revTranslate,
+  mapNtToAa,
   outGroup,
   keepTempFiles,
   percId,
@@ -92,7 +92,7 @@ between genomes. Stored in the output environment as "distMat."}
 Returned to the output environment as "njTree" and the path to the neighbor 
 joining tree is written to the output directory. Defaults to false.}
 
-\item{revTranslate}{Optional logical to to convert the aa alignment to dna.
+\item{mapNtToAa}{Optional logical to to convert the aa alignment to dna.
 Defaults to false.}
 
 \item{outGroup}{Optional character vector of genomes IDs that are not used

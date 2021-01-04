@@ -22,6 +22,11 @@ bool GenomeFeatures::parseGfs( BioSeq *wgs )
   if ( !gff.is_open() || gff.fail() ) return false;
   if ( gff.peek() == std::ifstream::traits_type::eof() ) return false;
 
+  // Check that this file has the gff tag in the first line
+  getline( gff, line );
+  if ( line.find( "gff" ) == string::npos ) 
+    Rcpp::stop( gfPath + " does not appear to be a valid gff-3 file..." );
+  
   // Read in the file line by line
   while ( getline( gff, line ) )
   {
