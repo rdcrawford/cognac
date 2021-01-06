@@ -50,7 +50,7 @@ SelectAlgnGenes = function(
       stop( "There are not enough conserved genes to make the tree..." )
 
     # Remove any outlier genomes that dont have core genes
-    isKeeper = RemoveOutlierGenomes(
+      isKeeper = RemoveOutlierGenomes(
       geneEnv$geneMat, minGeneNum, coreGeneThresh, isKeeper
       )
 

@@ -24,7 +24,7 @@ RemoveOutlierGenomes  = function(
     topGenes = order( geneCount, decreasing = TRUE )[ 1:targetGeneNum ]
     
     # Find the minimum frequency to be considered a core gene
-    coreCountVal = round( sum(isKeeper) * coreGeneThresh, 0 )
+    coreCountVal = floor( sum( isKeeper ) * coreGeneThresh )
     
     # Get the total count of core genes 
     numCoreGenes = sum( geneCount >= coreCountVal )

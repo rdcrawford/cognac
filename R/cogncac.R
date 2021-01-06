@@ -15,7 +15,7 @@
 #' @param fastaExt Optional file extension for the fasta files.
 #' @param featureDir Directory containing the Gff3 files, functionality is 
 #'   the same as the "fastaDir" argument. Incompatible with "featureFiles"
-#' @param featureExt Optional extension used on the gff or genbank files 
+#' @param featureExt Optional extension used on the gff files 
 #' @param fastaFiles A character vector with the paths to the the fasta files 
 #'   for each genome can be input. Incompatible with "fasta dir."
 #' @param featureFiles A character vector with a gff3
@@ -79,11 +79,11 @@
 
 cognac = function(
   fastaDir,       # Directory containing the fasta files
-  featureDir,     # Directory containing the Gff3 or genbank files 
+  featureDir,     # Directory containing the Gff3 files 
   fastaFiles,     # Fasta files for the input genomes
-  featureFiles,   # Gff3 or genbank files for the input genomes
+  featureFiles,   # Gff3 files for the input genomes
   fastaExt,       # Extension used on the fasta files
-  featureExt,     # Extension used on the gff or genbank files 
+  featureExt,     # Extension used on the gff files 
   genomeIds,      # Vector of genomes to
   geneEnv,        # Optional. Environment created by "CreateGeneDataEnv"
   outDir,         # Optional. Directory to write the output files
@@ -95,7 +95,7 @@ cognac = function(
   threadVal,      # Optional. Number of threads available for mafft
   distMat,        # Optional. Bool to create a distance matrix
   njTree,         # Optional. Bool to create a neighbor joining tree
-  mapNtToAa,   # Optional. Bool to convert the aa alignment to dna
+  mapNtToAa,      # Optional. Bool to convert the aa alignment to dna
   outGroup,       # Optional. Vector of genomes to exclude for gene selection
   keepTempFiles,  # Optional. Bool to keep mafft and cd-hit files
   percId,         # Optional. Percent ID for the Cd-hit
