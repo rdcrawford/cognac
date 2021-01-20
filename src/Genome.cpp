@@ -100,7 +100,8 @@ bool Genome::translateSeqs()
   // Iterate over all of the genes
   while ( gIdx < numGenes )
   {
-    // Get the sequnece of the current gene
+    // Get the sequnece of the current gene. If the coordinates for this
+    // gene are invalid, return false.
     if ( !getGeneSeq( seq ) ) return false;
 
     // Translate the nucleotide sequence and if the gene was updated and
@@ -123,4 +124,15 @@ std::vector< std::string > Genome::getAaSeqs()
 std::vector< std::string > *Genome::getAaSeqRef()
 {
   return & aaSeqs;
+}
+
+void Genome::clearGenome()
+{
+  clearSeqs();
+  featId.clear();
+  description.clear();
+  contig.clear();
+  startPos.clear();
+  endPos.clear();
+  strand.clear();
 }

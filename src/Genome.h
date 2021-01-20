@@ -63,6 +63,9 @@ public:
   // Returns a vector to the translate gene sequences
   std::vector< std::string > *getAaSeqRef();
 
+  // Free Associated memory with this genome
+  void clearGenome();
+
 private:
 
   // Integer to keep track of the current gene

@@ -40,30 +40,30 @@ SelectAlgnGenes = function(
     for ( i in which( isOutGroup ) ) isKeeper[ i ] = FALSE
   }
 
+  # Check that there are suffienct gene counts in the data set to make the
+  # tree
+  if ( is.null(dim(geneEnv$geneMat)) )
+    stop( "There are not enough conserved genes to make the tree..." )
+  if ( ncol(geneEnv$geneMat) < minGeneNum )
+    stop( "There are not enough conserved genes to make the tree..." )
+  
   repeat
   {
-    # Check that there are suffienct gene counts in the data set to make the
-    # tree
-    if ( is.null(dim(geneEnv$geneMat)) )
-      stop( "There are not enough conserved genes to make the tree..." )
-    if ( ncol(geneEnv$geneMat) < minGeneNum )
-      stop( "There are not enough conserved genes to make the tree..." )
-
-    # Remove any outlier genomes that dont have core genes
-    isKeeper = RemoveOutlierGenomes(
-      geneEnv$geneMat, minGeneNum, coreGeneThresh, isKeeper
-      )
-
     # Count the number of core genes in the dataset
     isCoreGene = CalcNumCoreGenes( geneEnv, coreGeneThresh, isKeeper )
     coreGeneCount = sum( isCoreGene )
 
-    if ( length( isCoreGene ) == 0 || sum( isCoreGene ) < minGeneNum )
+    if ( length( isCoreGene ) == 0 || sum( isKeeper ) == 0 )
       stop( paste( "Unable to find", minGeneNum, "core genes in these data" ) )
     
     # If there is variation in all of the genes after removing outliers
     # that do not share the core set of genes,
     if ( coreGeneCount >= minGeneNum ) break
+    
+    # Remove any outlier genomes that dont have core genes
+    isKeeper = RemoveOutlierGenomes(
+      geneEnv$geneMat, minGeneNum, coreGeneThresh, isKeeper
+      )
   }
 
   cat("  -- Identified ",  sum( isCoreGene ), " core genes\n" )

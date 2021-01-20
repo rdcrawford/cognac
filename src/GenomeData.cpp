@@ -51,12 +51,19 @@ void GenomeData::parseGenomeData()
     // Read in and parse the fasta and gff files
     g.parseGenome();
 
-    // Translate the amino acid sequences
+    // Translate the amino acid sequences. Returns true if the sequences
+    // were able to be translated.
     if ( !g.translateSeqs() )
+    {
+      // If translation fails, throw a warning and clear associated data
       Rcpp::warning(
-        "Warning: No coding genes were able to be translated for " + 
-         g.getGenomeId() 
+        "Warning: No coding genes were able to be translated for " +
+         g.getGenomeId()
         );
+
+      // Delete the data
+      g.clearGenome();
+    }
   });
 }
 
