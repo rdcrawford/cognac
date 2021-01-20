@@ -50,38 +50,48 @@ SelectAlgnGenes = function(
       stop( "There are not enough conserved genes to make the tree..." )
 
     # Remove any outlier genomes that dont have core genes
-      isKeeper = RemoveOutlierGenomes(
+    isKeeper = RemoveOutlierGenomes(
       geneEnv$geneMat, minGeneNum, coreGeneThresh, isKeeper
       )
-
-    # Check and see that at least one remaining genome has variation
-    # in each gene. If genes are conserved in all of the remaining genomes
-    # then there is no point in aligning them
-    isNotConserved = sapply(1:ncol(geneEnv$geneMat),
-      function(j) FALSE %in% (geneEnv$geneMat[ isKeeper, j ] == 100)
-      )
-
-    # If there are genes without variation, remove them from the dataset
-    if ( FALSE %in% isNotConserved )
-    {
-      geneEnv$geneMat      = geneEnv$geneMat[ , isNotConserved ]
-      geneEnv$clustList    = geneEnv$clustList[ isNotConserved ]
-      geneEnv$genomeIdList = geneEnv$genomeIdList[ isNotConserved ]
-    }
 
     # Count the number of core genes in the dataset
     isCoreGene = CalcNumCoreGenes( geneEnv, coreGeneThresh, isKeeper )
     coreGeneCount = sum( isCoreGene )
 
+    if ( length( isCoreGene ) == 0 || length( isCoreGene ) < minGeneNum )
+      stop( paste( "Unable to find", minGeneNum, "core genes in these data" ) )
+    
     # If there is variation in all of the genes after removing outliers
     # that do not share the core set of genes,
     if ( coreGeneCount >= minGeneNum ) break
   }
 
+  cat("  -- Identified ",  sum( isCoreGene ), " core genes\n" )
+  
+  # Check and see that at least one remaining genome has variation
+  # in each gene. If genes are conserved in all of the remaining genomes
+  # then there is no point in aligning them
+  isNotConserved = sapply(1:ncol(geneEnv$geneMat),
+    function(j) FALSE %in% (geneEnv$geneMat[ isKeeper, j ] == 100)
+    )
+  
   # Subset to only include the core genes
   geneEnv$clustList    = geneEnv$clustList[ isCoreGene ]
   geneEnv$genomeIdList = geneEnv$genomeIdList[ isCoreGene ]
   geneEnv$geneMat      = geneEnv$geneMat[ , isCoreGene ]
+  
+  # If there are genes without variation, remove them from the dataset
+  if ( FALSE %in% isNotConserved )
+  {
+    geneEnv$geneMat      = geneEnv$geneMat[ , isNotConserved ]
+    geneEnv$clustList    = geneEnv$clustList[ isNotConserved ]
+    geneEnv$genomeIdList = geneEnv$genomeIdList[ isNotConserved ]
+    
+    cat( 
+      "  -- Removing ", sum( !isNotConserved ), " perfectly conserved",
+      "genes from the analysis\n", sep = ''
+      )
+  }
   
   # Calcuate the fraction of missing genes
   missingGeneFrac = sapply( 1:nrow(geneEnv$geneMat),
