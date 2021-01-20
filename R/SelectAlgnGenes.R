@@ -58,7 +58,7 @@ SelectAlgnGenes = function(
     isCoreGene = CalcNumCoreGenes( geneEnv, coreGeneThresh, isKeeper )
     coreGeneCount = sum( isCoreGene )
 
-    if ( sum( isCoreGene ) == 0 || sum( isCoreGene ) < minGeneNum )
+    if ( length( isCoreGene ) == 0 || sum( isCoreGene ) < minGeneNum )
       stop( paste( "Unable to find", minGeneNum, "core genes in these data" ) )
     
     # If there is variation in all of the genes after removing outliers
