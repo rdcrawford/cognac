@@ -128,11 +128,17 @@ std::vector< std::string > *Genome::getAaSeqRef()
 
 void Genome::clearGenome()
 {
+  // Contigs in the bioSeq class
   clearSeqs();
+
+  // Vectors in the genome features
   featId.clear();
   description.clear();
   contig.clear();
   startPos.clear();
   endPos.clear();
   strand.clear();
+
+  // Amino acid sequences
+  aaSeqs.clear();
 }
