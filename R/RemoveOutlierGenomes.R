@@ -29,7 +29,7 @@ RemoveOutlierGenomes  = function(
   isMissingGenes = numMissing > 0
   if ( !TRUE %in% isMissingGenes ) return( isKeeper )
   
-  isKeeper[ toTest[ which.max(numMissing) ] ] = FALSE
+  isKeeper[ toTest[ which.max( numMissing ) ] ] = FALSE
   return( isKeeper )
 }
 

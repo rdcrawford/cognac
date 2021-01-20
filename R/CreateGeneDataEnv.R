@@ -46,10 +46,31 @@ CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
   geneEnv$fastaFiles = fastaFiles
   geneEnv$faaPath    = faaPath
   
+  hasNoGenes = sapply( geneEnv$gfList, nrow ) == 0
+  
+  # Check that parsing the data was sucessful for all genomes
+  if ( TRUE %in% hasNoGenes )
+  {
+    geneEnv$fastaFiles  = fastaFiles[ !hasNoGenes ]   
+    geneEnv$gfList      = geneEnv$gfList[ !hasNoGenes ]
+    geneEnv$genomeNames =  geneEnv$genomeNames[ !hasNoGenes ]
+    
+    cat(
+      "  -- Failed to parse the data for ", sum( hasNoGenes ), 
+      " genomes\nContinuing", length( geneEnv$genomeNames ), "genomes\n",
+      sep = ''
+      ) 
+    
+  } else {
+    
+    geneEnv$fastaFiles = fastaFiles
+  }
+  
   cat(
-    "  -- Parsed the data for ", length( geneEnv$geneIds ), " coding genes\n", 
+    "  -- Parsed the data for ", length( geneEnv$geneIds ), 
+    " coding genes\n", 
     sep = ''
-    )
+    ) 
   
   return( geneEnv )
 }

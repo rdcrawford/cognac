@@ -65,8 +65,6 @@ SelectAlgnGenes = function(
       geneEnv$geneMat, minGeneNum, coreGeneThresh, isKeeper
       )
   }
-
-  cat("  -- Identified ",  sum( isCoreGene ), " core genes\n" )
   
   # Check and see that at least one remaining genome has variation
   # in each gene. If genes are conserved in all of the remaining genomes
@@ -83,6 +81,8 @@ SelectAlgnGenes = function(
   # If there are genes without variation, remove them from the dataset
   if ( FALSE %in% isNotConserved )
   {
+    cat("  -- Identified",  sum( isCoreGene ), "core genes\n" )
+    
     geneEnv$geneMat      = geneEnv$geneMat[ , isNotConserved ]
     geneEnv$clustList    = geneEnv$clustList[ isNotConserved ]
     geneEnv$genomeIdList = geneEnv$genomeIdList[ isNotConserved ]

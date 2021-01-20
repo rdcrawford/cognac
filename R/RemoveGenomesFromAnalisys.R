@@ -23,7 +23,7 @@ RemoveGenomesFromAnalisys  = function( geneEnv, toRemove )
   
   # For each cluster of genes find the genes that correspond to the genomes
   # that will be removed from the analysis
-  for ( i in 1:length(geneEnv$genomeIdList) )
+  for ( i in 1:length( geneEnv$genomeIdList ) )
   {
     # Find the names of the genomes to remove
     isOut = geneEnv$genomeIdList[[ i ]] %in% toRemove
