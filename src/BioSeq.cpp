@@ -29,9 +29,11 @@ bool BioSeq::parseFasta( )
   }
 
   if ( ifs.peek() == std::ifstream::traits_type::eof() ) return false;
+
   // Read in the fasta file line by line
   while ( getline( ifs, line ) )
   {
+
     if (line[0] == '>')
     {
       seqIdx ++; // Advance the couter to the current contig
@@ -126,7 +128,7 @@ void BioSeq::convertToUper()
   if ( std::islower( seqs[0][0] ) )
   {
     for ( auto &seq : seqs )
-      transform( seq.begin(), seq.end(), seq.begin(), ::toupper);
+      transform( seq.begin(), seq.end(), seq.begin(), ::toupper );
   }
 }
 

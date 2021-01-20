@@ -167,8 +167,8 @@ cognac = function(
     genomeIds = GetGenomeIds(
       featureFiles, fastaFiles, fastaExt, featureExt, genomeIds
       )
+    nGenomes = length( featureFiles )
     
-    nGenomes = length(featureFiles)
   } else {
     nGenomes = length( geneEnv$gfList )
   }
@@ -193,7 +193,7 @@ cognac = function(
   
   # Make a temporary directory to store any files made during the run
   tempDir = paste0( outDir, runId, "temp_cognac_files/" )
-  if ( !file.exists(tempDir) ) system( paste("mkdir", tempDir) )
+  if ( !file.exists( tempDir ) ) system( paste( "mkdir", tempDir ) )
 
   # By default, delete any temporary file that are created
   if ( missing(keepTempFiles) ) keepTempFiles = FALSE

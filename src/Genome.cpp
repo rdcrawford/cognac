@@ -103,8 +103,9 @@ bool Genome::translateSeqs()
     // Get the sequnece of the current gene
     if ( !getGeneSeq( seq ) ) return false;
 
-    // Translate the nucleotide sequence and if the gene was updated and 
+    // Translate the nucleotide sequence and if the gene was updated and
     // translated, add it to the vector of amino acid sequences
+    // Rcpp::Rcout << " translted?" << std::endl;
     if ( codonMap.Translate( seq ) ) aaSeqs.push_back( seq );
   }
 

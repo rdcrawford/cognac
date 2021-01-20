@@ -24,17 +24,21 @@ bool GenomeFeatures::parseGfs( BioSeq *wgs )
 
   // Check that this file has the gff tag in the first line
   getline( gff, line );
-  if ( line.find( "gff" ) == string::npos ) 
+
+  if ( line.find( "gff" ) == string::npos )
     Rcpp::stop( gfPath + " does not appear to be a valid gff-3 file..." );
-  
-  // Read in the file line by line
+
   while ( getline( gff, line ) )
   {
     // Some gff files have the wgs appended to the end. If this has
     // the wgs, there are no more genes to parse.
-    if ( line[0]  == '#' )
+    if ( line.find( "#" ) != string::npos )
     {
       if ( line.find( "FASTA" ) != string::npos ) break;
+    }
+    else if ( line[0]  == '>' )
+    {
+      break;
     }
     else
     {
@@ -43,6 +47,7 @@ bool GenomeFeatures::parseGfs( BioSeq *wgs )
     }
   }
   gff.close();
+
   return true;
 }
 
@@ -97,24 +102,23 @@ bool GenomeFeatures::parseGffEntry( const std::string &line, BioSeq *wgs )
   string       type;
   string       attributes;
   string       fStrand;
+  string       temp;
   int          fStart;
   int          fEnd;
-  char         whoKnows;
-  int          noIdea;
   int          contIdx;
 
   // Get the attributes of the line
-  ss >> fContig;
-  ss >> method;
-  ss >> type;
-  ss >> fStart;
-  ss >> fEnd;
-  ss >> whoKnows;
-  ss >> fStrand;
-  ss >> noIdea;
-
-  // The final entry is the remainder of the line
-  attributes = ss.str();
+  getline( ss, fContig, '\t' );
+  getline( ss, method, '\t' );
+  getline( ss, type, '\t' );
+  getline( ss, temp, '\t' );
+  fStart = stoi( temp );
+  getline( ss, temp, '\t' );
+  fEnd = stoi( temp );
+  getline( ss, temp, '\t' );
+  getline( ss, fStrand, '\t' );
+  getline( ss, temp, '\t' );
+  getline( ss, attributes, '\t' );
 
   // Remove the accn string from the contig name if present
   auto accnPos = fContig.find( "accn|" );

@@ -48,7 +48,7 @@ for each genome}
 
 \item{fastaExt}{Optional file extension for the fasta files.}
 
-\item{featureExt}{Optional extension used on the gff or genbank files}
+\item{featureExt}{Optional extension used on the gff files}
 
 \item{genomeIds}{Optional character vector with a unique ID for each 
 genome. If not supplied, a genome id is created by removing the file 
