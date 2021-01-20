@@ -100,7 +100,7 @@ FindCogs = function(
     
     nBadGenomes = sum( hasNoGenes )
     cat(
-      "  -- There were ", nBadGenomes, 
+      "  -- Removed ", nBadGenomes, 
       " genomes with no genes shared by at least ", minGeneNum, 
       " genomes in this dataset\n",
       "  -- Continuing with the ", length( geneEnv$genomeNames ), 

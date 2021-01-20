@@ -17,12 +17,12 @@ SelectAlgnGenes = function(
 {
   # If missing the fraction of genomes a given gene must be in, set the
   # default to 99%
-  if ( missing(coreGeneThresh) ) coreGeneThresh = 0.99
+  if ( missing( coreGeneThresh ) ) coreGeneThresh = 0.99
 
   # Set the minimium number of genes to build the tree
-  if ( missing(minGeneNum) ) minGeneNum = 2
+  if ( missing( minGeneNum ) ) minGeneNum = 2
 
-  if ( missing(maxMissGenes) ) maxMissGenes = 1
+  if ( missing( maxMissGenes ) ) maxMissGenes = 1
   
   # Save the number of genes and genomes before filtering
   numClusts  = length( geneEnv$clustList )
@@ -34,7 +34,7 @@ SelectAlgnGenes = function(
 
   # If there is an outgroup selected, remove this genome for the
   # core gene selection
-  if ( !missing(outGroup) )
+  if ( !missing( outGroup ) )
   {
     isOutGroup = geneEnv$genomeNames %in% outGroup
     for ( i in which( isOutGroup ) ) isKeeper[ i ] = FALSE
@@ -42,10 +42,10 @@ SelectAlgnGenes = function(
 
   # Check that there are suffienct gene counts in the data set to make the
   # tree
-  if ( is.null(dim(geneEnv$geneMat)) )
-    stop( "There are not enough conserved genes to make the tree..." )
-  if ( ncol(geneEnv$geneMat) < minGeneNum )
-    stop( "There are not enough conserved genes to make the tree..." )
+  if ( is.null( dim( geneEnv$geneMat ) ) )
+    stop( "There are insufficient conserved genes to make the alignment..." )
+  if ( ncol( geneEnv$geneMat ) < minGeneNum )
+    stop( "There are insufficient conserved genes to make the alignment..." )
   
   repeat
   {
@@ -53,7 +53,7 @@ SelectAlgnGenes = function(
     isCoreGene = CalcNumCoreGenes( geneEnv, coreGeneThresh, isKeeper )
     coreGeneCount = sum( isCoreGene )
 
-    if ( length( isCoreGene ) == 0 || sum( isKeeper ) == 0 )
+    if ( length( isCoreGene ) == 0 || sum( isKeeper ) < 2 )
       stop( paste( "Unable to find", minGeneNum, "core genes in these data" ) )
     
     # If there is variation in all of the genes after removing outliers
@@ -66,17 +66,17 @@ SelectAlgnGenes = function(
       )
   }
   
-  # Check and see that at least one remaining genome has variation
-  # in each gene. If genes are conserved in all of the remaining genomes
-  # then there is no point in aligning them
-  isNotConserved = sapply(1:ncol(geneEnv$geneMat),
-    function(j) FALSE %in% (geneEnv$geneMat[ isKeeper, j ] == 100)
-    )
-  
-  # Subset to only include the core genes
+  # Subset to only include the core geness
   geneEnv$clustList    = geneEnv$clustList[ isCoreGene ]
   geneEnv$genomeIdList = geneEnv$genomeIdList[ isCoreGene ]
   geneEnv$geneMat      = geneEnv$geneMat[ , isCoreGene ]
+  
+  # Check and see that at least one remaining genome has variation
+  # in each gene. If genes are conserved in all of the remaining genomes
+  # then there is no point in aligning them
+  isNotConserved = sapply( 1:ncol( geneEnv$geneMat ),
+    function(j) FALSE %in% ( geneEnv$geneMat[ isKeeper, j ] == 100 )
+    )
   
   # If there are genes without variation, remove them from the dataset
   if ( FALSE %in% isNotConserved )
@@ -134,7 +134,7 @@ SelectAlgnGenes = function(
     isMissingTooMuch = missingGeneFrac > maxMissGenes
 
     # If there is an outgroup, do not remove it from the analysis
-    if ( !missing(outGroup) )
+    if ( !missing( outGroup ) )
     {
       for ( i in which( isOutGroup ) ) isMissingTooMuch[ i ] = FALSE
     }
