@@ -55,7 +55,7 @@ AnnotateGenome = function( faPath, outDir, genomeName, keepGto )
   system( createGenomeCmd )
   
   # Process the genome 
-  proGto = paste0( outDir, gId, "_pro.gto" )
+  proGto = paste0( outDir, genomeName, "_pro.gto" )
   system( paste( "rast-process-genome <", gtoPath, '>', proGto ) )
   
   # Create the path to the ouptput gff file to be created
