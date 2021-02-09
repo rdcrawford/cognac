@@ -8,7 +8,6 @@
 #include "Genome.h"
 using namespace std;
 
-
 // -----------------------------------------------------------------------------
 // Genome
 // Ryan D. Crawford
@@ -142,3 +141,5 @@ void Genome::clearGenome()
   // Amino acid sequences
   aaSeqs.clear();
 }
+
+// -----------------------------------------------------------------------------

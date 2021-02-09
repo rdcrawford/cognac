@@ -34,7 +34,7 @@ bool BioSeq::parseFasta( )
   while ( getline( ifs, line ) )
   {
 
-    if (line[0] == '>')
+    if ( line[0] == '>')
     {
       seqIdx ++; // Advance the couter to the current contig
       // Parse the line to get the name of the contig

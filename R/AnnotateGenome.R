@@ -55,7 +55,8 @@ AnnotateGenome = function( faPath, outDir, genomeName, keepGto )
   system( createGenomeCmd )
   
   # Process the genome 
-  system( paste( "rast-process-genome <", gtoPath, '>', gtoPath ) )
+  proGto = paste0( outDir, gId, "_pro.gto" )
+  system( paste( "rast-process-genome <", gtoPath, '>', proGto ) )
   
   # Create the path to the ouptput gff file to be created
   gffPath = paste0( outDir, genomeName, ".gff" )
@@ -64,7 +65,7 @@ AnnotateGenome = function( faPath, outDir, genomeName, keepGto )
   system( paste( "rast-export-genome", "gff", '<', gtoPath, '>', gffPath ) )
   
   # If not requested to keep the temp files, delete the gto
-  if ( !keepGto ) system( paste( "rm", gtoPath ) )
+  if ( !keepGto ) system( paste( "rm", gtoPath, proGto ) )
   
   return( gffPath )
 }

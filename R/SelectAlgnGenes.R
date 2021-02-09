@@ -47,6 +47,9 @@ SelectAlgnGenes = function(
   if ( ncol( geneEnv$geneMat ) < minGeneNum )
     stop( "There are insufficient conserved genes to make the alignment..." )
   
+  # Calculte the number of core genes. If the desired number of genes is
+  # not met, remove the genome with the fewest genes until the desired 
+  # number of core genes is reached
   repeat
   {
     # Count the number of core genes in the dataset
