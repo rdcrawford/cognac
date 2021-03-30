@@ -116,6 +116,11 @@ SelectAlgnGenes = function(
       }
     }
     
+    outDir = gsub( "allGenes.faa", '', faaPath, fixed = TRUE )
+    sink( paste0( outDir, "removed_genomes.tsv" ), append = TRUE )
+    for ( i in which( isMissingAll ) ) cat( geneEnv$genomeNames[i], '\n')
+    sink()
+    
     # Update the genomes and genes that are still being used for the analysis
     RemoveGenomesFromAnalisys( geneEnv, geneEnv$genomeNamest[ isMissingAll ] )
     cat(
@@ -154,7 +159,12 @@ SelectAlgnGenes = function(
           maxMissGenes * 100, "% of genes missing\n"
           )
       }
-
+      
+      outDir = gsub( "allGenes.faa", '', faaPath, fixed = TRUE )
+      sink( paste0( outDir, "removed_genomes.tsv" ), append = TRUE )
+      for ( i in which( isMissingTooMuch ) ) cat( geneEnv$genomeNames[i], '\n')
+      sink()
+      
       cat(
         "  -- ",  sum(isMissingTooMuch), " genomes are missing greater than ",
         maxMissGenes * 100, "% of genes\n", "  -- There are ",  numStillIn,

@@ -95,6 +95,10 @@ FindCogs = function(
   # impact on the down stream analysis.
   if ( TRUE %in% hasNoGenes )
   {
+    sink( paste0( outDir, "removed_genomes.tsv" ), append = TRUE )
+    for ( i in which( hasNoGenes ) ) cat( geneEnv$genomeNames[i], '\n')
+    sink()
+    
     # Remove any trace that these genomes ever existed
     RemoveGenomesFromAnalisys( geneEnv, geneEnv$genomeNames[ hasNoGenes ] )
     

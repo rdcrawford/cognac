@@ -96,6 +96,9 @@ std::string GenomeFeatures::getDescription( std::string attributes )
 
 bool GenomeFeatures::parseGffEntry( const std::string &line, BioSeq *wgs )
 {
+  // If there is no data on this line return false 
+  if ( line.size() == 0 ) return false;
+  
   stringstream ss( line );
   string       fContig;
   string       method;
