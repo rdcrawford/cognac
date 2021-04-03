@@ -90,7 +90,7 @@ SelectAlgnGenes = function(
     geneEnv$clustList    = geneEnv$clustList[ isNotConserved ]
     geneEnv$genomeIdList = geneEnv$genomeIdList[ isNotConserved ]
     
-    cat( 
+    cat(
       "  -- Removing ", sum( !isNotConserved ), " perfectly conserved",
       "genes from the analysis\n", sep = ''
       )
@@ -116,7 +116,7 @@ SelectAlgnGenes = function(
       }
     }
     
-    outDir = gsub( "allGenes.faa", '', faaPath, fixed = TRUE )
+    outDir = gsub( "allGenes.faa", '', geneEnv$faaPath, fixed = TRUE )
     sink( paste0( outDir, "removed_genomes.tsv" ), append = TRUE )
     for ( i in which( isMissingAll ) ) cat( geneEnv$genomeNames[i], '\n')
     sink()
@@ -160,7 +160,7 @@ SelectAlgnGenes = function(
           )
       }
       
-      outDir = gsub( "allGenes.faa", '', faaPath, fixed = TRUE )
+      outDir = gsub( "allGenes.faa", '', geneEnv$faaPath, fixed = TRUE )
       sink( paste0( outDir, "removed_genomes.tsv" ), append = TRUE )
       for ( i in which( isMissingTooMuch ) ) cat( geneEnv$genomeNames[i], '\n')
       sink()
