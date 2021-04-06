@@ -52,8 +52,8 @@ CreateGeneDataEnv = function( featureFiles, fastaFiles, genomeIds, outDir )
   {
     sink( paste0( outDir, "removed_genomes.tsv" ) )
     for ( i in which( hasNoGenes ) )
-      cat( genomeNames[i], "\t", "failed parsing data", '\n')
-    sink()
+      cat( genomeIds[i], "\t", "failed parsing data", '\n')
+    sink()w
     
     geneEnv$fastaFiles  = fastaFiles[ !hasNoGenes ] 
     geneEnv$gfList      = geneEnv$gfList[ !hasNoGenes ]
