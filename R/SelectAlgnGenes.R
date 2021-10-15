@@ -91,7 +91,7 @@ SelectAlgnGenes = function(
     geneEnv$genomeIdList = geneEnv$genomeIdList[ isNotConserved ]
     
     cat(
-      "  -- Removing ", sum( !isNotConserved ), " perfectly conserved",
+      "  -- Removing ", sum( !isNotConserved ), " perfectly conserved ",
       "genes from the analysis\n", sep = ''
       )
   }

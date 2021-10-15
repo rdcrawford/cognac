@@ -55,11 +55,11 @@ AlgnGeneSeqs = function(
   sink()
 
   # Generate the mafft command
-  if ( missing(maffftOps) )
+  if ( missing( maffftOps ) )
   {
     maffftOps = "--retree 2 --maxiterate 2 --quiet --leavegappyregion"
   }
-  mafftCmd = paste("mafft", maffftOps, geneFaPath, '>', algnPath)
+  mafftCmd = paste( "mafft", maffftOps, geneFaPath, '>', algnPath )
 
   # Run Mafft
   system( mafftCmd )
@@ -73,7 +73,7 @@ AlgnGeneSeqs = function(
     nGenes = length(identList[[i]])
     if ( nGenes )
     {
-      algnVecLen = length(algn) + 1
+      algnVecLen = length( algn ) + 1
       newSeqRange = algnVecLen:(algnVecLen + nGenes - 1)
       algn[ newSeqRange ] = rep( algn[i], nGenes )
       names(algn)[ newSeqRange ] = identList[[i]]

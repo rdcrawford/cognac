@@ -222,11 +222,11 @@ bool BioSeq::getSeqAtCoord(
 }
 
 // Write the sequence in a multi-fasta file
-bool BioSeq::writeSeqs( std::string faPath )
+bool BioSeq::writeSeqs( std::string outFasta )
 {
   // Initialize the output file stream and open for writing
   std::ofstream ofs;
-  ofs.open( faPath.c_str() );
+  ofs.open( outFasta.c_str() );
   if ( ofs.fail() || !ofs.is_open() ) return false;
 
   for ( unsigned int i = 0; i < seqs.size(); i++ )
