@@ -8,7 +8,7 @@
 # are also stored in a seperate vector
 # ------------------------------------------------------------------------------
 
-ConcatenateGeneAlgns = function( geneEnv, outDir, runId, maffftOps )
+ConcatenateGeneAlgns = function( geneEnv, outDir, runId, mafftOpts )
 {
   # Make an output directory to store the mafft alignments
   algnDir = paste0( outDir, runId, "temp_cognac_files/mafft_alignments/" )
@@ -16,7 +16,7 @@ ConcatenateGeneAlgns = function( geneEnv, outDir, runId, maffftOps )
 
   # Generate the mafft alignments using multi-threading via future.apply
   algnList = future.apply::future_sapply( 1:length(geneEnv$clustList) ,
-    function(i) AlgnGeneSeqs( geneEnv, i, algnDir, maffftOps )
+    function(i) AlgnGeneSeqs( geneEnv, i, algnDir, mafftOpts )
     )
   
   # Get the length of the alignments

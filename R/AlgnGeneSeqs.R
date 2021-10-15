@@ -14,7 +14,7 @@ AlgnGeneSeqs = function(
   geneEnv,  # Environment with the parsed gene sequences
   clustIdx, # Vector with unique gene ids to align
   algnDir,  # Path to the fasta file to write gene sequences to
-  maffftOps # Optional. Argumnets for mafft. mafft [maffftOps] in > out
+  mafftOpts # Optional. Arguments for mafft. mafft [mafftOpts] in > out
   )
 {
   # Set the path to the output files for the genes and the gene alignment
@@ -55,11 +55,11 @@ AlgnGeneSeqs = function(
   sink()
 
   # Generate the mafft command
-  if ( missing( maffftOps ) )
+  if ( missing( mafftOpts ) )
   {
-    maffftOps = "--retree 2 --maxiterate 2 --quiet --leavegappyregion"
+    mafftOpts = "--retree 2 --maxiterate 2 --quiet --leavegappyregion"
   }
-  mafftCmd = paste( "mafft", maffftOps, geneFaPath, '>', algnPath )
+  mafftCmd = paste( "mafft", mafftOpts, geneFaPath, '>', algnPath )
 
   # Run Mafft
   system( mafftCmd )

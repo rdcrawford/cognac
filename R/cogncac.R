@@ -70,7 +70,7 @@
 #' @param cdHitFlags Optional string with parameters to pass to cd-hit to 
 #'   define clusters aside from "-c" and "-aL" that can be used to define the
 #'   clustering parameters.
-#' @param maffftOps # Optional. Arguments for mafft: mafft [maffftOps] in > out
+#' @param mafftOpts # Optional. Arguments for mafft: mafft [mafftOpts] in > out
 #' @return An environment with the alignment data. Variables included
 #'   by default are "aaAlgnPath" and "metaData." If reverse translated,
 #'   the alignment is present under "ntAlgnPath," alignment distance matrix
@@ -102,7 +102,7 @@ cognac = function(
   percId,         # Optional. Percent ID for the Cd-hit
   algnCovg,       # Optional. Percent alignment coverage for the Cd-hit
   cdHitFlags,     # Optional. Parameters to pass to cd-hit to define clusters
-  maffftOps       # Optional. Arguments for mafft. mafft [maffftOps] in > out
+  mafftOpts       # Optional. Arguments for mafft. mafft [mafftOpts] in > out
   )
 {
   startTime = Sys.time() # Start the timer
@@ -274,7 +274,7 @@ cognac = function(
   # Individually create a new fasta file for each gene and generate the
   # alignment each gene with mafft
   cat( "\nStep 5: aligning and concatenating orthologous genes\n" )
-  algnPath = ConcatenateGeneAlgns( geneEnv, outDir, runId, maffftOps )
+  algnPath = ConcatenateGeneAlgns( geneEnv, outDir, runId, mafftOpts )
   stepTime = GetSplit( stepTime )
 
   # Create the environment with the objects to export
