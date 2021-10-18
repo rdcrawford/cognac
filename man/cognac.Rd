@@ -28,7 +28,7 @@ cognac(
   percId,
   algnCovg,
   cdHitFlags,
-  maffftOps
+  mafftOpts
 )
 }
 \arguments{
@@ -118,7 +118,7 @@ cd-hit manual. Defaults to 0.8.}
 define clusters aside from "-c" and "-aL" that can be used to define the
 clustering parameters.}
 
-\item{maffftOps}{# Optional. Arguments for mafft: mafft [maffftOps] in > out}
+\item{mafftOpts}{# Optional. Arguments for mafft: mafft [mafftOpts] in > out}
 }
 \value{
 An environment with the alignment data. Variables included

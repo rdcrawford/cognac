@@ -57,7 +57,7 @@ AlgnGeneSeqs = function(
   # Generate the mafft command
   if ( missing( mafftOpts ) )
   {
-    mafftOpts = "--retree 2 --maxiterate 2 --quiet --leavegappyregion"
+    mafftOpts = "--retree 2 --maxiterate 2 --quiet"
   }
   mafftCmd = paste( "mafft", mafftOpts, geneFaPath, '>', algnPath )
 

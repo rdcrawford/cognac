@@ -214,8 +214,11 @@ cognac = function(
     distMat = TRUE
   }
   
-  # By defautlt do not create the nt alignment 
-  if ( missing(mapNtToAa) ) mapNtToAa = FALSE
+  # By default do not create the nt alignment 
+  if ( missing( mapNtToAa ) ) mapNtToAa = FALSE
+
+  # Set the default optional arguments for mafft  
+  if ( missing( mafftOpts ) ) mafftOpts = "--retree 2 --maxiterate 2 --quiet"
   
   # ---- Set up multithreadding ------------------------------------------------
 
